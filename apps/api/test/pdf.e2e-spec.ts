@@ -35,18 +35,16 @@ describe('P0-11 PDF', () => {
   });
 
   it('long Thai paragraphs render with Sarabun and extract back exactly (word-wrap keeps every character)', async () => {
-    const pdf = await t.app
-      .get(PdfService)
-      .render(
-        'test-document',
-        {
-          title: 'ทดสอบการตัดคำภาษาไทย',
-          companyName: 'บริษัท ตัวอย่าง วิศวกรรมน้ำ จำกัด',
-          date: '28 ก.ย. 2569',
-          paragraphs: Array(12).fill(THAI).flat(),
-        },
-        { footerLeft: 'TEST-001' },
-      );
+    const pdf = await t.app.get(PdfService).render(
+      'test-document',
+      {
+        title: 'ทดสอบการตัดคำภาษาไทย',
+        companyName: 'บริษัท ตัวอย่าง วิศวกรรมน้ำ จำกัด',
+        date: '28 ก.ย. 2569',
+        paragraphs: Array(12).fill(THAI).flat(),
+      },
+      { footerLeft: 'TEST-001' },
+    );
     expect(pdf.subarray(0, 5).toString()).toBe('%PDF-');
     const doc = await PDFDocument.load(pdf);
     expect(doc.getPageCount()).toBeGreaterThan(1);

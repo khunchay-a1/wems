@@ -1,0 +1,20 @@
+{
+  "name": "@wems/api-contract",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Generated API contract (openapi.json + TypeScript types) — do not edit by hand (ADR-0002)",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./openapi.json": "./openapi.json"
+  },
+  "scripts": {
+    "generate": "openapi-typescript openapi.json -o src/schema.d.ts --enum-values --root-types",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "devDependencies": {
+    "@wems/config": "workspace:*",
+    "openapi-typescript": "7.13.0",
+    "typescript": "6.0.3"
+  }
+}
