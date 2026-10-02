@@ -52,7 +52,10 @@ pnpm lint && pnpm typecheck && pnpm test             # turbo run ทุก packa
 pnpm format:check                                    # prettier (pnpm format เพื่อแก้)
 pnpm check:spec                                      # check-enum-labels + check-spec-refs
 pnpm --filter api prisma migrate dev --name <name>
-pnpm --filter api prisma db seed
+pnpm --filter api prisma db seed                     # master data จาก docs/data/seed (รันซ้ำได้)
+pnpm --filter api cli create-admin --email <e> --name <n>   # ผู้ดูแลคนแรก (ไม่ระบุ --password = รหัสชั่วคราว)
+pnpm --filter api dev                                # API ที่ http://localhost:4000/api/v1 (Swagger: /api/docs)
+pnpm --filter api test                               # unit (src/**/*.spec.ts) + e2e (test/**/*.e2e-spec.ts, ใช้ DB wems_test)
 pnpm api:contract                                    # openapi.json + TS types
 cd apps/mobile && dart run swagger_parser && dart run build_runner build --delete-conflicting-outputs
 cd apps/mobile && flutter analyze && flutter test
@@ -79,6 +82,7 @@ node tools/check-enum-labels.mjs && node tools/check-spec-refs.mjs
 - **pnpm 12** (ล็อกใน `packageManager`) + **Turborepo 2** — ติดตั้งผ่าน `corepack enable`; ค่าตั้ง workspace อยู่ใน `pnpm-workspace.yaml`
 - **TypeScript 6.0.x** (ไม่ใช่ 7): npm tag `latest` ชี้ TypeScript 7 (native) แล้ว แต่ `typescript-eslint` 8.x รองรับ `<6.1` — ล็อก `typescript@6.0.3` จนกว่า typescript-eslint จะรองรับ 7; TS 6 ไม่ใส่ `@types/*` อัตโนมัติ จึงระบุ `"types": ["node"]` ใน preset
 - **ESLint 10** flat config — preset กลาง `@wems/config/eslint` (`createConfig`) บังคับกฎข้อ 7 ใน `*.service.ts`/`domain/**` ด้วย `NEST_DETERMINISTIC_FILES`
+- **NestJS 11** (ไม่ใช่ 12): Nest 12 (ส.ค. 2026) เป็น ESM-only แต่ API คอมไพล์เป็น CommonJS ตาม Prisma `moduleFormat = "cjs"` — ล็อก `@nestjs/*@11.2.x`; ด้วยเหตุเดียวกันจึงสร้าง UUIDv7 เองใน `src/common/ids/uuid.ts` (แพ็กเกจ `uuid` เป็น ESM-only)
 - **Prisma 7**: URL อยู่ใน `apps/api/prisma.config.ts`; `PrismaClient` ต้องส่ง `adapter: new PrismaPg(...)`; generator `prisma-client` + `moduleFormat = "cjs"`; ไม่โหลด `.env` เอง; seed ต้องรัน `prisma db seed` เอง; npm tag `latest` เคยชี้ไป 8.0.0-rc — ติดตั้ง `prisma@7` จนกว่า 8 จะ GA
 - **Next.js 16+**: ใช้ `proxy.ts` แทน `middleware.ts`
 - **Flutter**: Material/Cupertino แยกเป็นแพ็กเกจ `material_ui`/`cupertino_ui` — ใช้ตาม template ของ `flutter create` เวอร์ชันที่ใช้ และห้าม import ปน

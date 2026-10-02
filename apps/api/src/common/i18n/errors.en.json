@@ -1,0 +1,314 @@
+{
+  "VALIDATION_FAILED": {
+    "title": "Invalid input",
+    "detail": "Please check the highlighted fields and try again."
+  },
+  "UNAUTHENTICATED": {
+    "title": "Sign-in required",
+    "detail": "You are not signed in or your session has ended."
+  },
+  "TOKEN_EXPIRED": {
+    "title": "Session expired",
+    "detail": "Please sign in again."
+  },
+  "INVALID_CREDENTIALS": {
+    "title": "Sign-in failed",
+    "detail": "Incorrect email or password."
+  },
+  "MFA_INVALID_CODE": {
+    "title": "Invalid code",
+    "detail": "The 6-digit code is incorrect or has expired."
+  },
+  "FORBIDDEN": {
+    "title": "Not allowed",
+    "detail": "You do not have permission to perform this action."
+  },
+  "CSRF_INVALID": {
+    "title": "Invalid request",
+    "detail": "Please refresh the page and try again."
+  },
+  "PASSWORD_CHANGE_REQUIRED": {
+    "title": "Password change required",
+    "detail": "Please change your password to continue."
+  },
+  "NOT_FOUND": {
+    "title": "Not found",
+    "detail": "The item does not exist or you do not have access to it."
+  },
+  "CONFLICT_STALE_VERSION": {
+    "title": "Changed by someone else",
+    "detail": "Someone else changed this item. Reload the latest data and try again."
+  },
+  "INVALID_STATE_TRANSITION": {
+    "title": "Not allowed in the current status",
+    "detail": "The current status does not allow this action."
+  },
+  "DUPLICATE": {
+    "title": "Duplicate",
+    "detail": "This item already exists."
+  },
+  "IDEMPOTENCY_IN_PROGRESS": {
+    "title": "Request in progress",
+    "detail": "The same request is still being processed."
+  },
+  "SYNC_CURSOR_EXPIRED": {
+    "title": "Full resync required",
+    "detail": "Local data is too old; a full download will start."
+  },
+  "SYNC_SCOPE_FORBIDDEN": {
+    "title": "Sync scope not allowed",
+    "detail": "You are not a member of the requested scope."
+  },
+  "FILE_TOO_LARGE": {
+    "title": "File too large",
+    "detail": "The file exceeds the size limit for this purpose."
+  },
+  "PAYLOAD_TOO_LARGE": {
+    "title": "Request too large",
+    "detail": "The request body exceeds the size limit."
+  },
+  "UNSUPPORTED_FILE_TYPE": {
+    "title": "Unsupported file type",
+    "detail": "This file type is not allowed for this purpose."
+  },
+  "FILE_NOT_UPLOADED": {
+    "title": "File not uploaded",
+    "detail": "The file was not found in storage. Please upload it again."
+  },
+  "IDEMPOTENCY_KEY_REUSED": {
+    "title": "Idempotency-Key reused",
+    "detail": "This Idempotency-Key was already used for a different request."
+  },
+  "ACCOUNT_LOCKED": {
+    "title": "Account temporarily locked",
+    "detail": "Too many failed sign-ins. Try again later or contact an administrator."
+  },
+  "RATE_LIMITED": {
+    "title": "Too many requests",
+    "detail": "Please wait a moment and try again."
+  },
+  "INTERNAL_ERROR": {
+    "title": "Unexpected error",
+    "detail": "Please try again. If the problem persists, contact an administrator with the reference id."
+  },
+  "SERVICE_UNAVAILABLE": {
+    "title": "Service temporarily unavailable",
+    "detail": "Please try again later."
+  },
+  "PASSWORD_POLICY": {
+    "title": "Password too weak",
+    "detail": "Use at least 12 characters, not your email or name, and not a common password."
+  },
+  "PASSWORD_INCORRECT": {
+    "title": "Incorrect password",
+    "detail": "Your current password is incorrect."
+  },
+  "MFA_NOT_CONFIGURED": {
+    "title": "MFA not set up",
+    "detail": "Start two-factor setup first."
+  },
+  "MFA_ALREADY_ENABLED": {
+    "title": "MFA already enabled",
+    "detail": "Two-factor authentication is already enabled."
+  },
+  "MFA_REQUIRED_FOR_ROLE": {
+    "title": "MFA required",
+    "detail": "Your role requires two-factor authentication."
+  },
+  "SIGNING_PIN_INVALID_FORMAT": {
+    "title": "Invalid PIN",
+    "detail": "The signing PIN must be 6 digits."
+  },
+  "LAST_ADMIN": {
+    "title": "At least one administrator required",
+    "detail": "You cannot remove the role from, or deactivate, the last administrator."
+  },
+  "ROLE_IS_SYSTEM": {
+    "title": "System role",
+    "detail": "System roles can be edited but not deleted."
+  },
+  "LICENSE_NOT_FOUND": {
+    "title": "License not found",
+    "detail": "The license does not exist."
+  },
+  "NUMBERING_PATTERN_INVALID": {
+    "title": "Invalid numbering pattern",
+    "detail": "The pattern must contain {SEQ:n} and only supported tokens."
+  },
+  "SETTING_INVALID": {
+    "title": "Invalid setting",
+    "detail": "The value does not match the expected format."
+  },
+  "CLIENT_IN_USE": {
+    "title": "Client in use",
+    "detail": "Projects or other records reference this client. Deactivate it instead."
+  },
+  "CLIENT_INACTIVE": {
+    "title": "Client inactive",
+    "detail": "Inactive clients cannot be selected."
+  },
+  "MEMBER_HAS_PENDING_REVIEWS": {
+    "title": "Member has pending reviews",
+    "detail": "Reassign the member's pending review steps before removing them."
+  },
+  "PROJECT_HAS_OPEN_ITEMS": {
+    "title": "Project has open items",
+    "detail": "The project still has review cycles in progress or draft transmittals."
+  },
+  "PROJECT_CODE_LOCKED": {
+    "title": "Project code locked",
+    "detail": "The project code can only be changed before documents exist."
+  },
+  "PROJECT_SCHEME_LOCKED": {
+    "title": "Revision scheme locked",
+    "detail": "The revision scheme can only change while the project has no revisions."
+  },
+  "PROJECT_READ_ONLY": {
+    "title": "Project is read-only",
+    "detail": "Closed or cancelled projects cannot be changed."
+  },
+  "PROJECT_MANAGER_REQUIRED": {
+    "title": "Project manager required",
+    "detail": "The project manager must be a member with the project manager role."
+  },
+  "DOC_PROJECT_NOT_EDITABLE": {
+    "title": "Project not editable",
+    "detail": "Documents can only be created or edited while the project is planning or active."
+  },
+  "DOC_NOT_ACTIVE": {
+    "title": "Document not active",
+    "detail": "On-hold, cancelled or superseded documents do not allow this action."
+  },
+  "DOC_REVISION_IN_PROGRESS": {
+    "title": "Revision in progress",
+    "detail": "The document already has a draft or in-review revision."
+  },
+  "DOC_REVISION_LOCKED": {
+    "title": "Revision locked",
+    "detail": "Submitted or approved revisions cannot be changed."
+  },
+  "DOC_NUMBER_LOCKED": {
+    "title": "Document number locked",
+    "detail": "After approval, number/discipline/type can only be changed by a document admin with a reason."
+  },
+  "DOC_REV_LABEL_INVALID": {
+    "title": "Invalid revision label",
+    "detail": "The label is already used or does not match the project's revision scheme."
+  },
+  "DOC_CANNOT_DISCARD": {
+    "title": "Cannot discard",
+    "detail": "Revisions that were submitted or have comments cannot be discarded; void it instead."
+  },
+  "DOC_FILE_NOT_AVAILABLE": {
+    "title": "File not ready",
+    "detail": "The file is still processing or was rejected."
+  },
+  "DOC_FILE_TYPE_MISMATCH": {
+    "title": "File type mismatch",
+    "detail": "The PDF rendition must be a PDF file."
+  },
+  "DOC_PDF_RENDITION_REQUIRED": {
+    "title": "PDF required before review",
+    "detail": "This document type requires a PDF rendition before submission."
+  },
+  "DOC_REVISION_DESCRIPTION_REQUIRED": {
+    "title": "Description required",
+    "detail": "Revisions after the first need a change description before submission."
+  },
+  "DOC_ASSIGNEE_REQUIRED": {
+    "title": "Assignees required",
+    "detail": "Select an assignee for every non-optional step."
+  },
+  "DOC_ASSIGNEE_NOT_ELIGIBLE": {
+    "title": "Assignee not eligible",
+    "detail": "The selected person lacks the permission or project role this step requires."
+  },
+  "DOC_SEPARATION_OF_DUTIES": {
+    "title": "Separation of duties",
+    "detail": "The preparer cannot check or approve, and one person cannot both check and approve."
+  },
+  "DOC_LICENSE_REQUIRED": {
+    "title": "License required",
+    "detail": "The approver needs a valid professional license for this document type."
+  },
+  "DOC_LICENSE_EXPIRED": {
+    "title": "License expired",
+    "detail": "The approver's professional license has expired."
+  },
+  "DOC_SIGNATURE_REQUIRED": {
+    "title": "Signature required",
+    "detail": "This step requires confirmation with your password or signing PIN."
+  },
+  "DOC_SIGNATURE_INVALID": {
+    "title": "Invalid signature",
+    "detail": "The password or signing PIN is incorrect."
+  },
+  "DOC_NOT_ASSIGNEE": {
+    "title": "Not the assignee",
+    "detail": "Only the assignee of this step can decide."
+  },
+  "DOC_STEP_NOT_ACTIVE": {
+    "title": "Step not active",
+    "detail": "This step is not awaiting a decision."
+  },
+  "DOC_STEP_NOT_OPTIONAL": {
+    "title": "Step not optional",
+    "detail": "Only optional steps can be skipped."
+  },
+  "DOC_COMMENT_REQUIRED": {
+    "title": "Comment required",
+    "detail": "Approve-with-comments needs at least one comment; rejection needs a note or an open comment."
+  },
+  "DOC_COMMENT_NOT_EDITABLE": {
+    "title": "Comment not editable",
+    "detail": "Comments can be edited or deleted only by the author before the step is decided."
+  },
+  "DOC_NOT_SHAREABLE": {
+    "title": "Not shareable",
+    "detail": "This document is not marked as shareable with the client."
+  },
+  "TRN_ITEM_NOT_APPROVED": {
+    "title": "Revision not approved",
+    "detail": "Transmittal items must be approved or issued revisions of the same project."
+  },
+  "TRN_DUPLICATE_ITEM": {
+    "title": "Duplicate item",
+    "detail": "This revision is already on the transmittal."
+  },
+  "TRN_NO_ITEMS": {
+    "title": "No items",
+    "detail": "A transmittal needs at least one item."
+  },
+  "TRN_NO_RECIPIENT": {
+    "title": "No recipient",
+    "detail": "Enter at least one recipient email."
+  },
+  "TRN_NOT_EDITABLE": {
+    "title": "Transmittal not editable",
+    "detail": "Sent transmittals cannot be changed; issue a new one."
+  },
+  "TRN_LINK_EXPIRED": {
+    "title": "Link expired",
+    "detail": "This download link has expired or was revoked. Please contact the sender."
+  },
+  "DBS_DRAFT_EXISTS": {
+    "title": "Draft exists",
+    "detail": "A new revision can be created only when no draft exists."
+  },
+  "DBS_NOT_EDITABLE": {
+    "title": "Not editable",
+    "detail": "Only draft design bases can be edited."
+  },
+  "DBS_SELF_APPROVAL": {
+    "title": "Self-approval not allowed",
+    "detail": "The creator of this design basis cannot approve it."
+  },
+  "DBS_SOURCE_NOTE_REQUIRED": {
+    "title": "Source required",
+    "detail": "Measured values need a source note."
+  },
+  "IMPORT_INVALID_ROWS": {
+    "title": "Invalid import rows",
+    "detail": "Some rows have errors; nothing was saved."
+  }
+}

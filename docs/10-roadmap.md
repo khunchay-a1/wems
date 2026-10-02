@@ -20,9 +20,9 @@
   - รับงาน: `pnpm install && pnpm lint && pnpm typecheck` ผ่านบน repo เปล่า
 - [x] **P0-02 Infra dev** — `infra/docker-compose.yml`: PostgreSQL 16, Redis 7.2, S3-compatible storage (RustFS แทน MinIO — ADR-0007; + สร้าง bucket อัตโนมัติ), Mailpit, Gotenberg · อ้างอิง `02-architecture.md` §9
   - รับงาน: `docker compose up -d` ทุก service healthy; README มีขั้นตอน dev
-- [ ] **P0-03 API skeleton** — NestJS: config (ตรวจ env ด้วย zod), pino + requestId, prefix `/api/v1`, exception filter แบบ problem+json + catalog ข้อความ th/en, ValidationPipe (whitelist, forbidNonWhitelisted, transform), helmet, throttler, `/health/*`, Swagger (non-prod) · `04-api-conventions.md`
+- [x] **P0-03 API skeleton** — NestJS: config (ตรวจ env ด้วย zod), pino + requestId, prefix `/api/v1`, exception filter แบบ problem+json + catalog ข้อความ th/en, ValidationPipe (whitelist, forbidNonWhitelisted, transform), helmet, throttler, `/health/*`, Swagger (non-prod) · `04-api-conventions.md`
   - รับงาน: DTO ผิดได้ 400 problem+json มี `errors[]`; test ของ filter
-- [ ] **P0-04 Prisma** — Prisma 7 + `@prisma/adapter-pg`, `prisma.config.ts`, migration แรก (+ `CREATE EXTENSION pg_trgm`), `PrismaService`, helper `notDeleted()` และ optimistic update, serializer Decimal/Date, seed จาก `docs/data/seed/*`, CLI `create-admin` · `03-data-model.md`
+- [x] **P0-04 Prisma** — Prisma 7 + `@prisma/adapter-pg`, `prisma.config.ts`, migration แรก (+ `CREATE EXTENSION pg_trgm`), `PrismaService`, helper `notDeleted()` และ optimistic update, serializer Decimal/Date, seed จาก `docs/data/seed/*`, CLI `create-admin` · `03-data-model.md`
   - รับงาน: migrate จาก DB ว่างผ่าน; seed รันซ้ำได้ผลเท่าเดิม; `prisma migrate diff` ว่าง
 - [ ] **P0-05 Authentication** — login (argon2id), ล็อกบัญชี, MFA TOTP, session + refresh หมุนเวียน + ตรวจการใช้ซ้ำ, cookie + CSRF (เว็บ), bearer (มือถือ), logout, `/auth/me`, เปลี่ยนรหัสผ่าน, PIN ลงนาม, จัดการ session · `06-security.md` §2
   - รับงาน: AT-PLT-01, AT-PLT-02; e2e ทั้งแบบ cookie และ bearer

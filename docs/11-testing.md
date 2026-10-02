@@ -19,7 +19,7 @@
 - เวลา: ห้ามเรียก `new Date()` ตรงใน domain/service — ฉีด `ClockService` (ทดสอบวันครบกำหนด ใบอนุญาตหมดอายุ holding time ด้วยเวลาคงที่); เขตเวลาใน test = `Asia/Bangkok`
 - ID: ฉีด `IdGenerator` เพื่อให้ snapshot คงที่ใน test
 - ภายนอก: SMTP → Mailpit (ตรวจอีเมลผ่าน Mailpit API), FCM → fake adapter ที่เก็บข้อความไว้ตรวจ, Gotenberg → container จริงใน integration และ fake ใน unit
-- ฐานข้อมูลใน integration test: migrate ครั้งเดียวต่อ run แล้ว `TRUNCATE ... CASCADE` ทุกตาราง (ยกเว้น master data ที่ seed) ก่อนแต่ละไฟล์ test
+- ฐานข้อมูลใน integration test: migrate ครั้งเดียวต่อ run แล้ว `TRUNCATE ... CASCADE` ทุกตาราง (ยกเว้น master data ที่ seed) ก่อนแต่ละไฟล์ test — `apps/api/test/global-setup.ts` สร้าง DB `wems_test` ใหม่ด้วยการรัน `migration.sql` ทุกไฟล์ตามลำดับ (ไม่ต้องใช้ Prisma CLI) แล้ว seed; ตั้ง `TEST_DATABASE_URL` เพื่อชี้ DB อื่น
 - ห้าม test พึ่งลำดับการรันของกันและกัน
 
 ## 3. Test data

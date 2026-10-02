@@ -1,0 +1,11 @@
+{
+  "extends": "@wems/config/tsconfig/nestjs.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": ".",
+    "baseUrl": null,
+    "types": ["node", "jest"],
+    "incremental": false
+  },
+  "include": ["src/**/*.ts", "test/**/*.ts", "prisma/**/*.ts", "prisma.config.ts"]
+}
