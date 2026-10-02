@@ -30,7 +30,7 @@ sequenceDiagram
 | รหัสผ่าน | ยาว ≥ 12 ตัว, ห้ามตรงกับอีเมล/ชื่อ, ตรวจกับรายการรหัสผ่านยอดนิยม 10,000 อันดับ (ไฟล์ในโค้ด), hash ด้วย argon2id (m=64MB, t=3, p=1) |
 | ผิดติดต่อกัน | 10 ครั้ง → ล็อก 15 นาที (`lockedUntil`), แจ้งผู้ใช้ทางอีเมล |
 | ข้อความผิดพลาด | ไม่บอกว่าอีเมลมีอยู่หรือไม่ (`INVALID_CREDENTIALS` เสมอ) |
-| MFA (TOTP) | ทางเลือกสำหรับทุกคน **บังคับ** สำหรับบทบาท ADMIN; secret เข้ารหัส AES-256-GCM |
+| MFA (TOTP) | ทางเลือกสำหรับทุกคน **บังคับ** สำหรับบทบาท ADMIN (`/auth/me` คืน `mfaSetupRequired: true` และเว็บบังคับเข้าหน้าตั้งค่า); secret เข้ารหัส AES-256-GCM; รหัส TOTP ผิดนับรวมกับการล็อกบัญชี |
 | ลืมรหัสผ่าน | ผู้ดูแลระบบตั้งรหัสชั่วคราว + `mustChangePassword` (เฟส 5: ลิงก์รีเซ็ตทางอีเมล) |
 | SSO (เฟส 5) | OIDC กับ Microsoft Entra ID หรือ Google Workspace ผูกด้วยอีเมล; ผู้ใช้ SSO-only มี `passwordHash = null` |
 
@@ -43,7 +43,9 @@ sequenceDiagram
 | หมุนเวียน | – | ทุก `/auth/refresh` ออกคู่ใหม่ แถวเดิม `revokedAt` + `replacedBySessionId` |
 | ตรวจจับการขโมย | – | ใช้ refresh token ที่ถูกหมุนไปแล้ว → เพิกถอนทั้ง `familyId` + audit `auth.token_reuse_detected` + แจ้งผู้ใช้ |
 
-- สิทธิ์ของผู้ใช้โหลดจาก DB/Redis cache ทุก request (key มี `perms_ver`) — เปลี่ยนบทบาทแล้วมีผลทันที ไม่ต้องรอ token หมดอายุ
+- สิทธิ์ของผู้ใช้โหลดจาก DB ทุก request (query เดียวรวม session + user + บทบาท + สิทธิ์ ใน `AuthGuard`) — เปลี่ยนบทบาทแล้วมีผลทันที ไม่ต้องรอ token หมดอายุ; ถ้าภายหลังต้องลดภาระ DB ค่อยเพิ่ม Redis cache ที่ key มี `perms_ver`
+- เว็บ: ถ้า refresh token ที่เพิ่งถูกหมุน (ภายใน 5 วินาที) ถูกส่งมาอีกครั้ง ถือเป็นการ refresh ซ้อนจากหลายแท็บ (cookie jar เดียวกัน) → ตอบ 401 โดย**ไม่**เพิกถอนทั้งตระกูล; เกิน 5 วินาที หรือเป็นมือถือ = ถูกขโมย (AT-PLT-02)
+- Idle timeout ของเว็บวัดจาก `Session.lastUsedAt` ซึ่งอัปเดตทุกครั้งที่ refresh (ทุก ~15 นาทีเมื่อใช้งานอยู่)
 - ผู้ใช้ดูและเพิกถอน session ของตนได้ (`GET /auth/sessions`, `DELETE /auth/sessions/{id}`); ADMIN เพิกถอนทุก session ของผู้ใช้ได้เมื่อปิดบัญชี
 - ปิดบัญชี (`isActive = false`) → เพิกถอนทุก session ทันที
 

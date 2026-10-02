@@ -24,9 +24,9 @@
   - รับงาน: DTO ผิดได้ 400 problem+json มี `errors[]`; test ของ filter
 - [x] **P0-04 Prisma** — Prisma 7 + `@prisma/adapter-pg`, `prisma.config.ts`, migration แรก (+ `CREATE EXTENSION pg_trgm`), `PrismaService`, helper `notDeleted()` และ optimistic update, serializer Decimal/Date, seed จาก `docs/data/seed/*`, CLI `create-admin` · `03-data-model.md`
   - รับงาน: migrate จาก DB ว่างผ่าน; seed รันซ้ำได้ผลเท่าเดิม; `prisma migrate diff` ว่าง
-- [ ] **P0-05 Authentication** — login (argon2id), ล็อกบัญชี, MFA TOTP, session + refresh หมุนเวียน + ตรวจการใช้ซ้ำ, cookie + CSRF (เว็บ), bearer (มือถือ), logout, `/auth/me`, เปลี่ยนรหัสผ่าน, PIN ลงนาม, จัดการ session · `06-security.md` §2
+- [x] **P0-05 Authentication** — login (argon2id), ล็อกบัญชี, MFA TOTP, session + refresh หมุนเวียน + ตรวจการใช้ซ้ำ, cookie + CSRF (เว็บ), bearer (มือถือ), logout, `/auth/me`, เปลี่ยนรหัสผ่าน, PIN ลงนาม, จัดการ session · `06-security.md` §2
   - รับงาน: AT-PLT-01, AT-PLT-02; e2e ทั้งแบบ cookie และ bearer
-- [ ] **P0-06 Authorization และผู้ใช้** — `permissions.ts` (test ยืนยันว่าตรงกับ `roles.json`), `@RequirePermission` + guard, `ProjectAccessService`, cache สิทธิ์ด้วย `perms_ver`, API ผู้ใช้/บทบาท/แผนก/ใบอนุญาต/directory · `06-security.md` §3, M01
+- [x] **P0-06 Authorization และผู้ใช้** — `permissions.ts` (test ยืนยันว่าตรงกับ `roles.json`), `@RequirePermission` + guard, `ProjectAccessService`, cache สิทธิ์ด้วย `perms_ver`, API ผู้ใช้/บทบาท/แผนก/ใบอนุญาต/directory · `06-security.md` §3, M01
   - รับงาน: AT-PLT-03, AT-PLT-06; test ตาราง 404/403
 - [ ] **P0-07 Audit, change log, outbox, idempotency** — service ที่ทำงานใน transaction เดียว, outbox relay + BullMQ ใน `worker.ts`, interceptor `Idempotency-Key`, ตรวจ UUIDv7 จาก client · `02-architecture.md` §5–6, `04-api-conventions.md` §8
   - รับงาน: test ว่า rollback แล้วไม่มี audit/change/outbox ค้าง; relay 2 instance พร้อมกันส่ง event ละครั้งเดียว

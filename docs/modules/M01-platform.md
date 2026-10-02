@@ -125,8 +125,9 @@ Worker (`files` queue) ทำ: คำนวณ sha256, ตรวจ magic bytes,
 | GET / POST / PATCH | `/users/{id}/licenses[/{licenseId}]` | `user.manage` หรือเจ้าของ | BR-PLT-004 |
 | POST | `/licenses/{id}/verify` | `user.manage` | |
 | GET / POST / PATCH | `/departments[/{id}]` | ล็อกอิน / `user.manage` | |
-| GET / POST / PATCH | `/roles[/{id}]` | `role.manage` | BR-PLT-003 |
+| GET / POST / PATCH / DELETE | `/roles[/{id}]` | `role.manage` (GET: `user.manage` ด้วย) | BR-PLT-003; ลบได้เฉพาะบทบาทที่ไม่ใช่ระบบ; บทบาท ADMIN ต้องมี `user.manage` และ `role.manage` เสมอ |
 | GET | `/permissions` | `role.manage` | รายการรหัสสิทธิ์ + คำอธิบาย |
+| PATCH | `/users/me` | ล็อกอิน | แก้โปรไฟล์ตัวเอง (ชื่อ เบอร์ ภาษา ปฏิทิน) |
 | GET / PUT | `/settings/{key}` | ล็อกอิน (บาง key) / `settings.manage` | key ที่มีข้อมูลลับอ่านได้เฉพาะ `settings.manage` |
 | GET / PUT | `/numbering-schemes[/{id}]` | `settings.manage` | `POST /numbering-schemes/preview` ดูตัวอย่างเลขถัดไปโดยไม่เลื่อนตัวนับ |
 | POST | `/files/upload-url` · `/files/{id}/complete` | ล็อกอิน | `04-api-conventions.md` §9 |
