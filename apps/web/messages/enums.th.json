@@ -1,0 +1,536 @@
+{
+  "ActorType": {
+    "USER": "ผู้ใช้",
+    "SYSTEM": "ระบบ",
+    "PUBLIC_LINK": "ลิงก์สาธารณะ"
+  },
+  "AttachmentOwnerType": {
+    "PROJECT": "โครงการ",
+    "CLIENT": "ลูกค้า",
+    "SITE": "สถานที่",
+    "TRANSMITTAL": "ใบนำส่ง",
+    "DESIGN_BASIS": "ค่าออกแบบ",
+    "COMMENT": "ความเห็น",
+    "DAILY_REPORT": "รายงานประจำวัน",
+    "ISSUE": "ปัญหาหน้างาน",
+    "INSPECTION": "การตรวจงาน",
+    "INSPECTION_RESULT": "ผลตรวจรายข้อ",
+    "SITE_QUERY": "คำถามหน้างาน",
+    "LAB_JOB": "งานวิเคราะห์",
+    "SAMPLE": "ตัวอย่าง",
+    "SAMPLING_STOP": "จุดแวะเก็บตัวอย่าง",
+    "INSTRUMENT_EVENT": "ประวัติเครื่องมือ",
+    "QUOTATION": "ใบเสนอราคา"
+  },
+  "BatchStatus": {
+    "OPEN": "กำลังวิเคราะห์",
+    "COMPLETED": "เสร็จ รอตรวจ QC",
+    "QC_FAILED": "QC ไม่ผ่าน",
+    "APPROVED": "อนุมัติแล้ว"
+  },
+  "BillingStatus": {
+    "DRAFT": "ร่าง",
+    "REQUESTED": "ส่งคำขอออกใบแจ้งหนี้แล้ว",
+    "INVOICED": "ออกใบแจ้งหนี้แล้ว",
+    "PAID": "ชำระแล้ว",
+    "CANCELLED": "ยกเลิก"
+  },
+  "BuildingClass": {
+    "A": "ประเภท ก",
+    "B": "ประเภท ข",
+    "C": "ประเภท ค",
+    "D": "ประเภท ง",
+    "E": "ประเภท จ"
+  },
+  "CalendarPreference": {
+    "BUDDHIST": "พุทธศักราช (พ.ศ.)",
+    "GREGORIAN": "คริสต์ศักราช (ค.ศ.)"
+  },
+  "ChangeOp": {
+    "UPSERT": "เพิ่ม/แก้ไข",
+    "DELETE": "ลบ"
+  },
+  "ChecklistResponseType": {
+    "PASS_FAIL_NA": "ผ่าน/ไม่ผ่าน/ไม่เกี่ยวข้อง",
+    "NUMBER": "ตัวเลข",
+    "TEXT": "ข้อความ",
+    "PHOTO": "รูปถ่าย"
+  },
+  "ClientPlatform": {
+    "WEB": "เว็บ",
+    "ANDROID": "Android",
+    "IOS": "iOS"
+  },
+  "ClientReturnCode": {
+    "CODE_1": "รหัส 1 · อนุมัติ",
+    "CODE_2": "รหัส 2 · อนุมัติตามความเห็น",
+    "CODE_3": "รหัส 3 · แก้ไขแล้วส่งใหม่",
+    "CODE_4": "รหัส 4 · ไม่อนุมัติ",
+    "INFO": "รับทราบ"
+  },
+  "ClientType": {
+    "COMPANY": "บริษัท/ห้างร้าน",
+    "GOVERNMENT": "หน่วยงานราชการ",
+    "STATE_ENTERPRISE": "รัฐวิสาหกิจ",
+    "LOCAL_AUTHORITY": "องค์กรปกครองส่วนท้องถิ่น",
+    "INDIVIDUAL": "บุคคลธรรมดา",
+    "OTHER": "อื่นๆ"
+  },
+  "CommentOwnerType": {
+    "DOCUMENT_REVISION": "เอกสาร (Revision)",
+    "TRANSMITTAL": "ใบนำส่ง",
+    "DESIGN_BASIS": "ค่าออกแบบ",
+    "TASK": "งาน",
+    "DAILY_REPORT": "รายงานประจำวัน",
+    "ISSUE": "ปัญหาหน้างาน",
+    "SITE_QUERY": "คำถามหน้างาน",
+    "LAB_JOB": "งานวิเคราะห์",
+    "SAMPLE": "ตัวอย่าง",
+    "QUOTATION": "ใบเสนอราคา"
+  },
+  "CommentStatus": {
+    "NONE": "ความเห็นทั่วไป",
+    "OPEN": "รอดำเนินการ",
+    "RESPONDED": "ตอบแล้ว รอปิด",
+    "CLOSED": "ปิดแล้ว"
+  },
+  "ComplianceStatus": {
+    "PASS": "ผ่านเกณฑ์",
+    "FAIL": "ไม่ผ่านเกณฑ์",
+    "NOT_EVALUATED": "ไม่ประเมิน"
+  },
+  "Confidentiality": {
+    "INTERNAL": "ใช้ภายใน",
+    "CLIENT_SHAREABLE": "ส่งลูกค้าได้",
+    "CONFIDENTIAL": "ลับ"
+  },
+  "DailyReportStatus": {
+    "DRAFT": "ร่าง",
+    "SUBMITTED": "ส่งแล้ว",
+    "APPROVED": "อนุมัติแล้ว",
+    "RETURNED": "ตีกลับแก้ไข"
+  },
+  "DeliveryMethod": {
+    "EMAIL_ATTACHMENT": "อีเมลพร้อมไฟล์แนบ",
+    "EMAIL_LINK": "อีเมลพร้อมลิงก์ดาวน์โหลด",
+    "HARD_COPY": "ส่งฉบับพิมพ์",
+    "OTHER": "อื่นๆ"
+  },
+  "DependencyType": {
+    "FS": "เสร็จแล้วจึงเริ่ม (FS)",
+    "SS": "เริ่มพร้อมกัน (SS)",
+    "FF": "เสร็จพร้อมกัน (FF)",
+    "SF": "เริ่มแล้วจึงเสร็จ (SF)"
+  },
+  "DesignBasisStatus": {
+    "DRAFT": "ร่าง",
+    "APPROVED": "อนุมัติแล้ว",
+    "SUPERSEDED": "ถูกแทนที่"
+  },
+  "DesignValueSource": {
+    "ASSUMED": "สมมติฐาน",
+    "MEASURED": "ผลตรวจวัด",
+    "CLIENT_PROVIDED": "ข้อมูลจากลูกค้า",
+    "STANDARD": "ค่ามาตรฐาน/ตำรา",
+    "CALCULATED": "คำนวณ"
+  },
+  "DocumentFileRole": {
+    "PDF_RENDITION": "ไฟล์ PDF",
+    "NATIVE": "ไฟล์ต้นฉบับ",
+    "SUPPORTING": "ไฟล์ประกอบ"
+  },
+  "DocumentSource": {
+    "INTERNAL": "จัดทำภายใน",
+    "EXTERNAL": "ได้รับจากภายนอก"
+  },
+  "DocumentStatus": {
+    "ACTIVE": "ใช้งาน",
+    "ON_HOLD": "ระงับชั่วคราว",
+    "CANCELLED": "ยกเลิก",
+    "SUPERSEDED": "ถูกแทนที่"
+  },
+  "EventResult": {
+    "PASS": "ผ่าน",
+    "FAIL": "ไม่ผ่าน"
+  },
+  "FileStatus": {
+    "PENDING_UPLOAD": "รออัปโหลด",
+    "PROCESSING": "กำลังประมวลผล",
+    "AVAILABLE": "พร้อมใช้งาน",
+    "REJECTED": "ไฟล์ไม่ผ่านการตรวจ",
+    "DELETED": "ลบแล้ว"
+  },
+  "InspectionOutcome": {
+    "PASS": "ผ่าน",
+    "FAIL": "ไม่ผ่าน",
+    "CONDITIONAL": "ผ่านแบบมีเงื่อนไข"
+  },
+  "InspectionStatus": {
+    "DRAFT": "ร่าง",
+    "SUBMITTED": "ส่งแล้ว",
+    "APPROVED": "อนุมัติแล้ว",
+    "REJECTED": "ไม่อนุมัติ"
+  },
+  "InstrumentEventType": {
+    "CALIBRATION": "สอบเทียบ",
+    "VERIFICATION": "ทวนสอบ",
+    "MAINTENANCE": "บำรุงรักษา",
+    "REPAIR": "ซ่อม"
+  },
+  "InstrumentStatus": {
+    "IN_SERVICE": "ใช้งาน",
+    "OUT_OF_SERVICE": "งดใช้งาน",
+    "RETIRED": "ปลดระวาง"
+  },
+  "IssueCategory": {
+    "DEFECT": "ข้อบกพร่อง",
+    "SAFETY": "ความปลอดภัย",
+    "QUALITY": "คุณภาพ",
+    "DESIGN": "แบบ/การออกแบบ",
+    "ENVIRONMENT": "สิ่งแวดล้อม",
+    "OTHER": "อื่นๆ"
+  },
+  "IssueSeverity": {
+    "LOW": "ต่ำ",
+    "MEDIUM": "ปานกลาง",
+    "HIGH": "สูง",
+    "CRITICAL": "วิกฤต"
+  },
+  "IssueStatus": {
+    "OPEN": "เปิด",
+    "IN_PROGRESS": "กำลังแก้ไข",
+    "RESOLVED": "แก้ไขแล้ว รอตรวจ",
+    "VERIFIED": "ตรวจแล้ว",
+    "CLOSED": "ปิด",
+    "CANCELLED": "ยกเลิก"
+  },
+  "LabJobStatus": {
+    "DRAFT": "ร่าง",
+    "OPEN": "เปิดงาน",
+    "IN_PROGRESS": "กำลังวิเคราะห์",
+    "COMPLETED": "วิเคราะห์ครบ",
+    "REPORTED": "ออกรายงานแล้ว",
+    "CLOSED": "ปิดงาน",
+    "CANCELLED": "ยกเลิก"
+  },
+  "LabPriority": {
+    "NORMAL": "ปกติ",
+    "URGENT": "เร่งด่วน"
+  },
+  "LicenseBranch": {
+    "CIVIL": "โยธา",
+    "MECHANICAL": "เครื่องกล",
+    "ELECTRICAL_POWER": "ไฟฟ้า งานไฟฟ้ากำลัง",
+    "ELECTRICAL_COMMUNICATION": "ไฟฟ้า งานไฟฟ้าสื่อสาร",
+    "INDUSTRIAL": "อุตสาหการ",
+    "ENVIRONMENTAL": "สิ่งแวดล้อม",
+    "CHEMICAL": "เคมี",
+    "MINING": "เหมืองแร่",
+    "OTHER": "อื่นๆ"
+  },
+  "LicenseLevel": {
+    "ASSOCIATE": "ภาคีวิศวกร",
+    "ASSOCIATE_SPECIAL": "ภาคีวิศวกรพิเศษ",
+    "PROFESSIONAL": "สามัญวิศวกร",
+    "SENIOR": "วุฒิวิศวกร"
+  },
+  "LicenseType": {
+    "ENGINEER": "วิศวกร (กว.)",
+    "ARCHITECT": "สถาปนิก",
+    "OTHER": "อื่นๆ"
+  },
+  "LimitComparator": {
+    "MAX": "ไม่เกิน",
+    "MIN": "ไม่น้อยกว่า",
+    "RANGE": "อยู่ในช่วง",
+    "NOT_DETECTED": "ต้องตรวจไม่พบ",
+    "MAX_INCREASE_OVER_BASELINE": "เพิ่มจากค่าพื้นฐานไม่เกิน",
+    "INFO": "แสดงค่าเท่านั้น"
+  },
+  "LimitEvaluation": {
+    "AUTO": "ประเมินอัตโนมัติ",
+    "MANUAL": "ผู้อนุมัติประเมิน"
+  },
+  "Matrix": {
+    "DRINKING_WATER": "น้ำดื่ม/น้ำประปา",
+    "SURFACE_WATER": "น้ำผิวดิน",
+    "GROUNDWATER": "น้ำใต้ดิน",
+    "WASTEWATER": "น้ำเสีย",
+    "TREATED_WASTEWATER": "น้ำทิ้ง",
+    "SEAWATER": "น้ำทะเล",
+    "SLUDGE": "ตะกอน",
+    "OTHER": "อื่นๆ"
+  },
+  "NotificationChannel": {
+    "IN_APP": "ในระบบ",
+    "EMAIL": "อีเมล",
+    "PUSH": "แจ้งเตือนมือถือ",
+    "LINE": "LINE"
+  },
+  "NumberedEntity": {
+    "PROJECT": "โครงการ",
+    "DOCUMENT": "เอกสาร",
+    "TRANSMITTAL": "ใบนำส่ง",
+    "ISSUE": "ปัญหาหน้างาน",
+    "INSPECTION": "การตรวจงาน",
+    "SITE_QUERY": "คำถามหน้างาน",
+    "LAB_JOB": "งานวิเคราะห์",
+    "SAMPLE": "ตัวอย่าง",
+    "ANALYSIS_BATCH": "ชุดการวิเคราะห์",
+    "TEST_REPORT": "ใบรายงานผล",
+    "SAMPLING_TRIP": "ทริปเก็บตัวอย่าง",
+    "QUOTATION": "ใบเสนอราคา",
+    "BILLING": "การวางบิล"
+  },
+  "ParameterCategory": {
+    "PHYSICAL": "กายภาพ",
+    "INORGANIC": "อนินทรีย์",
+    "ORGANIC": "อินทรีย์",
+    "NUTRIENT": "สารอาหาร (N, P)",
+    "METAL": "โลหะหนัก",
+    "MICROBIOLOGICAL": "จุลชีววิทยา",
+    "OTHER": "อื่นๆ"
+  },
+  "PassFail": {
+    "PASS": "ผ่าน",
+    "FAIL": "ไม่ผ่าน",
+    "NA": "ไม่เกี่ยวข้อง"
+  },
+  "PaymentMilestoneStatus": {
+    "PENDING": "ยังไม่ถึงงวด",
+    "SUBMITTED": "ส่งมอบงานแล้ว",
+    "ACCEPTED": "ตรวจรับแล้ว",
+    "INVOICED": "วางบิลแล้ว",
+    "PAID": "รับชำระแล้ว",
+    "CANCELLED": "ยกเลิก"
+  },
+  "ProjectRole": {
+    "PROJECT_MANAGER": "ผู้จัดการโครงการ",
+    "DESIGN_MANAGER": "ผู้จัดการงานออกแบบ",
+    "ENGINEER": "วิศวกร",
+    "DRAFTER": "ช่างเขียนแบบ",
+    "DOCUMENT_CONTROLLER": "เจ้าหน้าที่ควบคุมเอกสาร",
+    "SITE_ENGINEER": "วิศวกรสนาม",
+    "FOREMAN": "โฟร์แมน",
+    "VIEWER": "ผู้ดูอย่างเดียว"
+  },
+  "ProjectStatus": {
+    "PLANNING": "วางแผน",
+    "ACTIVE": "ดำเนินการ",
+    "ON_HOLD": "ระงับชั่วคราว",
+    "COMPLETED": "แล้วเสร็จ",
+    "CLOSED": "ปิดโครงการ",
+    "CANCELLED": "ยกเลิก"
+  },
+  "ProjectType": {
+    "DESIGN": "ออกแบบ",
+    "DESIGN_BUILD": "ออกแบบและก่อสร้าง",
+    "CONSTRUCTION": "ก่อสร้าง/ติดตั้ง",
+    "OPERATION_MAINTENANCE": "เดินระบบและบำรุงรักษา",
+    "MONITORING": "ตรวจวัดคุณภาพน้ำ",
+    "CONSULTING": "ที่ปรึกษา",
+    "OTHER": "อื่นๆ"
+  },
+  "PurposeCode": {
+    "FI": "เพื่อทราบ",
+    "FR": "เพื่อพิจารณา",
+    "FA": "เพื่ออนุมัติ",
+    "FT": "เพื่อประกวดราคา",
+    "FC": "เพื่อก่อสร้าง",
+    "AB": "แบบก่อสร้างจริง"
+  },
+  "QcType": {
+    "METHOD_BLANK": "Method blank",
+    "LCS": "LCS",
+    "LCS_DUPLICATE": "LCS ซ้ำ",
+    "SAMPLE_DUPLICATE": "ตัวอย่างซ้ำ",
+    "MATRIX_SPIKE": "Matrix spike",
+    "MATRIX_SPIKE_DUPLICATE": "Matrix spike ซ้ำ",
+    "CALIBRATION_CHECK": "ตรวจสอบ calibration"
+  },
+  "QuotationStatus": {
+    "DRAFT": "ร่าง",
+    "PENDING_APPROVAL": "รออนุมัติ",
+    "APPROVED": "อนุมัติแล้ว",
+    "SENT": "ส่งลูกค้าแล้ว",
+    "ACCEPTED": "ลูกค้าตอบรับ",
+    "REJECTED": "ลูกค้าปฏิเสธ",
+    "EXPIRED": "หมดอายุ",
+    "CANCELLED": "ยกเลิก",
+    "SUPERSEDED": "มีฉบับใหม่แทน"
+  },
+  "QuotationType": {
+    "LAB": "งานวิเคราะห์",
+    "DESIGN": "งานออกแบบ",
+    "CONSTRUCTION": "งานก่อสร้าง",
+    "CONSULTING": "งานที่ปรึกษา",
+    "OTHER": "อื่นๆ"
+  },
+  "ReceiptCondition": {
+    "ACCEPTABLE": "สภาพปกติ",
+    "ACCEPTED_WITH_DEVIATION": "รับโดยมีข้อสังเกต",
+    "REJECTED": "ไม่รับ"
+  },
+  "ResultQualifier": {
+    "NONE": "–",
+    "LESS_THAN": "น้อยกว่า (<)",
+    "GREATER_THAN": "มากกว่า (>)",
+    "NOT_DETECTED": "ตรวจไม่พบ (ND)"
+  },
+  "ReviewCycleStatus": {
+    "IN_PROGRESS": "กำลังตรวจ",
+    "APPROVED": "ผ่าน",
+    "REJECTED": "ตีกลับ",
+    "CANCELLED": "ยกเลิก"
+  },
+  "ReviewStepKind": {
+    "CHECK": "ตรวจสอบ",
+    "REVIEW": "ทบทวน",
+    "APPROVE": "อนุมัติ"
+  },
+  "ReviewStepStatus": {
+    "PENDING": "รอคิว",
+    "ACTIVE": "รอดำเนินการ",
+    "APPROVED": "ผ่าน",
+    "APPROVED_WITH_COMMENTS": "ผ่านตามความเห็น",
+    "REJECTED": "ตีกลับ",
+    "SKIPPED": "ข้าม",
+    "CANCELLED": "ยกเลิก"
+  },
+  "RevisionScheme": {
+    "ALPHA_NUMERIC": "A, B, C → 0, 1, 2",
+    "ISO19650": "P01, P02 → C01, C02"
+  },
+  "RevisionStatus": {
+    "DRAFT": "ร่าง",
+    "IN_REVIEW": "กำลังตรวจ",
+    "APPROVED": "อนุมัติแล้ว",
+    "ISSUED": "ส่งออกแล้ว",
+    "SUPERSEDED": "ฉบับเก่า",
+    "VOID": "ยกเลิก"
+  },
+  "RoundingMode": {
+    "HALF_UP": "ปัดครึ่งขึ้น",
+    "HALF_EVEN": "ปัดครึ่งเข้าหาเลขคู่"
+  },
+  "SampleStatus": {
+    "REGISTERED": "ลงทะเบียนแล้ว",
+    "RECEIVED": "รับตัวอย่างแล้ว",
+    "IN_ANALYSIS": "กำลังวิเคราะห์",
+    "ANALYSIS_COMPLETE": "วิเคราะห์ครบ",
+    "REPORTED": "ออกรายงานแล้ว",
+    "REJECTED": "ปฏิเสธการรับ",
+    "CANCELLED": "ยกเลิก",
+    "DISPOSED": "ทำลายแล้ว"
+  },
+  "SampleTestStatus": {
+    "PENDING": "รอวิเคราะห์",
+    "IN_PROGRESS": "กำลังวิเคราะห์",
+    "RESULT_ENTERED": "บันทึกผลแล้ว",
+    "REVIEWED": "ทบทวนแล้ว",
+    "APPROVED": "อนุมัติผลแล้ว",
+    "CANCELLED": "ยกเลิก"
+  },
+  "SamplingPointType": {
+    "RAW_WATER": "น้ำดิบ",
+    "INFLUENT": "น้ำเสียเข้าระบบ",
+    "EFFLUENT": "น้ำทิ้ง",
+    "TREATED_WATER": "น้ำผ่านการปรับปรุง",
+    "TAP_WATER": "น้ำประปา/น้ำใช้",
+    "SURFACE_WATER": "น้ำผิวดิน",
+    "GROUNDWATER": "น้ำใต้ดิน",
+    "PROCESS": "น้ำในกระบวนการ",
+    "SLUDGE": "ตะกอน",
+    "OTHER": "อื่นๆ"
+  },
+  "SamplingStopStatus": {
+    "PENDING": "ยังไม่เก็บ",
+    "SAMPLED": "เก็บแล้ว",
+    "SKIPPED": "ข้าม"
+  },
+  "SamplingTripStatus": {
+    "PLANNED": "วางแผน",
+    "IN_PROGRESS": "กำลังเก็บตัวอย่าง",
+    "COMPLETED": "เสร็จ",
+    "CANCELLED": "ยกเลิก"
+  },
+  "SequenceReset": {
+    "NEVER": "ไม่เริ่มนับใหม่",
+    "YEARLY": "เริ่มนับใหม่ทุกปี",
+    "MONTHLY": "เริ่มนับใหม่ทุกเดือน"
+  },
+  "SignatureMethod": {
+    "PASSWORD": "รหัสผ่าน",
+    "SIGNING_PIN": "PIN ลงนาม",
+    "SSO_REAUTH": "ยืนยันตัวตนผ่าน SSO"
+  },
+  "SiteQueryStatus": {
+    "OPEN": "เปิด",
+    "ANSWERED": "ตอบแล้ว",
+    "CLOSED": "ปิด",
+    "CANCELLED": "ยกเลิก"
+  },
+  "SiteType": {
+    "FACTORY": "โรงงาน",
+    "BUILDING": "อาคาร",
+    "INDUSTRIAL_ESTATE": "นิคมอุตสาหกรรม",
+    "MUNICIPAL": "ชุมชน/เทศบาล",
+    "WATER_TREATMENT_PLANT": "ระบบผลิตน้ำประปา",
+    "WASTEWATER_TREATMENT_PLANT": "ระบบบำบัดน้ำเสีย",
+    "NATURAL_WATER_BODY": "แหล่งน้ำธรรมชาติ",
+    "OTHER": "อื่นๆ"
+  },
+  "StandardCategory": {
+    "INDUSTRIAL_EFFLUENT": "น้ำทิ้งโรงงาน",
+    "BUILDING_EFFLUENT": "น้ำทิ้งอาคาร",
+    "INDUSTRIAL_ESTATE": "นิคมอุตสาหกรรม",
+    "DRINKING_WATER": "น้ำบริโภค/ประปา",
+    "SURFACE_WATER": "แหล่งน้ำผิวดิน",
+    "GROUNDWATER": "น้ำใต้ดิน",
+    "CUSTOM": "กำหนดเอง"
+  },
+  "TaskStatus": {
+    "NOT_STARTED": "ยังไม่เริ่ม",
+    "IN_PROGRESS": "กำลังทำ",
+    "ON_HOLD": "ระงับ",
+    "COMPLETED": "เสร็จ",
+    "CANCELLED": "ยกเลิก"
+  },
+  "TaskType": {
+    "PHASE": "ช่วงงาน",
+    "TASK": "งาน",
+    "MILESTONE": "หมุดหมาย"
+  },
+  "TestReportStatus": {
+    "DRAFT": "ร่าง",
+    "IN_REVIEW": "รอลงนาม",
+    "ISSUED": "ออกแล้ว",
+    "SUPERSEDED": "ถูกแทนที่ด้วยฉบับแก้ไข",
+    "CANCELLED": "ยกเลิก"
+  },
+  "TimesheetStatus": {
+    "DRAFT": "ร่าง",
+    "SUBMITTED": "ส่งแล้ว",
+    "APPROVED": "อนุมัติแล้ว",
+    "REJECTED": "ตีกลับ"
+  },
+  "TransmittalFormat": {
+    "PDF": "PDF",
+    "NATIVE": "ไฟล์ต้นฉบับ",
+    "PDF_AND_NATIVE": "PDF และไฟล์ต้นฉบับ",
+    "HARD_COPY": "ฉบับพิมพ์"
+  },
+  "TransmittalStatus": {
+    "DRAFT": "ร่าง",
+    "SENT": "ส่งแล้ว",
+    "ACKNOWLEDGED": "ลูกค้ารับแล้ว",
+    "CANCELLED": "ยกเลิก"
+  },
+  "Weather": {
+    "SUNNY": "แดดออก",
+    "CLOUDY": "มีเมฆ",
+    "RAIN": "ฝนตก",
+    "HEAVY_RAIN": "ฝนตกหนัก",
+    "STORM": "พายุ"
+  }
+}

@@ -23,9 +23,10 @@
     "test": "turbo run test",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "check:spec": "node tools/check-enum-labels.mjs && node tools/check-spec-refs.mjs",
+    "check:spec": "node tools/check-enum-labels.mjs && node tools/check-spec-refs.mjs && node tools/gen-i18n-enums.mjs --check",
     "api:contract": "pnpm --filter api build && node apps/api/dist/openapi.js && pnpm --filter @wems/api-contract generate",
-    "api:contract:check": "pnpm api:contract && git diff --exit-code -- packages/api-contract"
+    "api:contract:check": "pnpm api:contract && git diff --exit-code -- packages/api-contract",
+    "gen:enums": "node tools/gen-i18n-enums.mjs"
   },
   "devDependencies": {
     "@wems/config": "workspace:*",

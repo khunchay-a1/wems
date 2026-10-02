@@ -1,0 +1,536 @@
+{
+  "ActorType": {
+    "USER": "User",
+    "SYSTEM": "System",
+    "PUBLIC_LINK": "Public link"
+  },
+  "AttachmentOwnerType": {
+    "PROJECT": "Project",
+    "CLIENT": "Client",
+    "SITE": "Site",
+    "TRANSMITTAL": "Transmittal",
+    "DESIGN_BASIS": "Design basis",
+    "COMMENT": "Comment",
+    "DAILY_REPORT": "Daily report",
+    "ISSUE": "Issue",
+    "INSPECTION": "Inspection",
+    "INSPECTION_RESULT": "Inspection result",
+    "SITE_QUERY": "Site query",
+    "LAB_JOB": "Lab job",
+    "SAMPLE": "Sample",
+    "SAMPLING_STOP": "Sampling stop",
+    "INSTRUMENT_EVENT": "Instrument event",
+    "QUOTATION": "Quotation"
+  },
+  "BatchStatus": {
+    "OPEN": "Open",
+    "COMPLETED": "Completed",
+    "QC_FAILED": "Qc failed",
+    "APPROVED": "Approved"
+  },
+  "BillingStatus": {
+    "DRAFT": "Draft",
+    "REQUESTED": "Requested",
+    "INVOICED": "Invoiced",
+    "PAID": "Paid",
+    "CANCELLED": "Cancelled"
+  },
+  "BuildingClass": {
+    "A": "Class A (ก)",
+    "B": "Class B (ข)",
+    "C": "Class C (ค)",
+    "D": "Class D (ง)",
+    "E": "Class E (จ)"
+  },
+  "CalendarPreference": {
+    "BUDDHIST": "Buddhist Era (B.E.)",
+    "GREGORIAN": "Common Era (A.D.)"
+  },
+  "ChangeOp": {
+    "UPSERT": "Upsert",
+    "DELETE": "Delete"
+  },
+  "ChecklistResponseType": {
+    "PASS_FAIL_NA": "Pass fail na",
+    "NUMBER": "Number",
+    "TEXT": "Text",
+    "PHOTO": "Photo"
+  },
+  "ClientPlatform": {
+    "WEB": "Web",
+    "ANDROID": "Android",
+    "IOS": "iOS"
+  },
+  "ClientReturnCode": {
+    "CODE_1": "Code 1 · Approved",
+    "CODE_2": "Code 2 · Approved with comments",
+    "CODE_3": "Code 3 · Revise and resubmit",
+    "CODE_4": "Code 4 · Rejected",
+    "INFO": "Received for information"
+  },
+  "ClientType": {
+    "COMPANY": "Company",
+    "GOVERNMENT": "Government",
+    "STATE_ENTERPRISE": "State enterprise",
+    "LOCAL_AUTHORITY": "Local authority",
+    "INDIVIDUAL": "Individual",
+    "OTHER": "Other"
+  },
+  "CommentOwnerType": {
+    "DOCUMENT_REVISION": "Document revision",
+    "TRANSMITTAL": "Transmittal",
+    "DESIGN_BASIS": "Design basis",
+    "TASK": "Task",
+    "DAILY_REPORT": "Daily report",
+    "ISSUE": "Issue",
+    "SITE_QUERY": "Site query",
+    "LAB_JOB": "Lab job",
+    "SAMPLE": "Sample",
+    "QUOTATION": "Quotation"
+  },
+  "CommentStatus": {
+    "NONE": "None",
+    "OPEN": "Open",
+    "RESPONDED": "Responded",
+    "CLOSED": "Closed"
+  },
+  "ComplianceStatus": {
+    "PASS": "Pass",
+    "FAIL": "Fail",
+    "NOT_EVALUATED": "Not evaluated"
+  },
+  "Confidentiality": {
+    "INTERNAL": "Internal",
+    "CLIENT_SHAREABLE": "Client shareable",
+    "CONFIDENTIAL": "Confidential"
+  },
+  "DailyReportStatus": {
+    "DRAFT": "Draft",
+    "SUBMITTED": "Submitted",
+    "APPROVED": "Approved",
+    "RETURNED": "Returned"
+  },
+  "DeliveryMethod": {
+    "EMAIL_ATTACHMENT": "Email attachment",
+    "EMAIL_LINK": "Email link",
+    "HARD_COPY": "Hard copy",
+    "OTHER": "Other"
+  },
+  "DependencyType": {
+    "FS": "Finish-to-Start",
+    "SS": "Start-to-Start",
+    "FF": "Finish-to-Finish",
+    "SF": "Start-to-Finish"
+  },
+  "DesignBasisStatus": {
+    "DRAFT": "Draft",
+    "APPROVED": "Approved",
+    "SUPERSEDED": "Superseded"
+  },
+  "DesignValueSource": {
+    "ASSUMED": "Assumed",
+    "MEASURED": "Measured",
+    "CLIENT_PROVIDED": "Client provided",
+    "STANDARD": "Standard",
+    "CALCULATED": "Calculated"
+  },
+  "DocumentFileRole": {
+    "PDF_RENDITION": "PDF rendition",
+    "NATIVE": "Native",
+    "SUPPORTING": "Supporting"
+  },
+  "DocumentSource": {
+    "INTERNAL": "Internal",
+    "EXTERNAL": "External"
+  },
+  "DocumentStatus": {
+    "ACTIVE": "Active",
+    "ON_HOLD": "On hold",
+    "CANCELLED": "Cancelled",
+    "SUPERSEDED": "Superseded"
+  },
+  "EventResult": {
+    "PASS": "Pass",
+    "FAIL": "Fail"
+  },
+  "FileStatus": {
+    "PENDING_UPLOAD": "Pending upload",
+    "PROCESSING": "Processing",
+    "AVAILABLE": "Available",
+    "REJECTED": "Rejected",
+    "DELETED": "Deleted"
+  },
+  "InspectionOutcome": {
+    "PASS": "Pass",
+    "FAIL": "Fail",
+    "CONDITIONAL": "Conditional"
+  },
+  "InspectionStatus": {
+    "DRAFT": "Draft",
+    "SUBMITTED": "Submitted",
+    "APPROVED": "Approved",
+    "REJECTED": "Rejected"
+  },
+  "InstrumentEventType": {
+    "CALIBRATION": "Calibration",
+    "VERIFICATION": "Verification",
+    "MAINTENANCE": "Maintenance",
+    "REPAIR": "Repair"
+  },
+  "InstrumentStatus": {
+    "IN_SERVICE": "In service",
+    "OUT_OF_SERVICE": "Out of service",
+    "RETIRED": "Retired"
+  },
+  "IssueCategory": {
+    "DEFECT": "Defect",
+    "SAFETY": "Safety",
+    "QUALITY": "Quality",
+    "DESIGN": "Design",
+    "ENVIRONMENT": "Environment",
+    "OTHER": "Other"
+  },
+  "IssueSeverity": {
+    "LOW": "Low",
+    "MEDIUM": "Medium",
+    "HIGH": "High",
+    "CRITICAL": "Critical"
+  },
+  "IssueStatus": {
+    "OPEN": "Open",
+    "IN_PROGRESS": "In progress",
+    "RESOLVED": "Resolved",
+    "VERIFIED": "Verified",
+    "CLOSED": "Closed",
+    "CANCELLED": "Cancelled"
+  },
+  "LabJobStatus": {
+    "DRAFT": "Draft",
+    "OPEN": "Open",
+    "IN_PROGRESS": "In progress",
+    "COMPLETED": "Completed",
+    "REPORTED": "Reported",
+    "CLOSED": "Closed",
+    "CANCELLED": "Cancelled"
+  },
+  "LabPriority": {
+    "NORMAL": "Normal",
+    "URGENT": "Urgent"
+  },
+  "LicenseBranch": {
+    "CIVIL": "Civil",
+    "MECHANICAL": "Mechanical",
+    "ELECTRICAL_POWER": "Electrical power",
+    "ELECTRICAL_COMMUNICATION": "Electrical communication",
+    "INDUSTRIAL": "Industrial",
+    "ENVIRONMENTAL": "Environmental",
+    "CHEMICAL": "Chemical",
+    "MINING": "Mining",
+    "OTHER": "Other"
+  },
+  "LicenseLevel": {
+    "ASSOCIATE": "Associate Engineer",
+    "ASSOCIATE_SPECIAL": "Special Associate Engineer",
+    "PROFESSIONAL": "Professional Engineer",
+    "SENIOR": "Senior Professional Engineer"
+  },
+  "LicenseType": {
+    "ENGINEER": "Engineer",
+    "ARCHITECT": "Architect",
+    "OTHER": "Other"
+  },
+  "LimitComparator": {
+    "MAX": "Max",
+    "MIN": "Min",
+    "RANGE": "Range",
+    "NOT_DETECTED": "Not detected",
+    "MAX_INCREASE_OVER_BASELINE": "Max increase over baseline",
+    "INFO": "Info"
+  },
+  "LimitEvaluation": {
+    "AUTO": "Auto",
+    "MANUAL": "Manual"
+  },
+  "Matrix": {
+    "DRINKING_WATER": "Drinking water",
+    "SURFACE_WATER": "Surface water",
+    "GROUNDWATER": "Groundwater",
+    "WASTEWATER": "Wastewater",
+    "TREATED_WASTEWATER": "Treated wastewater",
+    "SEAWATER": "Seawater",
+    "SLUDGE": "Sludge",
+    "OTHER": "Other"
+  },
+  "NotificationChannel": {
+    "IN_APP": "In app",
+    "EMAIL": "Email",
+    "PUSH": "Push",
+    "LINE": "Line"
+  },
+  "NumberedEntity": {
+    "PROJECT": "Project",
+    "DOCUMENT": "Document",
+    "TRANSMITTAL": "Transmittal",
+    "ISSUE": "Issue",
+    "INSPECTION": "Inspection",
+    "SITE_QUERY": "Site query",
+    "LAB_JOB": "Lab job",
+    "SAMPLE": "Sample",
+    "ANALYSIS_BATCH": "Analysis batch",
+    "TEST_REPORT": "Test report",
+    "SAMPLING_TRIP": "Sampling trip",
+    "QUOTATION": "Quotation",
+    "BILLING": "Billing"
+  },
+  "ParameterCategory": {
+    "PHYSICAL": "Physical",
+    "INORGANIC": "Inorganic",
+    "ORGANIC": "Organic",
+    "NUTRIENT": "Nutrient",
+    "METAL": "Metal",
+    "MICROBIOLOGICAL": "Microbiological",
+    "OTHER": "Other"
+  },
+  "PassFail": {
+    "PASS": "Pass",
+    "FAIL": "Fail",
+    "NA": "Na"
+  },
+  "PaymentMilestoneStatus": {
+    "PENDING": "Pending",
+    "SUBMITTED": "Submitted",
+    "ACCEPTED": "Accepted",
+    "INVOICED": "Invoiced",
+    "PAID": "Paid",
+    "CANCELLED": "Cancelled"
+  },
+  "ProjectRole": {
+    "PROJECT_MANAGER": "Project manager",
+    "DESIGN_MANAGER": "Design manager",
+    "ENGINEER": "Engineer",
+    "DRAFTER": "Drafter",
+    "DOCUMENT_CONTROLLER": "Document controller",
+    "SITE_ENGINEER": "Site engineer",
+    "FOREMAN": "Foreman",
+    "VIEWER": "Viewer"
+  },
+  "ProjectStatus": {
+    "PLANNING": "Planning",
+    "ACTIVE": "Active",
+    "ON_HOLD": "On hold",
+    "COMPLETED": "Completed",
+    "CLOSED": "Closed",
+    "CANCELLED": "Cancelled"
+  },
+  "ProjectType": {
+    "DESIGN": "Design",
+    "DESIGN_BUILD": "Design build",
+    "CONSTRUCTION": "Construction",
+    "OPERATION_MAINTENANCE": "Operation maintenance",
+    "MONITORING": "Monitoring",
+    "CONSULTING": "Consulting",
+    "OTHER": "Other"
+  },
+  "PurposeCode": {
+    "FI": "For Information",
+    "FR": "For Review",
+    "FA": "For Approval",
+    "FT": "For Tender",
+    "FC": "For Construction",
+    "AB": "As-Built"
+  },
+  "QcType": {
+    "METHOD_BLANK": "Method blank",
+    "LCS": "Laboratory control sample (LCS)",
+    "LCS_DUPLICATE": "LCS duplicate",
+    "SAMPLE_DUPLICATE": "Sample duplicate",
+    "MATRIX_SPIKE": "Matrix spike",
+    "MATRIX_SPIKE_DUPLICATE": "Matrix spike duplicate",
+    "CALIBRATION_CHECK": "Calibration check"
+  },
+  "QuotationStatus": {
+    "DRAFT": "Draft",
+    "PENDING_APPROVAL": "Pending approval",
+    "APPROVED": "Approved",
+    "SENT": "Sent",
+    "ACCEPTED": "Accepted",
+    "REJECTED": "Rejected",
+    "EXPIRED": "Expired",
+    "CANCELLED": "Cancelled",
+    "SUPERSEDED": "Superseded"
+  },
+  "QuotationType": {
+    "LAB": "Lab",
+    "DESIGN": "Design",
+    "CONSTRUCTION": "Construction",
+    "CONSULTING": "Consulting",
+    "OTHER": "Other"
+  },
+  "ReceiptCondition": {
+    "ACCEPTABLE": "Acceptable",
+    "ACCEPTED_WITH_DEVIATION": "Accepted with deviation",
+    "REJECTED": "Rejected"
+  },
+  "ResultQualifier": {
+    "NONE": "–",
+    "LESS_THAN": "Less than (<)",
+    "GREATER_THAN": "Greater than (>)",
+    "NOT_DETECTED": "Not detected (ND)"
+  },
+  "ReviewCycleStatus": {
+    "IN_PROGRESS": "In progress",
+    "APPROVED": "Approved",
+    "REJECTED": "Rejected",
+    "CANCELLED": "Cancelled"
+  },
+  "ReviewStepKind": {
+    "CHECK": "Check",
+    "REVIEW": "Review",
+    "APPROVE": "Approve"
+  },
+  "ReviewStepStatus": {
+    "PENDING": "Pending",
+    "ACTIVE": "Active",
+    "APPROVED": "Approved",
+    "APPROVED_WITH_COMMENTS": "Approved with comments",
+    "REJECTED": "Rejected",
+    "SKIPPED": "Skipped",
+    "CANCELLED": "Cancelled"
+  },
+  "RevisionScheme": {
+    "ALPHA_NUMERIC": "A, B, C → 0, 1, 2",
+    "ISO19650": "P01, P02 → C01, C02 (ISO 19650)"
+  },
+  "RevisionStatus": {
+    "DRAFT": "Draft",
+    "IN_REVIEW": "In review",
+    "APPROVED": "Approved",
+    "ISSUED": "Issued",
+    "SUPERSEDED": "Superseded",
+    "VOID": "Void"
+  },
+  "RoundingMode": {
+    "HALF_UP": "Half up",
+    "HALF_EVEN": "Half even"
+  },
+  "SampleStatus": {
+    "REGISTERED": "Registered",
+    "RECEIVED": "Received",
+    "IN_ANALYSIS": "In analysis",
+    "ANALYSIS_COMPLETE": "Analysis complete",
+    "REPORTED": "Reported",
+    "REJECTED": "Rejected",
+    "CANCELLED": "Cancelled",
+    "DISPOSED": "Disposed"
+  },
+  "SampleTestStatus": {
+    "PENDING": "Pending",
+    "IN_PROGRESS": "In progress",
+    "RESULT_ENTERED": "Result entered",
+    "REVIEWED": "Reviewed",
+    "APPROVED": "Approved",
+    "CANCELLED": "Cancelled"
+  },
+  "SamplingPointType": {
+    "RAW_WATER": "Raw water",
+    "INFLUENT": "Influent",
+    "EFFLUENT": "Effluent",
+    "TREATED_WATER": "Treated water",
+    "TAP_WATER": "Tap water",
+    "SURFACE_WATER": "Surface water",
+    "GROUNDWATER": "Groundwater",
+    "PROCESS": "Process",
+    "SLUDGE": "Sludge",
+    "OTHER": "Other"
+  },
+  "SamplingStopStatus": {
+    "PENDING": "Pending",
+    "SAMPLED": "Sampled",
+    "SKIPPED": "Skipped"
+  },
+  "SamplingTripStatus": {
+    "PLANNED": "Planned",
+    "IN_PROGRESS": "In progress",
+    "COMPLETED": "Completed",
+    "CANCELLED": "Cancelled"
+  },
+  "SequenceReset": {
+    "NEVER": "Never",
+    "YEARLY": "Yearly",
+    "MONTHLY": "Monthly"
+  },
+  "SignatureMethod": {
+    "PASSWORD": "Password",
+    "SIGNING_PIN": "Signing pin",
+    "SSO_REAUTH": "Sso reauth"
+  },
+  "SiteQueryStatus": {
+    "OPEN": "Open",
+    "ANSWERED": "Answered",
+    "CLOSED": "Closed",
+    "CANCELLED": "Cancelled"
+  },
+  "SiteType": {
+    "FACTORY": "Factory",
+    "BUILDING": "Building",
+    "INDUSTRIAL_ESTATE": "Industrial estate",
+    "MUNICIPAL": "Municipal",
+    "WATER_TREATMENT_PLANT": "Water treatment plant",
+    "WASTEWATER_TREATMENT_PLANT": "Wastewater treatment plant",
+    "NATURAL_WATER_BODY": "Natural water body",
+    "OTHER": "Other"
+  },
+  "StandardCategory": {
+    "INDUSTRIAL_EFFLUENT": "Industrial effluent",
+    "BUILDING_EFFLUENT": "Building effluent",
+    "INDUSTRIAL_ESTATE": "Industrial estate",
+    "DRINKING_WATER": "Drinking water",
+    "SURFACE_WATER": "Surface water",
+    "GROUNDWATER": "Groundwater",
+    "CUSTOM": "Custom"
+  },
+  "TaskStatus": {
+    "NOT_STARTED": "Not started",
+    "IN_PROGRESS": "In progress",
+    "ON_HOLD": "On hold",
+    "COMPLETED": "Completed",
+    "CANCELLED": "Cancelled"
+  },
+  "TaskType": {
+    "PHASE": "Phase",
+    "TASK": "Task",
+    "MILESTONE": "Milestone"
+  },
+  "TestReportStatus": {
+    "DRAFT": "Draft",
+    "IN_REVIEW": "In review",
+    "ISSUED": "Issued",
+    "SUPERSEDED": "Superseded",
+    "CANCELLED": "Cancelled"
+  },
+  "TimesheetStatus": {
+    "DRAFT": "Draft",
+    "SUBMITTED": "Submitted",
+    "APPROVED": "Approved",
+    "REJECTED": "Rejected"
+  },
+  "TransmittalFormat": {
+    "PDF": "PDF",
+    "NATIVE": "Native",
+    "PDF_AND_NATIVE": "PDF and native",
+    "HARD_COPY": "Hard copy"
+  },
+  "TransmittalStatus": {
+    "DRAFT": "Draft",
+    "SENT": "Sent",
+    "ACKNOWLEDGED": "Acknowledged",
+    "CANCELLED": "Cancelled"
+  },
+  "Weather": {
+    "SUNNY": "Sunny",
+    "CLOUDY": "Cloudy",
+    "RAIN": "Rain",
+    "HEAVY_RAIN": "Heavy rain",
+    "STORM": "Storm"
+  }
+}
