@@ -6,11 +6,14 @@ import { HealthModule } from '../common/health/health.module';
 import { CoreModule } from '../common/ids/ids.module';
 import { LoggerModule } from '../common/logging/logger.module';
 import { PrismaModule } from '../common/prisma/prisma.module';
+import { FilesCoreModule } from '../common/files/files.module';
 import { QueueModule } from '../common/queue/queue.module';
+import { RealtimeModule } from '../common/realtime/realtime.module';
 import { SettingsModule } from '../common/settings/settings.module';
 import { EventDispatcher } from './event-dispatcher.service';
 import { OutboxRelayService } from './outbox-relay.service';
 import { QueueWorkersService } from './queue-workers.service';
+import { FileProcessingHandler } from './handlers/file-processing.handler';
 import { CleanupTask } from './tasks/cleanup.task';
 
 /** Background process: outbox relay, BullMQ consumers and scheduled jobs (docs/02-architecture.md §6). */
@@ -24,9 +27,17 @@ import { CleanupTask } from './tasks/cleanup.task';
     SettingsModule,
     HealthModule,
     QueueModule,
+    RealtimeModule,
+    FilesCoreModule,
     DiscoveryModule,
   ],
-  providers: [EventDispatcher, OutboxRelayService, QueueWorkersService, CleanupTask],
+  providers: [
+    EventDispatcher,
+    OutboxRelayService,
+    QueueWorkersService,
+    CleanupTask,
+    FileProcessingHandler,
+  ],
   exports: [EventDispatcher, OutboxRelayService],
 })
 export class WorkerModule {}

@@ -5,6 +5,7 @@ import { AuditService, diffFields } from '../../../common/audit/audit.service';
 import type { AuthUser } from '../../../common/auth/auth-user';
 import { checkPasswordPolicy, hashSecret } from '../../../common/auth/password';
 import { Problem } from '../../../common/errors/problem';
+import { FileAccessRegistry } from '../../../common/files/file-access.registry';
 import { pageArgs, parseSort, type Page } from '../../../common/http/pagination';
 import { IdGenerator } from '../../../common/ids/id-generator';
 import {
@@ -44,7 +45,22 @@ export class UsersService {
     private readonly ids: IdGenerator,
     private readonly clock: ClockService,
     private readonly auth: AuthService,
-  ) {}
+    registry: FileAccessRegistry,
+  ) {
+    // License scans and signature images: the owner and user managers may read them
+    registry.registerReader(async (user, fileId) => {
+      const lic = await this.prisma.professionalLicense.findFirst({
+        where: { fileId },
+        select: { userId: true },
+      });
+      if (lic) return lic.userId === user.id || user.permissions.has('user.manage');
+      const owner = await this.prisma.user.findFirst({
+        where: { signatureImageFileId: fileId },
+        select: { id: true },
+      });
+      return !!owner && (owner.id === user.id || user.permissions.has('user.manage'));
+    });
+  }
 
   async list(q: ListUsersQueryDto): Promise<Page<UserDto>> {
     const { skip, take, page, pageSize } = pageArgs(q);

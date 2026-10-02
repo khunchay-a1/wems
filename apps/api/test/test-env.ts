@@ -11,4 +11,9 @@ export function applyTestEnv(): void {
   process.env.REDIS_URL ??= 'redis://localhost:6379/15';
   process.env.LOG_LEVEL = 'silent';
   process.env.COOKIE_SECURE = 'false';
+  process.env.S3_ENDPOINT ??= 'http://127.0.0.1:9000';
+  process.env.S3_BUCKET = process.env.TEST_S3_BUCKET ?? 'wems-test';
+  process.env.S3_ACCESS_KEY ??= 'wemsdev';
+  process.env.S3_SECRET_KEY ??= 'wemsdev-secret-change-me';
+  process.env.S3_FORCE_PATH_STYLE = 'true';
 }
