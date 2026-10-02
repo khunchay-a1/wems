@@ -1,0 +1,105 @@
+<style>
+  @font-face {
+    font-family: 'Sarabun';
+    src: url('Sarabun-Regular.ttf') format('truetype');
+    font-weight: 400;
+  }
+  @font-face {
+    font-family: 'Sarabun';
+    src: url('Sarabun-Bold.ttf') format('truetype');
+    font-weight: 700;
+  }
+  @page {
+    size: A4;
+  }
+  * {
+    box-sizing: border-box;
+  }
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    font-family: 'Sarabun', sans-serif;
+    font-size: 11pt;
+    line-height: 1.5;
+    color: #1f2933;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    /* Chromium (ICU) breaks Thai at word boundaries; never break inside words */
+    word-break: normal;
+    overflow-wrap: anywhere;
+    line-break: auto;
+  }
+  h1 {
+    font-size: 16pt;
+    margin: 0 0 4mm;
+  }
+  h2 {
+    font-size: 13pt;
+    margin: 6mm 0 2mm;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9.5pt;
+  }
+  th,
+  td {
+    border: 0.6pt solid #9aa5b1;
+    padding: 1.5mm 2mm;
+    vertical-align: top;
+    text-align: left;
+  }
+  th {
+    background: #e9eef2;
+    font-weight: 700;
+  }
+  thead {
+    display: table-header-group;
+  }
+  tr {
+    page-break-inside: avoid;
+  }
+  .muted {
+    color: #616e7c;
+  }
+  .num {
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+  }
+  .company {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 1.2pt solid #0b5c7a;
+    padding-bottom: 3mm;
+    margin-bottom: 5mm;
+  }
+  .company .name {
+    font-size: 14pt;
+    font-weight: 700;
+    color: #0b5c7a;
+  }
+  .meta td {
+    border: none;
+    padding: 0.5mm 2mm 0.5mm 0;
+  }
+  .meta td:first-child {
+    width: 32mm;
+    color: #616e7c;
+  }
+  .sign {
+    margin-top: 12mm;
+    display: flex;
+    gap: 20mm;
+  }
+  .sign div {
+    flex: 1;
+    border-top: 0.6pt solid #616e7c;
+    padding-top: 2mm;
+    text-align: center;
+    font-size: 9.5pt;
+  }
+</style>

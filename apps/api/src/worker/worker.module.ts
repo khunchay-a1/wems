@@ -8,6 +8,7 @@ import { LoggerModule } from '../common/logging/logger.module';
 import { PrismaModule } from '../common/prisma/prisma.module';
 import { FilesCoreModule } from '../common/files/files.module';
 import { NotificationsCoreModule } from '../common/notifications/notifications-core.module';
+import { PdfModule } from '../common/pdf/pdf.module';
 import { QueueModule } from '../common/queue/queue.module';
 import { RealtimeModule } from '../common/realtime/realtime.module';
 import { SettingsModule } from '../common/settings/settings.module';
@@ -33,6 +34,7 @@ import { CleanupTask } from './tasks/cleanup.task';
     RealtimeModule,
     FilesCoreModule,
     NotificationsCoreModule,
+    PdfModule,
     DiscoveryModule,
   ],
   providers: [

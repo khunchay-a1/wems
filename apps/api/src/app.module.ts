@@ -17,6 +17,7 @@ import { QueueModule } from './common/queue/queue.module';
 import { SettingsModule } from './common/settings/settings.module';
 import { FilesCoreModule } from './common/files/files.module';
 import { NumberingModule } from './common/numbering/numbering.module';
+import { PdfModule } from './common/pdf/pdf.module';
 import { NotificationsCoreModule } from './common/notifications/notifications-core.module';
 import { RealtimeApiModule } from './common/realtime/realtime.module';
 import { AdminModule } from './modules/platform/admin/admin.module';
@@ -38,6 +39,7 @@ import { UsersModule } from './modules/platform/users/users.module';
     RealtimeApiModule,
     FilesCoreModule,
     NotificationsCoreModule,
+    PdfModule,
     AuthCoreModule,
     // General API limit: 300/min per user (docs/04-api-conventions.md §11); auth routes override per-route
     ThrottlerModule.forRoot([{ name: 'default', ttl: 60_000, limit: 300 }]),

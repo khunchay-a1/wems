@@ -200,7 +200,7 @@ sequenceDiagram
 
 - ทุกเอกสารที่ระบบสร้าง (ใบนำส่ง, CRS, ทะเบียนเอกสาร, ใบรายงานผล, ใบเสนอราคา) = HTML template + CSS → **Gotenberg (Chromium)** → PDF เพราะ Chromium ตัดคำภาษาไทยถูกต้อง ส่วนไลบรารีสร้าง PDF ใน Node ส่วนใหญ่ตัดคำไทยไม่ได้
 - ฟอนต์: **Sarabun** (Google Fonts, SIL OFL) ฝังใน template (`templates/fonts/`) ห้ามพึ่งฟอนต์ในเครื่อง
-- หัว/ท้ายกระดาษและเลขหน้าใช้ header/footer ของ Gotenberg
+- หัว/ท้ายกระดาษและเลขหน้าใช้ header/footer ของ Gotenberg — Chromium ไม่รอโหลด web font ใน header/footer จึงใช้ฟอนต์ระบบและข้อความละติน (เลขเอกสาร + `หน้า/ทั้งหมด`) ส่วนหัวเรื่องภาษาไทยอยู่ในเนื้อหน้าแรก
 - ตราประทับบน PDF แบบ ("SUPERSEDED", "PRELIMINARY – NOT FOR CONSTRUCTION", "APPROVED Rev.B 26/09/2569") ทำด้วย `pdf-lib` ตอนดาวน์โหลด (ไม่แก้ไฟล์ต้นฉบับ) — ข้อความภาษาไทยในตราให้ render เป็น PDF เล็กด้วย Gotenberg แล้ว `embedPage` ซ้อน เพราะ `pdf-lib` จัดวางสระ/วรรณยุกต์ไทยไม่ถูก
 
 ## 9. Environments และการ deploy

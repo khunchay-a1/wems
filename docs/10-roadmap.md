@@ -36,7 +36,7 @@
   - รับงาน: AT-PLT-05; integration test กับ S3-compatible storage ใน compose
 - [x] **P0-10 Notifications** — handler สร้าง Notification, อีเมล (Handlebars th/en → Mailpit), push (FCM, stub ใน dev), SSE + Redis pub/sub, preferences, ปฏิทินวันทำการ · M01 §6, `05-workflows.md` §10
   - รับงาน: AT-PLT-07; e2e event → แถว notification + อีเมลใน Mailpit
-- [ ] **P0-11 PDF** — Gotenberg client, layout HTML ฐาน + ฟอนต์ Sarabun, header/footer เลขหน้า, บริการประทับตราด้วย pdf-lib · `02-architecture.md` §8
+- [x] **P0-11 PDF** — Gotenberg client, layout HTML ฐาน + ฟอนต์ Sarabun, header/footer เลขหน้า, บริการประทับตราด้วย pdf-lib · `02-architecture.md` §8
   - รับงาน: PDF ทดสอบย่อหน้าไทยยาวตัดคำถูก (ข้อความที่ extract ได้ตรงกับต้นฉบับ); แนบภาพตัวอย่างใน PR
 - [ ] **P0-12 OpenAPI pipeline** — `pnpm api:contract` สร้าง `openapi.json` + TS types, ตรวจรูปแบบ `operationId`, CI ตรวจว่าถูก commit · ADR-0002
 - [ ] **P0-13 Web skeleton** — Next.js + Tailwind + shadcn/ui + next-intl (+ ป้าย enum) + TanStack Query + openapi-fetch (CSRF) + `proxy.ts`; layout; login/MFA; โปรไฟล์ (รหัสผ่าน, PIN, MFA); แจ้งเตือน + กระดิ่ง SSE; หน้าผู้ดูแลระบบของ M01; component กลางใน `07-web-ui.md` §3
