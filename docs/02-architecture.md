@@ -48,7 +48,7 @@ flowchart TB
 
 | ชั้น | เทคโนโลยี | หมายเหตุ |
 |---|---|---|
-| Monorepo | pnpm workspaces + Turborepo | Flutter อยู่ใน `apps/mobile` แต่ใช้เครื่องมือ Flutter ของตัวเอง |
+| Monorepo | pnpm workspaces + Turborepo | Flutter อยู่ใน `apps/mobile` แต่ใช้เครื่องมือ Flutter ของตัวเอง (ไม่อยู่ใน pnpm workspace); ค่าตั้งร่วม tsconfig/ESLint/Prettier อยู่ใน `packages/config` (`@wems/config`) |
 | API | NestJS + TypeScript (strict) | `class-validator` + `class-transformer` สำหรับ DTO, `@nestjs/swagger` (เปิด CLI plugin) |
 | ORM | **Prisma 7.x** | ณ วันที่เขียน stable ล่าสุดคือ 7.10.0 และ npm tag `latest` ชี้ไป 8.0.0-rc — ให้ติดตั้ง `prisma@7` จนกว่า 8.x จะออก GA; generator `prisma-client` + `moduleFormat = "cjs"` (Nest เป็น CommonJS), PrismaClient ต้องส่ง `adapter: new PrismaPg(...)`, URL และคำสั่ง seed อยู่ใน `apps/api/prisma.config.ts`, Prisma 7 ไม่โหลด `.env` เอง (ใช้ `dotenv/config`) — ต้องการ Node ≥ 20.19 (แนะนำ 22) และ TypeScript ≥ 5.4 |
 | ฐานข้อมูล | PostgreSQL 16 ขึ้นไป | extension `pg_trgm` (ค้นหา) |

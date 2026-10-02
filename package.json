@@ -1,0 +1,30 @@
+{
+  "name": "wems",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "WEMS — Water Engineering Management System (monorepo)",
+  "packageManager": "pnpm@12.8.1",
+  "engines": {
+    "node": ">=22.12.0",
+    "pnpm": ">=12.8.0"
+  },
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint && pnpm run lint:root",
+    "lint:root": "eslint .",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "check:spec": "node tools/check-enum-labels.mjs && node tools/check-spec-refs.mjs"
+  },
+  "devDependencies": {
+    "@wems/config": "workspace:*",
+    "eslint": "10.11.0",
+    "prettier": "3.9.9",
+    "turbo": "2.11.7",
+    "typescript": "6.0.3"
+  }
+}

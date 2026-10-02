@@ -1,0 +1,10 @@
+# Specs are hand-formatted (Thai tables) — do not reflow
+*.md
+docs/
+.claude/
+# Generated / vendored
+pnpm-lock.yaml
+apps/api/src/generated/
+packages/api-contract/
+apps/mobile/
+**/prisma/migrations/

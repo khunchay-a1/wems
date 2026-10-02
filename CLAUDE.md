@@ -2,7 +2,7 @@
 
 ระบบภายในของบริษัทออกแบบ/บริหารโครงการ/วิเคราะห์น้ำ: เว็บ (Next.js) + มือถือ (Flutter) + API (NestJS + PostgreSQL)
 ผู้ใช้คือพนักงานเท่านั้น ลูกค้าได้รับเอกสารทางอีเมล/ลิงก์ดาวน์โหลดที่หมดอายุได้
-**สถานะ:** repo เริ่มจากสเปก (`docs/`) + Prisma schema ที่ผ่าน `prisma validate` แล้ว — โค้ดยังไม่ถูก scaffold ให้เริ่มที่ `/next-task P0-01`
+**สถานะ:** monorepo scaffold แล้ว (P0-01: pnpm workspaces + Turborepo + `packages/config`) — ทำต่อที่ `/next-task` (task ถัดไปใน roadmap)
 
 ## ภาษา
 - เอกสารสเปกเป็นภาษาไทย; โค้ด ชื่อตัวแปร commit message และ comment ในโค้ดเป็นภาษาอังกฤษ (อ้างรหัส BR ได้)
@@ -45,9 +45,11 @@ infra/        docker compose (dev/prod), Caddy
 ## คำสั่ง (สร้างใน P0-01…P0-16 — อัปเดตส่วนนี้เมื่อคำสั่งจริงต่างไป)
 ```bash
 docker compose -f infra/docker-compose.yml up -d     # postgres redis minio mailpit gotenberg
-pnpm install
+corepack enable && pnpm install                     # pnpm ตาม "packageManager" ใน package.json
 pnpm dev                                             # api + worker + web
-pnpm lint && pnpm typecheck && pnpm test
+pnpm lint && pnpm typecheck && pnpm test             # turbo run ทุก package (+ eslint ระดับ root สำหรับ tools/)
+pnpm format:check                                    # prettier (pnpm format เพื่อแก้)
+pnpm check:spec                                      # check-enum-labels + check-spec-refs
 pnpm --filter api prisma migrate dev --name <name>
 pnpm --filter api prisma db seed
 pnpm api:contract                                    # openapi.json + TS types
@@ -73,6 +75,9 @@ node tools/check-enum-labels.mjs && node tools/check-spec-refs.mjs
 14. **สเปกกับโค้ดต้องตรงกัน** — ทำต่างจากสเปกต้องแก้สเปกใน commit เดียวกัน; ประเด็นที่บริษัทต้องตัดสินให้เพิ่มใน `docs/open-questions.md` พร้อมค่าที่สมมติ แล้วทำงานต่อ
 
 ## ข้อควรระวังเรื่องเวอร์ชัน (ตรวจ ณ ก.ย. 2026)
+- **pnpm 12** (ล็อกใน `packageManager`) + **Turborepo 2** — ติดตั้งผ่าน `corepack enable`; ค่าตั้ง workspace อยู่ใน `pnpm-workspace.yaml`
+- **TypeScript 6.0.x** (ไม่ใช่ 7): npm tag `latest` ชี้ TypeScript 7 (native) แล้ว แต่ `typescript-eslint` 8.x รองรับ `<6.1` — ล็อก `typescript@6.0.3` จนกว่า typescript-eslint จะรองรับ 7; TS 6 ไม่ใส่ `@types/*` อัตโนมัติ จึงระบุ `"types": ["node"]` ใน preset
+- **ESLint 10** flat config — preset กลาง `@wems/config/eslint` (`createConfig`) บังคับกฎข้อ 7 ใน `*.service.ts`/`domain/**` ด้วย `NEST_DETERMINISTIC_FILES`
 - **Prisma 7**: URL อยู่ใน `apps/api/prisma.config.ts`; `PrismaClient` ต้องส่ง `adapter: new PrismaPg(...)`; generator `prisma-client` + `moduleFormat = "cjs"`; ไม่โหลด `.env` เอง; seed ต้องรัน `prisma db seed` เอง; npm tag `latest` เคยชี้ไป 8.0.0-rc — ติดตั้ง `prisma@7` จนกว่า 8 จะ GA
 - **Next.js 16+**: ใช้ `proxy.ts` แทน `middleware.ts`
 - **Flutter**: Material/Cupertino แยกเป็นแพ็กเกจ `material_ui`/`cupertino_ui` — ใช้ตาม template ของ `flutter create` เวอร์ชันที่ใช้ และห้าม import ปน

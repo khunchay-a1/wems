@@ -5,7 +5,7 @@
 ## เริ่มใช้งาน
 
 1. สร้าง git repository ใหม่ แล้วแตกไฟล์ชุดนี้ไว้ที่ root (`CLAUDE.md` ต้องอยู่ชั้นบนสุด)
-2. เครื่องที่ใช้พัฒนาต้องมี: Node.js 22, pnpm, Docker, Flutter (stable), Git
+2. เครื่องที่ใช้พัฒนาต้องมี: Node.js 22 (≥ 22.12), Docker, Flutter (stable), Git — pnpm ติดตั้งผ่าน `corepack enable` (เวอร์ชันล็อกใน `package.json`) แล้วรัน `pnpm install`
 3. อ่านและตอบ `docs/open-questions.md` อย่างน้อย Q01–Q09 (ถ้ายังไม่ตอบ ระบบจะใช้ค่าที่สมมติไว้ไปก่อน)
 4. เปิด Claude Code ที่ root ของ repo แล้วรัน `/context` เพื่อตรวจว่า `CLAUDE.md` ถูกโหลด
 5. สั่ง `/next-task P0-01` แล้วทำต่อทีละ task ตาม `docs/10-roadmap.md` (หลังจากนั้นพิมพ์ `/next-task` เฉยๆ ได้)

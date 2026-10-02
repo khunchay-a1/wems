@@ -16,7 +16,7 @@
 
 ## เฟส 0 — Foundation
 
-- [ ] **P0-01 Monorepo** — pnpm workspaces + Turborepo, `packages/config` (tsconfig strict, ESLint, Prettier), `.editorconfig`, `.gitignore`, `.env.example`, script รวม `dev/build/lint/typecheck/test`
+- [x] **P0-01 Monorepo** — pnpm workspaces + Turborepo, `packages/config` (tsconfig strict, ESLint, Prettier), `.editorconfig`, `.gitignore`, `.env.example`, script รวม `dev/build/lint/typecheck/test`
   - รับงาน: `pnpm install && pnpm lint && pnpm typecheck` ผ่านบน repo เปล่า
 - [ ] **P0-02 Infra dev** — `infra/docker-compose.yml`: PostgreSQL 16, Redis 7, MinIO (+ สร้าง bucket อัตโนมัติ), Mailpit, Gotenberg · อ้างอิง `02-architecture.md` §9
   - รับงาน: `docker compose up -d` ทุก service healthy; README มีขั้นตอน dev

@@ -23,7 +23,10 @@ for (const file of readdirSync(schemaDir).filter((f) => f.endsWith('.prisma'))) 
 
 const problems = [];
 for (const [name, values] of Object.entries(enums)) {
-  if (!labels[name]) { problems.push(`missing enum ${name}`); continue; }
+  if (!labels[name]) {
+    problems.push(`missing enum ${name}`);
+    continue;
+  }
   for (const v of values) {
     const l = labels[name][v];
     if (!l || !l.th || !l.en) problems.push(`missing label ${name}.${v}`);
@@ -32,10 +35,15 @@ for (const [name, values] of Object.entries(enums)) {
     if (!values.includes(v)) problems.push(`label for removed value ${name}.${v}`);
   }
 }
-for (const name of Object.keys(labels)) if (!enums[name]) problems.push(`label for removed enum ${name}`);
+for (const name of Object.keys(labels))
+  if (!enums[name]) problems.push(`label for removed enum ${name}`);
 
 if (problems.length) {
-  console.error(`enum-labels.json ไม่ตรงกับ schema (${problems.length}):\n- ` + problems.join('\n- '));
+  console.error(
+    `enum-labels.json ไม่ตรงกับ schema (${problems.length}):\n- ` + problems.join('\n- '),
+  );
   process.exit(1);
 }
-console.log(`enum labels OK: ${Object.keys(enums).length} enums, ${Object.values(enums).flat().length} values`);
+console.log(
+  `enum labels OK: ${Object.keys(enums).length} enums, ${Object.values(enums).flat().length} values`,
+);
