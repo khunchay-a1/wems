@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { type Env, loadEnv } from './env';
+import { type Env, loadEnv, resetEnvCache } from './env';
 
 /** Typed access to configuration. Inject this instead of reading process.env. */
 @Injectable()
@@ -7,6 +7,8 @@ export class AppConfig {
   readonly env: Env;
 
   constructor() {
+    // Parse at construction time so each app instance (and each test) sees the current environment
+    resetEnvCache();
     this.env = loadEnv();
   }
 

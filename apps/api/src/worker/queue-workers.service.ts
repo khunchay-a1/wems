@@ -10,6 +10,7 @@ import { AppConfig } from '../common/config/app-config';
 import { type OutboxJobData, QUEUES, type QueueName } from '../common/queue/queues';
 import { QueueService } from '../common/queue/queue.module';
 import { createRedis } from '../common/queue/redis';
+import { type MailJob, MailerService } from '../common/notifications/mailer.service';
 import { EventDispatcher } from './event-dispatcher.service';
 
 const CONCURRENCY: Record<QueueName, number> = {
@@ -31,6 +32,7 @@ export class QueueWorkersService implements OnApplicationBootstrap, OnApplicatio
     private readonly config: AppConfig,
     private readonly dispatcher: EventDispatcher,
     private readonly queues: QueueService,
+    private readonly mailer: MailerService,
   ) {}
 
   async onApplicationBootstrap(): Promise<void> {
@@ -41,6 +43,7 @@ export class QueueWorkersService implements OnApplicationBootstrap, OnApplicatio
         name,
         async (job) => {
           if (name === QUEUES.scheduled) return this.dispatcher.runTask(job.name);
+          if (name === QUEUES.mail) return this.mailer.send(job.data as MailJob);
           return this.dispatcher.dispatch(job.data as OutboxJobData);
         },
         { connection, concurrency: CONCURRENCY[name] },

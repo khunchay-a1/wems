@@ -1,0 +1,45 @@
+<html lang='{{lang}}'>
+  <head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1' />
+    <title>{{title}}</title>
+  </head>
+  <body
+    style="margin:0;padding:0;background:#f4f6f8;font-family:'Sarabun','Noto Sans Thai','Leelawadee UI',Tahoma,Arial,sans-serif;color:#1f2933;"
+  >
+    <table
+      role='presentation'
+      width='100%'
+      cellspacing='0'
+      cellpadding='0'
+      style='background:#f4f6f8;padding:24px 0;'
+    >
+      <tr><td align='center'>
+          <table
+            role='presentation'
+            width='600'
+            cellspacing='0'
+            cellpadding='0'
+            style='max-width:600px;width:100%;background:#ffffff;border-radius:8px;overflow:hidden;'
+          >
+            <tr><td
+                style='background:#0b5c7a;color:#ffffff;padding:16px 24px;font-size:16px;font-weight:bold;'
+              >{{companyName}}</td></tr>
+            <tr><td style='padding:24px;'>
+                <h1 style='margin:0 0 16px;font-size:20px;line-height:1.4;'>{{title}}</h1>
+                {{#each lines}}<p
+                    style='margin:0 0 12px;font-size:15px;line-height:1.6;'
+                  >{{this}}</p>{{/each}}
+                {{#if actionUrl}}<p style='margin:24px 0 0;'><a
+                      href='{{actionUrl}}'
+                      style='display:inline-block;background:#0b5c7a;color:#ffffff;text-decoration:none;padding:10px 18px;border-radius:6px;font-size:15px;'
+                    >{{actionLabel}}</a></p>{{/if}}
+              </td></tr>
+            <tr><td
+                style='padding:16px 24px;font-size:12px;color:#6b7785;border-top:1px solid #e5e9ee;'
+              >{{footer}}</td></tr>
+          </table>
+        </td></tr>
+    </table>
+  </body>
+</html>

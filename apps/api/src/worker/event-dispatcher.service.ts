@@ -1,6 +1,7 @@
 import { Injectable, Logger, type OnModuleInit } from '@nestjs/common';
 import { DiscoveryService, Reflector } from '@nestjs/core';
 import type { OutboxJobData } from '../common/queue/queues';
+import { NotificationHandler } from './handlers/notification.handler';
 import {
   OUTBOX_EVENT_TYPES,
   type OutboxEventHandler,
@@ -19,6 +20,7 @@ export class EventDispatcher implements OnModuleInit {
   constructor(
     private readonly discovery: DiscoveryService,
     private readonly reflector: Reflector,
+    private readonly notifications: NotificationHandler,
   ) {}
 
   onModuleInit(): void {
@@ -44,11 +46,10 @@ export class EventDispatcher implements OnModuleInit {
 
   async dispatch(event: OutboxJobData): Promise<void> {
     const list = this.handlers.get(event.type) ?? [];
-    if (!list.length) {
-      this.logger.debug(`no handler for ${event.type}`);
-      return;
-    }
     for (const h of list) await h.handle(event);
+    // Any event with a notification definition also notifies its recipients (docs/05-workflows.md §10)
+    if (this.notifications.handles(event.type)) await this.notifications.handle(event);
+    else if (!list.length) this.logger.debug(`no handler for ${event.type}`);
   }
 
   async runTask(id: string): Promise<void> {

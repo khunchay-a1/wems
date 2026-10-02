@@ -24,5 +24,5 @@ export const ScheduledTask = (meta: ScheduledTaskMeta): ClassDecorator =>
   SetMetadata(SCHEDULED_TASK, meta);
 
 export interface ScheduledTaskHandler {
-  run(): Promise<void>;
+  run(): Promise<unknown>;
 }

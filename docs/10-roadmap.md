@@ -34,7 +34,7 @@
   - รับงาน: AT-PLT-04; unit test token รวมปี พ.ศ.
 - [x] **P0-09 Files** — upload-url/complete/download-url, worker (sha256, magic bytes, จำนวนหน้า, preview), attachments, cleanup · M01 §5
   - รับงาน: AT-PLT-05; integration test กับ S3-compatible storage ใน compose
-- [ ] **P0-10 Notifications** — handler สร้าง Notification, อีเมล (Handlebars th/en → Mailpit), push (FCM, stub ใน dev), SSE + Redis pub/sub, preferences, ปฏิทินวันทำการ · M01 §6, `05-workflows.md` §10
+- [x] **P0-10 Notifications** — handler สร้าง Notification, อีเมล (Handlebars th/en → Mailpit), push (FCM, stub ใน dev), SSE + Redis pub/sub, preferences, ปฏิทินวันทำการ · M01 §6, `05-workflows.md` §10
   - รับงาน: AT-PLT-07; e2e event → แถว notification + อีเมลใน Mailpit
 - [ ] **P0-11 PDF** — Gotenberg client, layout HTML ฐาน + ฟอนต์ Sarabun, header/footer เลขหน้า, บริการประทับตราด้วย pdf-lib · `02-architecture.md` §8
   - รับงาน: PDF ทดสอบย่อหน้าไทยยาวตัดคำถูก (ข้อความที่ extract ได้ตรงกับต้นฉบับ); แนบภาพตัวอย่างใน PR

@@ -18,7 +18,7 @@
 - **BR-PLT-021** ไฟล์ `PENDING_UPLOAD` เกิน 24 ชั่วโมง → DELETED (cleanup); ไฟล์ที่ไม่มีใครอ้างอิงเกิน 7 วัน → DELETED
 - **BR-PLT-022** ไฟล์ที่ sha256 ซ้ำกับไฟล์ที่มีอยู่ของผู้ใช้เดียวกันในเอกสารเดียวกัน → เตือน "ไฟล์นี้เคยอัปโหลดแล้ว" (ไม่บล็อก)
 - **BR-PLT-030** การแจ้งเตือนสร้างจาก outbox handler เท่านั้น (ไม่สร้างใน request); ผู้ใช้ไม่ได้รับแจ้งเตือนจากการกระทำของตนเอง
-- **BR-PLT-031** อีเมลแจ้งเตือนรวบ (digest) เมื่อมี event ชนิดเดียวกันถึงผู้ใช้คนเดียวกันเกิน 5 ครั้งใน 10 นาที
+- **BR-PLT-031** อีเมลแจ้งเตือนรวบ (digest) เมื่อมี event ชนิดเดียวกันถึงผู้ใช้คนเดียวกันเกิน 5 ครั้งใน 10 นาที — ฉบับที่ 6 เป็นต้นไปถูกพักไว้ และงาน `email-digest` (ทุก 10 นาที) ส่งรวมเป็นอีเมลเดียว
 - **BR-PLT-040** วันทำการ: จ.–ศ. ยกเว้นวันใน setting `calendar.holidays` (รายการวันที่ `YYYY-MM-DD` ที่ ADMIN ดูแลทุกปี); ฟังก์ชัน `addWorkingDays(date, n)` ใช้ทั้งระบบ
 
 ## 3. ผู้ใช้และสิทธิ์
@@ -134,7 +134,8 @@ Worker (`files` queue) ทำ: คำนวณ sha256, ตรวจ magic bytes,
 | GET | `/files/{id}` · `/files/{id}/download-url` | สิทธิ์จาก entity ที่ผูก | |
 | GET | `/attachments?ownerType=&ownerId=` | สิทธิ์จากเจ้าของ | |
 | POST / DELETE | `/attachments[/{id}]` | สิทธิ์แก้เจ้าของ | รับ `id` จาก client ได้ |
-| GET | `/notifications` | ล็อกอิน | cursor, `unreadOnly` |
+| GET | `/notifications` | ล็อกอิน | cursor, `unreadOnly`; `meta.unreadCount` |
+| GET | `/notifications/unread-count` | ล็อกอิน | ตัวเลขกระดิ่ง |
 | POST | `/notifications/{id}/read` · `/notifications/read-all` | ล็อกอิน | |
 | GET / PUT | `/notification-preferences` | ล็อกอิน | |
 | POST / DELETE | `/push-devices[/{token}]` | ล็อกอิน | ลงทะเบียน FCM token |
