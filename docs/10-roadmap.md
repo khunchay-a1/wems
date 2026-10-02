@@ -28,7 +28,7 @@
   - รับงาน: AT-PLT-01, AT-PLT-02; e2e ทั้งแบบ cookie และ bearer
 - [x] **P0-06 Authorization และผู้ใช้** — `permissions.ts` (test ยืนยันว่าตรงกับ `roles.json`), `@RequirePermission` + guard, `ProjectAccessService`, cache สิทธิ์ด้วย `perms_ver`, API ผู้ใช้/บทบาท/แผนก/ใบอนุญาต/directory · `06-security.md` §3, M01
   - รับงาน: AT-PLT-03, AT-PLT-06; test ตาราง 404/403
-- [ ] **P0-07 Audit, change log, outbox, idempotency** — service ที่ทำงานใน transaction เดียว, outbox relay + BullMQ ใน `worker.ts`, interceptor `Idempotency-Key`, ตรวจ UUIDv7 จาก client · `02-architecture.md` §5–6, `04-api-conventions.md` §8
+- [x] **P0-07 Audit, change log, outbox, idempotency** — service ที่ทำงานใน transaction เดียว, outbox relay + BullMQ ใน `worker.ts`, interceptor `Idempotency-Key`, ตรวจ UUIDv7 จาก client · `02-architecture.md` §5–6, `04-api-conventions.md` §8
   - รับงาน: test ว่า rollback แล้วไม่มี audit/change/outbox ค้าง; relay 2 instance พร้อมกันส่ง event ละครั้งเดียว
 - [ ] **P0-08 Numbering** — token, reset, concurrency, API จัดการ + preview · M01 §4
   - รับงาน: AT-PLT-04; unit test token รวมปี พ.ศ.

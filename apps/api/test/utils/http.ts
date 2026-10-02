@@ -1,5 +1,6 @@
 import type { INestApplication } from '@nestjs/common';
 import request from 'supertest';
+import { uuidv7 } from '../../src/common/ids/uuid';
 import { DEFAULT_PASSWORD } from '../factories/users';
 
 /** Mobile-style client: bearer token in memory. */
@@ -15,15 +16,19 @@ export async function bearerLogin(
   const accessToken = res.body.accessToken as string;
   const refreshToken = res.body.refreshToken as string;
   const auth = (r: request.Test) => r.set('Authorization', `Bearer ${accessToken}`);
+  // the mobile app sends an Idempotency-Key with every mutating request (docs/04-api-conventions.md §8)
+  const mut = (r: request.Test) => auth(r).set('Idempotency-Key', uuidv7());
   return {
     accessToken,
     refreshToken,
     body: res.body,
     get: (url: string) => auth(request(app.getHttpServer()).get(url)),
-    post: (url: string) => auth(request(app.getHttpServer()).post(url)),
-    patch: (url: string) => auth(request(app.getHttpServer()).patch(url)),
-    put: (url: string) => auth(request(app.getHttpServer()).put(url)),
-    delete: (url: string) => auth(request(app.getHttpServer()).delete(url)),
+    post: (url: string) => mut(request(app.getHttpServer()).post(url)),
+    patch: (url: string) => mut(request(app.getHttpServer()).patch(url)),
+    put: (url: string) => mut(request(app.getHttpServer()).put(url)),
+    delete: (url: string) => mut(request(app.getHttpServer()).delete(url)),
+    /** POST without an Idempotency-Key */
+    postRaw: (url: string) => auth(request(app.getHttpServer()).post(url)),
   };
 }
 

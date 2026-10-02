@@ -48,6 +48,7 @@ pnpm infra:up                                        # docker compose up -d --wa
 pnpm infra:down                                      # หยุด (ข้อมูลอยู่ใน volume; ล้างด้วย pnpm infra:reset)
 corepack enable && pnpm install                     # pnpm ตาม "packageManager" ใน package.json
 pnpm dev                                             # api + worker + web
+pnpm --filter api dev:worker                         # worker เท่านั้น (outbox relay, BullMQ, งานตามเวลา)
 pnpm lint && pnpm typecheck && pnpm test             # turbo run ทุก package (+ eslint ระดับ root สำหรับ tools/)
 pnpm format:check                                    # prettier (pnpm format เพื่อแก้)
 pnpm check:spec                                      # check-enum-labels + check-spec-refs
