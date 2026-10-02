@@ -15,6 +15,8 @@ import { LoggerModule } from './common/logging/logger.module';
 import { PrismaModule } from './common/prisma/prisma.module';
 import { QueueModule } from './common/queue/queue.module';
 import { SettingsModule } from './common/settings/settings.module';
+import { NumberingModule } from './common/numbering/numbering.module';
+import { AdminModule } from './modules/platform/admin/admin.module';
 import { AuthModule } from './modules/platform/auth/auth.module';
 import { UsersModule } from './modules/platform/users/users.module';
 
@@ -27,12 +29,14 @@ import { UsersModule } from './modules/platform/users/users.module';
     AuditModule,
     SettingsModule,
     QueueModule,
+    NumberingModule,
     AuthCoreModule,
     // General API limit: 300/min per user (docs/04-api-conventions.md §11); auth routes override per-route
     ThrottlerModule.forRoot([{ name: 'default', ttl: 60_000, limit: 300 }]),
     HealthModule,
     AuthModule,
     UsersModule,
+    AdminModule,
   ],
   providers: [
     { provide: APP_FILTER, useClass: ProblemFilter },

@@ -30,7 +30,7 @@
   - รับงาน: AT-PLT-03, AT-PLT-06; test ตาราง 404/403
 - [x] **P0-07 Audit, change log, outbox, idempotency** — service ที่ทำงานใน transaction เดียว, outbox relay + BullMQ ใน `worker.ts`, interceptor `Idempotency-Key`, ตรวจ UUIDv7 จาก client · `02-architecture.md` §5–6, `04-api-conventions.md` §8
   - รับงาน: test ว่า rollback แล้วไม่มี audit/change/outbox ค้าง; relay 2 instance พร้อมกันส่ง event ละครั้งเดียว
-- [ ] **P0-08 Numbering** — token, reset, concurrency, API จัดการ + preview · M01 §4
+- [x] **P0-08 Numbering** — token, reset, concurrency, API จัดการ + preview · M01 §4
   - รับงาน: AT-PLT-04; unit test token รวมปี พ.ศ.
 - [ ] **P0-09 Files** — upload-url/complete/download-url, worker (sha256, magic bytes, จำนวนหน้า, preview), attachments, cleanup · M01 §5
   - รับงาน: AT-PLT-05; integration test กับ S3-compatible storage ใน compose
