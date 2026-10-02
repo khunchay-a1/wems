@@ -1,0 +1,159 @@
+{
+  "$comment": "แม่แบบ workflow ตั้งต้น (M04 §5) — upsert ด้วย code; steps แทนที่ทั้งชุดเมื่อ seed ใหม่เฉพาะแม่แบบที่ยังไม่เคยถูกใช้",
+  "templates": [
+    {
+      "code": "DRAW_CHECK_APPROVE",
+      "name": "ตรวจสอบ → อนุมัติ (ต้องมีใบอนุญาต)",
+      "steps": [
+        {
+          "stepOrder": 1,
+          "kind": "CHECK",
+          "name": "ตรวจสอบ",
+          "allowedProjectRoles": [
+            "ENGINEER",
+            "DESIGN_MANAGER"
+          ],
+          "requiresSignature": false,
+          "requiresLicense": false,
+          "dueDays": 3,
+          "isOptional": false
+        },
+        {
+          "stepOrder": 2,
+          "kind": "APPROVE",
+          "name": "อนุมัติ",
+          "allowedProjectRoles": [
+            "DESIGN_MANAGER",
+            "PROJECT_MANAGER"
+          ],
+          "requiresSignature": true,
+          "requiresLicense": true,
+          "dueDays": 2,
+          "isOptional": false
+        }
+      ]
+    },
+    {
+      "code": "CHECK_APPROVE",
+      "name": "ตรวจสอบ → อนุมัติ",
+      "steps": [
+        {
+          "stepOrder": 1,
+          "kind": "CHECK",
+          "name": "ตรวจสอบ",
+          "allowedProjectRoles": [
+            "ENGINEER",
+            "DESIGN_MANAGER",
+            "PROJECT_MANAGER"
+          ],
+          "requiresSignature": false,
+          "requiresLicense": false,
+          "dueDays": 3,
+          "isOptional": false
+        },
+        {
+          "stepOrder": 2,
+          "kind": "APPROVE",
+          "name": "อนุมัติ",
+          "allowedProjectRoles": [
+            "DESIGN_MANAGER",
+            "PROJECT_MANAGER"
+          ],
+          "requiresSignature": true,
+          "requiresLicense": false,
+          "dueDays": 2,
+          "isOptional": false
+        }
+      ]
+    },
+    {
+      "code": "APPROVE_ONLY",
+      "name": "อนุมัติอย่างเดียว",
+      "steps": [
+        {
+          "stepOrder": 1,
+          "kind": "APPROVE",
+          "name": "อนุมัติ",
+          "allowedProjectRoles": [
+            "PROJECT_MANAGER",
+            "DESIGN_MANAGER"
+          ],
+          "requiresSignature": true,
+          "requiresLicense": false,
+          "dueDays": 2,
+          "isOptional": false
+        }
+      ]
+    },
+    {
+      "code": "MULTI_DISCIPLINE",
+      "name": "ตรวจหลายสาขา → ทบทวน → อนุมัติ",
+      "steps": [
+        {
+          "stepOrder": 1,
+          "kind": "CHECK",
+          "name": "ตรวจสอบสาขากระบวนการ",
+          "allowedProjectRoles": [
+            "ENGINEER",
+            "DESIGN_MANAGER"
+          ],
+          "requiresSignature": false,
+          "requiresLicense": false,
+          "dueDays": 3,
+          "isOptional": false
+        },
+        {
+          "stepOrder": 1,
+          "kind": "CHECK",
+          "name": "ตรวจสอบสาขาโยธา/โครงสร้าง",
+          "allowedProjectRoles": [
+            "ENGINEER",
+            "DESIGN_MANAGER"
+          ],
+          "requiresSignature": false,
+          "requiresLicense": false,
+          "dueDays": 3,
+          "isOptional": true
+        },
+        {
+          "stepOrder": 1,
+          "kind": "CHECK",
+          "name": "ตรวจสอบสาขาเครื่องกล/ไฟฟ้า",
+          "allowedProjectRoles": [
+            "ENGINEER",
+            "DESIGN_MANAGER"
+          ],
+          "requiresSignature": false,
+          "requiresLicense": false,
+          "dueDays": 3,
+          "isOptional": true
+        },
+        {
+          "stepOrder": 2,
+          "kind": "REVIEW",
+          "name": "ทบทวนโดยผู้จัดการงานออกแบบ",
+          "allowedProjectRoles": [
+            "DESIGN_MANAGER"
+          ],
+          "requiresSignature": false,
+          "requiresLicense": false,
+          "dueDays": 2,
+          "isOptional": false
+        },
+        {
+          "stepOrder": 3,
+          "kind": "APPROVE",
+          "name": "อนุมัติ",
+          "allowedProjectRoles": [
+            "PROJECT_MANAGER",
+            "DESIGN_MANAGER"
+          ],
+          "requiresSignature": true,
+          "requiresLicense": true,
+          "dueDays": 2,
+          "isOptional": false
+        }
+      ]
+    }
+  ]
+}

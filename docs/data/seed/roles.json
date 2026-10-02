@@ -1,0 +1,490 @@
+{
+  "$comment": "สิทธิ์ตั้งต้นของบทบาทระบบ (isSystem) — seed ด้วย upsert; รายการรหัสสิทธิ์ต้องตรงกับ apps/api/src/common/auth/permissions.ts",
+  "permissions": [
+    {
+      "code": "user.manage",
+      "phase": 0,
+      "descriptionTh": "จัดการผู้ใช้ บทบาทของผู้ใช้ ใบอนุญาต"
+    },
+    {
+      "code": "role.manage",
+      "phase": 0,
+      "descriptionTh": "แก้สิทธิ์ของบทบาท"
+    },
+    {
+      "code": "settings.manage",
+      "phase": 0,
+      "descriptionTh": "ค่าตั้งบริษัท เลขเอกสาร วันหยุด"
+    },
+    {
+      "code": "masterdata.manage",
+      "phase": 1,
+      "descriptionTh": "สาขา ประเภทเอกสาร แม่แบบ workflow"
+    },
+    {
+      "code": "audit.read",
+      "phase": 0,
+      "descriptionTh": "ดู audit log"
+    },
+    {
+      "code": "client.read",
+      "phase": 1,
+      "descriptionTh": "ดูลูกค้า/สถานที่"
+    },
+    {
+      "code": "client.manage",
+      "phase": 1,
+      "descriptionTh": "สร้าง/แก้ลูกค้า ผู้ติดต่อ สถานที่"
+    },
+    {
+      "code": "project.create",
+      "phase": 1,
+      "descriptionTh": "สร้างโครงการ"
+    },
+    {
+      "code": "project.manage",
+      "phase": 1,
+      "descriptionTh": "แก้ทุกโครงการ/ทีม (ไม่ต้องเป็น PM ของโครงการ)"
+    },
+    {
+      "code": "project.read_all",
+      "phase": 1,
+      "descriptionTh": "เข้าถึงทุกโครงการโดยไม่ต้องเป็นสมาชิก"
+    },
+    {
+      "code": "document.read",
+      "phase": 1,
+      "descriptionTh": "ดูเอกสารในโครงการที่เข้าถึงได้"
+    },
+    {
+      "code": "document.create",
+      "phase": 1,
+      "descriptionTh": "ลงทะเบียนเอกสาร/นำเข้า"
+    },
+    {
+      "code": "document.edit",
+      "phase": 1,
+      "descriptionTh": "แก้ข้อมูลเอกสาร สร้าง revision อัปโหลด ส่งตรวจ"
+    },
+    {
+      "code": "document.review",
+      "phase": 1,
+      "descriptionTh": "ถูกมอบหมายเป็นผู้ตรวจสอบ/ผู้ทบทวนได้"
+    },
+    {
+      "code": "document.approve",
+      "phase": 1,
+      "descriptionTh": "ถูกมอบหมายเป็นผู้อนุมัติได้ (ยังต้องผ่านเงื่อนไขใบอนุญาต)"
+    },
+    {
+      "code": "document.admin",
+      "phase": 1,
+      "descriptionTh": "แก้เลข void revision ที่ออกแล้ว มอบหมายงานตรวจแทนผู้อื่น"
+    },
+    {
+      "code": "transmittal.manage",
+      "phase": 1,
+      "descriptionTh": "สร้าง/ส่งใบนำส่ง บันทึกการรับและผลตอบกลับ"
+    },
+    {
+      "code": "designbasis.edit",
+      "phase": 1,
+      "descriptionTh": "แก้ค่าออกแบบ"
+    },
+    {
+      "code": "designbasis.approve",
+      "phase": 1,
+      "descriptionTh": "อนุมัติค่าออกแบบ"
+    },
+    {
+      "code": "task.manage",
+      "phase": 2,
+      "descriptionTh": "แผนงาน WBS"
+    },
+    {
+      "code": "milestone.manage",
+      "phase": 2,
+      "descriptionTh": "งวดงาน"
+    },
+    {
+      "code": "dailyreport.submit",
+      "phase": 2,
+      "descriptionTh": "ส่งรายงานประจำวัน"
+    },
+    {
+      "code": "dailyreport.approve",
+      "phase": 2,
+      "descriptionTh": "อนุมัติรายงานประจำวัน"
+    },
+    {
+      "code": "issue.create",
+      "phase": 2,
+      "descriptionTh": "แจ้งปัญหาหน้างาน"
+    },
+    {
+      "code": "issue.manage",
+      "phase": 2,
+      "descriptionTh": "มอบหมาย/ตรวจปิด/ยกเลิกปัญหา"
+    },
+    {
+      "code": "inspection.submit",
+      "phase": 2,
+      "descriptionTh": "บันทึกการตรวจตาม checklist"
+    },
+    {
+      "code": "inspection.approve",
+      "phase": 2,
+      "descriptionTh": "อนุมัติผลการตรวจ"
+    },
+    {
+      "code": "sitequery.create",
+      "phase": 2,
+      "descriptionTh": "ถามคำถามหน้างาน"
+    },
+    {
+      "code": "sitequery.answer",
+      "phase": 2,
+      "descriptionTh": "ตอบคำถามหน้างาน"
+    },
+    {
+      "code": "lab.read",
+      "phase": 3,
+      "descriptionTh": "ดูงานแล็บ ตัวอย่าง ผล"
+    },
+    {
+      "code": "lab.job.manage",
+      "phase": 3,
+      "descriptionTh": "ลงทะเบียน/แก้งานวิเคราะห์"
+    },
+    {
+      "code": "lab.sample.receive",
+      "phase": 3,
+      "descriptionTh": "รับตัวอย่าง"
+    },
+    {
+      "code": "lab.result.enter",
+      "phase": 3,
+      "descriptionTh": "บันทึกผล/QC"
+    },
+    {
+      "code": "lab.result.review",
+      "phase": 3,
+      "descriptionTh": "ทบทวนผล"
+    },
+    {
+      "code": "lab.result.approve",
+      "phase": 3,
+      "descriptionTh": "อนุมัติผล (ลงนาม)"
+    },
+    {
+      "code": "lab.report.issue",
+      "phase": 3,
+      "descriptionTh": "ออกใบรายงานผล (ผู้มีอำนาจลงนาม)"
+    },
+    {
+      "code": "lab.masterdata.manage",
+      "phase": 3,
+      "descriptionTh": "พารามิเตอร์ วิธีวิเคราะห์ สูตร มาตรฐาน"
+    },
+    {
+      "code": "lab.instrument.manage",
+      "phase": 3,
+      "descriptionTh": "เครื่องมือและการสอบเทียบ"
+    },
+    {
+      "code": "sampling.plan",
+      "phase": 3,
+      "descriptionTh": "วางแผนทริปเก็บตัวอย่าง"
+    },
+    {
+      "code": "sampling.perform",
+      "phase": 3,
+      "descriptionTh": "เก็บตัวอย่าง/บันทึกภาคสนาม"
+    },
+    {
+      "code": "quotation.create",
+      "phase": 4,
+      "descriptionTh": "จัดทำใบเสนอราคา"
+    },
+    {
+      "code": "quotation.approve",
+      "phase": 4,
+      "descriptionTh": "อนุมัติใบเสนอราคา"
+    },
+    {
+      "code": "billing.manage",
+      "phase": 4,
+      "descriptionTh": "บันทึกการวางบิล"
+    },
+    {
+      "code": "timesheet.submit",
+      "phase": 4,
+      "descriptionTh": "ลงเวลาทำงาน"
+    },
+    {
+      "code": "timesheet.approve",
+      "phase": 4,
+      "descriptionTh": "อนุมัติ timesheet"
+    },
+    {
+      "code": "costrate.manage",
+      "phase": 4,
+      "descriptionTh": "อัตราต้นทุน"
+    },
+    {
+      "code": "dashboard.executive",
+      "phase": 4,
+      "descriptionTh": "Dashboard ผู้บริหาร"
+    },
+    {
+      "code": "report.export",
+      "phase": 1,
+      "descriptionTh": "ส่งออกรายงาน/Excel"
+    }
+  ],
+  "roles": [
+    {
+      "code": "ADMIN",
+      "nameTh": "ผู้ดูแลระบบ",
+      "nameEn": "System administrator",
+      "isSystem": true,
+      "permissions": [
+        "user.manage",
+        "role.manage",
+        "settings.manage",
+        "masterdata.manage",
+        "audit.read",
+        "client.read",
+        "client.manage",
+        "project.create",
+        "project.manage",
+        "project.read_all",
+        "document.read",
+        "document.create",
+        "document.edit",
+        "document.review",
+        "document.approve",
+        "document.admin",
+        "transmittal.manage",
+        "designbasis.edit",
+        "designbasis.approve",
+        "task.manage",
+        "milestone.manage",
+        "dailyreport.submit",
+        "dailyreport.approve",
+        "issue.create",
+        "issue.manage",
+        "inspection.submit",
+        "inspection.approve",
+        "sitequery.create",
+        "sitequery.answer",
+        "lab.read",
+        "lab.job.manage",
+        "lab.sample.receive",
+        "lab.result.enter",
+        "lab.result.review",
+        "lab.result.approve",
+        "lab.report.issue",
+        "lab.masterdata.manage",
+        "lab.instrument.manage",
+        "sampling.plan",
+        "sampling.perform",
+        "quotation.create",
+        "quotation.approve",
+        "billing.manage",
+        "timesheet.submit",
+        "timesheet.approve",
+        "costrate.manage",
+        "dashboard.executive",
+        "report.export"
+      ]
+    },
+    {
+      "code": "EXECUTIVE",
+      "nameTh": "ผู้บริหาร",
+      "nameEn": "Executive",
+      "isSystem": true,
+      "permissions": [
+        "client.read",
+        "project.read_all",
+        "document.read",
+        "document.approve",
+        "audit.read",
+        "lab.read",
+        "dashboard.executive",
+        "report.export",
+        "quotation.approve",
+        "timesheet.approve",
+        "designbasis.approve"
+      ]
+    },
+    {
+      "code": "PROJECT_MANAGER",
+      "nameTh": "ผู้จัดการโครงการ",
+      "nameEn": "Project manager",
+      "isSystem": true,
+      "permissions": [
+        "client.read",
+        "client.manage",
+        "project.create",
+        "document.read",
+        "document.create",
+        "document.edit",
+        "document.review",
+        "document.approve",
+        "transmittal.manage",
+        "designbasis.edit",
+        "designbasis.approve",
+        "task.manage",
+        "milestone.manage",
+        "dailyreport.approve",
+        "issue.create",
+        "issue.manage",
+        "inspection.approve",
+        "sitequery.answer",
+        "lab.read",
+        "timesheet.submit",
+        "timesheet.approve",
+        "report.export"
+      ]
+    },
+    {
+      "code": "ENGINEER",
+      "nameTh": "วิศวกร",
+      "nameEn": "Engineer",
+      "isSystem": true,
+      "permissions": [
+        "client.read",
+        "document.read",
+        "document.create",
+        "document.edit",
+        "document.review",
+        "document.approve",
+        "designbasis.edit",
+        "issue.create",
+        "sitequery.create",
+        "sitequery.answer",
+        "lab.read",
+        "timesheet.submit"
+      ]
+    },
+    {
+      "code": "DRAFTER",
+      "nameTh": "ช่างเขียนแบบ",
+      "nameEn": "Drafter",
+      "isSystem": true,
+      "permissions": [
+        "document.read",
+        "document.create",
+        "document.edit",
+        "timesheet.submit"
+      ]
+    },
+    {
+      "code": "DOCUMENT_CONTROLLER",
+      "nameTh": "เจ้าหน้าที่ควบคุมเอกสาร",
+      "nameEn": "Document controller",
+      "isSystem": true,
+      "permissions": [
+        "client.read",
+        "project.read_all",
+        "masterdata.manage",
+        "document.read",
+        "document.create",
+        "document.edit",
+        "transmittal.manage",
+        "report.export",
+        "timesheet.submit"
+      ]
+    },
+    {
+      "code": "SITE_STAFF",
+      "nameTh": "ทีมหน้างาน",
+      "nameEn": "Site staff",
+      "isSystem": true,
+      "permissions": [
+        "document.read",
+        "dailyreport.submit",
+        "issue.create",
+        "inspection.submit",
+        "sitequery.create",
+        "timesheet.submit"
+      ]
+    },
+    {
+      "code": "LAB_MANAGER",
+      "nameTh": "ผู้จัดการห้องปฏิบัติการ",
+      "nameEn": "Laboratory manager",
+      "isSystem": true,
+      "permissions": [
+        "client.read",
+        "lab.read",
+        "lab.job.manage",
+        "lab.sample.receive",
+        "lab.result.enter",
+        "lab.result.review",
+        "lab.result.approve",
+        "lab.report.issue",
+        "lab.masterdata.manage",
+        "lab.instrument.manage",
+        "sampling.plan",
+        "sampling.perform",
+        "report.export",
+        "timesheet.submit",
+        "timesheet.approve"
+      ]
+    },
+    {
+      "code": "LAB_ANALYST",
+      "nameTh": "นักวิเคราะห์",
+      "nameEn": "Laboratory analyst",
+      "isSystem": true,
+      "permissions": [
+        "lab.read",
+        "lab.sample.receive",
+        "lab.result.enter",
+        "lab.result.review",
+        "timesheet.submit"
+      ]
+    },
+    {
+      "code": "SAMPLER",
+      "nameTh": "เจ้าหน้าที่เก็บตัวอย่าง",
+      "nameEn": "Sampler",
+      "isSystem": true,
+      "permissions": [
+        "lab.read",
+        "sampling.perform",
+        "timesheet.submit"
+      ]
+    },
+    {
+      "code": "SALES_ADMIN",
+      "nameTh": "ธุรการ/ขาย",
+      "nameEn": "Sales & admin officer",
+      "isSystem": true,
+      "permissions": [
+        "client.read",
+        "client.manage",
+        "lab.read",
+        "lab.job.manage",
+        "quotation.create",
+        "report.export",
+        "timesheet.submit"
+      ]
+    },
+    {
+      "code": "ACCOUNTING",
+      "nameTh": "บัญชี",
+      "nameEn": "Accounting",
+      "isSystem": true,
+      "permissions": [
+        "client.read",
+        "project.read_all",
+        "billing.manage",
+        "report.export",
+        "timesheet.submit"
+      ]
+    }
+  ]
+}

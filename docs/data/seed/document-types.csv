@@ -1,0 +1,15 @@
+code,name_th,name_en,requires_pdf_rendition,requires_licensed_approver,allowed_license_branches,min_license_level,default_workflow,sort_order
+DWG,แบบ,Drawing,true,true,,,DRAW_CHECK_APPROVE,10
+PID,แผนภาพท่อและเครื่องมือวัด (P&ID),Piping & Instrumentation Diagram,true,true,,,DRAW_CHECK_APPROVE,20
+PFD,แผนผังกระบวนการ,Process Flow Diagram,true,true,,,DRAW_CHECK_APPROVE,30
+CAL,รายการคำนวณ,Calculation,true,true,,,DRAW_CHECK_APPROVE,40
+SPC,ข้อกำหนดทางเทคนิค,Specification,true,false,,,CHECK_APPROVE,50
+RPT,รายงาน,Report,true,false,,,CHECK_APPROVE,60
+BOQ,บัญชีแสดงปริมาณวัสดุและราคา,Bill of Quantities,true,false,,,CHECK_APPROVE,70
+DS,แผ่นข้อมูลอุปกรณ์,Datasheet,true,false,,,CHECK_APPROVE,80
+LST,รายการอุปกรณ์/รายการอื่น,List,true,false,,,CHECK_APPROVE,90
+MAN,คู่มือ O&M,O&M Manual,true,false,,,CHECK_APPROVE,100
+SCH,แผนงาน,Schedule,true,false,,,APPROVE_ONLY,110
+MOM,บันทึกการประชุม,Minutes of Meeting,true,false,,,APPROVE_ONLY,120
+LET,หนังสือ,Letter,true,false,,,APPROVE_ONLY,130
+OTH,อื่นๆ,Other,false,false,,,APPROVE_ONLY,140

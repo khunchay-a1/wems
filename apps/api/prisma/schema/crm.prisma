@@ -1,0 +1,176 @@
+// ═══════════════════ M02 ลูกค้าและสถานที่ — เฟส 1 (SamplingPoint ใช้เฟส 3) ═══════════════════
+// สเปก: docs/modules/M02-clients-sites.md
+
+enum ClientType {
+  COMPANY
+  GOVERNMENT
+  STATE_ENTERPRISE
+  LOCAL_AUTHORITY // อปท. เช่น เทศบาล อบต.
+  INDIVIDUAL
+  OTHER
+}
+
+enum SiteType {
+  FACTORY
+  BUILDING
+  INDUSTRIAL_ESTATE
+  MUNICIPAL
+  WATER_TREATMENT_PLANT
+  WASTEWATER_TREATMENT_PLANT
+  NATURAL_WATER_BODY
+  OTHER
+}
+
+/// ประเภทอาคารตามประกาศมาตรฐานน้ำทิ้งจากอาคาร: A=ก B=ข C=ค D=ง E=จ
+enum BuildingClass {
+  A
+  B
+  C
+  D
+  E
+}
+
+enum SamplingPointType {
+  RAW_WATER
+  INFLUENT
+  EFFLUENT
+  TREATED_WATER
+  TAP_WATER
+  SURFACE_WATER
+  GROUNDWATER
+  PROCESS
+  SLUDGE
+  OTHER
+}
+
+model Client {
+  id          String     @id @default(uuid(7)) @db.Uuid
+  code        String     @unique
+  nameTh      String     @map("name_th")
+  nameEn      String?    @map("name_en")
+  clientType  ClientType @default(COMPANY) @map("client_type")
+  /// เลขประจำตัวผู้เสียภาษี 13 หลัก
+  taxId       String?    @map("tax_id")
+  /// "00000" = สำนักงานใหญ่
+  branchCode  String?    @map("branch_code")
+  industry    String?
+  addressLine String?    @map("address_line")
+  subdistrict String?
+  district    String?
+  province    String?
+  postcode    String?
+  phone       String?
+  email       String?
+  website     String?
+  notes       String?
+  isActive    Boolean    @default(true) @map("is_active")
+  createdById String?    @map("created_by_id") @db.Uuid
+  createdAt   DateTime   @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime   @updatedAt @map("updated_at") @db.Timestamptz(3)
+  deletedAt   DateTime?  @map("deleted_at") @db.Timestamptz(3)
+  version     Int        @default(1)
+
+  contacts       ClientContact[]
+  sites          Site[]
+  projects       Project[]
+  transmittals   Transmittal[]
+  labJobs        LabJob[]
+  quotations     Quotation[]
+  billingRecords BillingRecord[]
+
+  @@index([nameTh(ops: raw("gin_trgm_ops"))], type: Gin, map: "clients_name_th_trgm_idx")
+  @@index([taxId])
+  @@map("clients")
+}
+
+model ClientContact {
+  id                   String    @id @default(uuid(7)) @db.Uuid
+  clientId             String    @map("client_id") @db.Uuid
+  name                 String
+  position             String?
+  department           String?
+  phone                String?
+  email                String?
+  isPrimary            Boolean   @default(false) @map("is_primary")
+  /// รับใบนำส่งเอกสาร (M04) ทางอีเมลโดยค่าเริ่มต้น
+  receivesTransmittals Boolean   @default(false) @map("receives_transmittals")
+  /// รับใบรายงานผลแล็บ (M06) ทางอีเมลโดยค่าเริ่มต้น
+  receivesLabReports   Boolean   @default(false) @map("receives_lab_reports")
+  notes                String?
+  isActive             Boolean   @default(true) @map("is_active")
+  createdAt            DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt            DateTime  @updatedAt @map("updated_at") @db.Timestamptz(3)
+  deletedAt            DateTime? @map("deleted_at") @db.Timestamptz(3)
+  version              Int       @default(1)
+
+  client     Client      @relation(fields: [clientId], references: [id])
+  labJobs    LabJob[]
+  quotations Quotation[]
+
+  @@index([clientId])
+  @@map("client_contacts")
+}
+
+model Site {
+  id                    String         @id @default(uuid(7)) @db.Uuid
+  clientId              String         @map("client_id") @db.Uuid
+  code                  String
+  name                  String
+  siteType              SiteType       @map("site_type")
+  addressLine           String?        @map("address_line")
+  subdistrict           String?
+  district              String?
+  province              String?
+  postcode              String?
+  latitude              Decimal?       @db.Decimal(9, 6)
+  longitude             Decimal?       @db.Decimal(9, 6)
+  /// ประเภทอาคาร ก–จ (เฉพาะ siteType = BUILDING)
+  buildingClass         BuildingClass? @map("building_class")
+  /// เลขทะเบียนโรงงาน
+  factoryRegistrationNo String?        @map("factory_registration_no")
+  /// ลำดับที่ประเภทโรงงานตามกฎหมายโรงงาน
+  factoryTypeCode       String?        @map("factory_type_code")
+  /// มาตรฐานน้ำทิ้งที่ใช้เปรียบเทียบโดยค่าเริ่มต้น (M06)
+  defaultStandardId     String?        @map("default_standard_id") @db.Uuid
+  notes                 String?
+  isActive              Boolean        @default(true) @map("is_active")
+  createdAt             DateTime       @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt             DateTime       @updatedAt @map("updated_at") @db.Timestamptz(3)
+  deletedAt             DateTime?      @map("deleted_at") @db.Timestamptz(3)
+  version               Int            @default(1)
+
+  client          Client              @relation(fields: [clientId], references: [id])
+  defaultStandard RegulatoryStandard? @relation(fields: [defaultStandardId], references: [id])
+  samplingPoints  SamplingPoint[]
+  projects        Project[]
+  labJobs         LabJob[]
+  samplingStops   SamplingStop[]
+
+  @@unique([clientId, code])
+  @@map("sites")
+}
+
+model SamplingPoint {
+  id                String            @id @default(uuid(7)) @db.Uuid
+  siteId            String            @map("site_id") @db.Uuid
+  code              String
+  name              String
+  pointType         SamplingPointType @map("point_type")
+  description       String?
+  latitude          Decimal?          @db.Decimal(9, 6)
+  longitude         Decimal?          @db.Decimal(9, 6)
+  defaultStandardId String?           @map("default_standard_id") @db.Uuid
+  isActive          Boolean           @default(true) @map("is_active")
+  createdAt         DateTime          @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt         DateTime          @updatedAt @map("updated_at") @db.Timestamptz(3)
+  deletedAt         DateTime?         @map("deleted_at") @db.Timestamptz(3)
+  version           Int               @default(1)
+
+  site            Site                @relation(fields: [siteId], references: [id])
+  defaultStandard RegulatoryStandard? @relation(fields: [defaultStandardId], references: [id])
+  samples         Sample[]
+  samplingStops   SamplingStop[]
+
+  @@unique([siteId, code])
+  @@map("sampling_points")
+}

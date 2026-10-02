@@ -1,0 +1,207 @@
+// ═══════════════════ M08 งานขายและการเงิน — เฟส 4 ═══════════════════
+// ใบเสนอราคา, บันทึกการวางบิล (เอกสารภาษีจริงออกจากระบบบัญชี), Timesheet, อัตราต้นทุน
+// สเปก: docs/modules/M08-commercial.md — เงินใช้ Decimal เสมอ ห้าม float
+
+enum QuotationType {
+  LAB
+  DESIGN
+  CONSTRUCTION
+  CONSULTING
+  OTHER
+}
+
+enum QuotationStatus {
+  DRAFT
+  PENDING_APPROVAL
+  APPROVED
+  SENT
+  ACCEPTED
+  REJECTED
+  EXPIRED
+  CANCELLED
+  SUPERSEDED
+}
+
+/// สถานะการวางบิลฝั่งระบบนี้; ใบแจ้งหนี้/ใบกำกับภาษีจริงออกจากระบบบัญชี (externalRef)
+enum BillingStatus {
+  DRAFT
+  REQUESTED // ส่งคำขอออกใบแจ้งหนี้ให้ฝ่ายบัญชีแล้ว
+  INVOICED // ฝ่ายบัญชีออกเอกสารแล้ว
+  PAID
+  CANCELLED
+}
+
+enum TimesheetStatus {
+  DRAFT
+  SUBMITTED
+  APPROVED
+  REJECTED
+}
+
+model Quotation {
+  id              String          @id @default(uuid(7)) @db.Uuid
+  number          String
+  /// 0 = ฉบับแรก; แก้หลังส่งลูกค้าแล้ว = ฉบับใหม่ revNo + 1
+  revNo           Int             @default(0) @map("rev_no")
+  clientId        String          @map("client_id") @db.Uuid
+  contactId       String?         @map("contact_id") @db.Uuid
+  projectId       String?         @map("project_id") @db.Uuid
+  type            QuotationType
+  status          QuotationStatus @default(DRAFT)
+  title           String
+  issueDate       DateTime?       @map("issue_date") @db.Date
+  validUntil      DateTime?       @map("valid_until") @db.Date
+  currency        String          @default("THB")
+  subtotal        Decimal         @default(0) @db.Decimal(14, 2)
+  discountAmount  Decimal         @default(0) @map("discount_amount") @db.Decimal(14, 2)
+  /// อัตรา VAT ขณะออกเอกสาร (snapshot จาก Setting tax.vatRate)
+  vatRate         Decimal         @map("vat_rate") @db.Decimal(5, 2)
+  vatAmount       Decimal         @default(0) @map("vat_amount") @db.Decimal(14, 2)
+  withholdingRate Decimal?        @map("withholding_rate") @db.Decimal(5, 2)
+  totalAmount     Decimal         @default(0) @map("total_amount") @db.Decimal(14, 2)
+  terms           String?
+  notes           String?
+  preparedById    String          @map("prepared_by_id") @db.Uuid
+  approvedById    String?         @map("approved_by_id") @db.Uuid
+  approvedAt      DateTime?       @map("approved_at") @db.Timestamptz(3)
+  sentAt          DateTime?       @map("sent_at") @db.Timestamptz(3)
+  acceptedAt      DateTime?       @map("accepted_at") @db.Timestamptz(3)
+  rejectedReason  String?         @map("rejected_reason")
+  pdfFileId       String?         @map("pdf_file_id") @db.Uuid
+  supersedesId    String?         @unique @map("supersedes_id") @db.Uuid
+  createdAt       DateTime        @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt       DateTime        @updatedAt @map("updated_at") @db.Timestamptz(3)
+  deletedAt       DateTime?       @map("deleted_at") @db.Timestamptz(3)
+  version         Int             @default(1)
+
+  client         Client          @relation(fields: [clientId], references: [id])
+  contact        ClientContact?  @relation(fields: [contactId], references: [id])
+  project        Project?        @relation(fields: [projectId], references: [id])
+  preparedBy     User            @relation("QuotationPreparedBy", fields: [preparedById], references: [id])
+  approvedBy     User?           @relation("QuotationApprovedBy", fields: [approvedById], references: [id])
+  supersedes     Quotation?      @relation("QuotationRevision", fields: [supersedesId], references: [id])
+  supersededBy   Quotation?      @relation("QuotationRevision")
+  items          QuotationItem[]
+  labJobs        LabJob[]
+  billingRecords BillingRecord[]
+
+  @@unique([number, revNo])
+  @@index([clientId, status])
+  @@map("quotations")
+}
+
+model QuotationItem {
+  id             String  @id @default(uuid(7)) @db.Uuid
+  quotationId    String  @map("quotation_id") @db.Uuid
+  seq            Int
+  description    String
+  methodId       String? @map("method_id") @db.Uuid
+  packageId      String? @map("package_id") @db.Uuid
+  quantity       Decimal @db.Decimal(14, 4)
+  unit           String?
+  unitPrice      Decimal @map("unit_price") @db.Decimal(14, 2)
+  discountAmount Decimal @default(0) @map("discount_amount") @db.Decimal(14, 2)
+  amount         Decimal @db.Decimal(14, 2)
+
+  quotation Quotation         @relation(fields: [quotationId], references: [id], onDelete: Cascade)
+  method    AnalyticalMethod? @relation(fields: [methodId], references: [id])
+  package   TestPackage?      @relation(fields: [packageId], references: [id])
+
+  @@unique([quotationId, seq])
+  @@map("quotation_items")
+}
+
+model BillingRecord {
+  id                 String        @id @default(uuid(7)) @db.Uuid
+  number             String        @unique
+  /// เลขเอกสารในระบบบัญชี (ใบแจ้งหนี้/ใบกำกับภาษี)
+  externalRef        String?       @map("external_ref")
+  clientId           String        @map("client_id") @db.Uuid
+  projectId          String?       @map("project_id") @db.Uuid
+  labJobId           String?       @map("lab_job_id") @db.Uuid
+  paymentMilestoneId String?       @map("payment_milestone_id") @db.Uuid
+  quotationId        String?       @map("quotation_id") @db.Uuid
+  status             BillingStatus @default(DRAFT)
+  description        String
+  amount             Decimal       @db.Decimal(14, 2)
+  vatAmount          Decimal       @default(0) @map("vat_amount") @db.Decimal(14, 2)
+  withholdingAmount  Decimal       @default(0) @map("withholding_amount") @db.Decimal(14, 2)
+  totalAmount        Decimal       @map("total_amount") @db.Decimal(14, 2)
+  requestedAt        DateTime?     @map("requested_at") @db.Timestamptz(3)
+  invoicedAt         DateTime?     @map("invoiced_at") @db.Date
+  dueDate            DateTime?     @map("due_date") @db.Date
+  paidAt             DateTime?     @map("paid_at") @db.Date
+  notes              String?
+  createdById        String?       @map("created_by_id") @db.Uuid
+  createdAt          DateTime      @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt          DateTime      @updatedAt @map("updated_at") @db.Timestamptz(3)
+  version            Int           @default(1)
+
+  client           Client            @relation(fields: [clientId], references: [id])
+  project          Project?          @relation(fields: [projectId], references: [id])
+  labJob           LabJob?           @relation(fields: [labJobId], references: [id])
+  paymentMilestone PaymentMilestone? @relation(fields: [paymentMilestoneId], references: [id])
+  quotation        Quotation?        @relation(fields: [quotationId], references: [id])
+
+  @@index([clientId, status])
+  @@map("billing_records")
+}
+
+model Timesheet {
+  id           String          @id @default(uuid(7)) @db.Uuid
+  userId       String          @map("user_id") @db.Uuid
+  /// วันจันทร์ของสัปดาห์
+  weekStart    DateTime        @map("week_start") @db.Date
+  status       TimesheetStatus @default(DRAFT)
+  submittedAt  DateTime?       @map("submitted_at") @db.Timestamptz(3)
+  approvedById String?         @map("approved_by_id") @db.Uuid
+  approvedAt   DateTime?       @map("approved_at") @db.Timestamptz(3)
+  rejectReason String?         @map("reject_reason")
+  createdAt    DateTime        @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt    DateTime        @updatedAt @map("updated_at") @db.Timestamptz(3)
+  version      Int             @default(1)
+
+  user       User             @relation("TimesheetOwner", fields: [userId], references: [id])
+  approvedBy User?            @relation("TimesheetApprovedBy", fields: [approvedById], references: [id])
+  entries    TimesheetEntry[]
+
+  @@unique([userId, weekStart])
+  @@map("timesheets")
+}
+
+model TimesheetEntry {
+  id          String   @id @default(uuid(7)) @db.Uuid
+  timesheetId String   @map("timesheet_id") @db.Uuid
+  workDate    DateTime @map("work_date") @db.Date
+  projectId   String?  @map("project_id") @db.Uuid
+  taskId      String?  @map("task_id") @db.Uuid
+  /// งานที่ไม่ผูกโครงการ เช่น "OVERHEAD", "TRAINING", "LEAVE"
+  category    String?
+  hours       Decimal  @db.Decimal(4, 2)
+  description String?
+  isBillable  Boolean  @default(true) @map("is_billable")
+
+  timesheet Timesheet @relation(fields: [timesheetId], references: [id], onDelete: Cascade)
+  project   Project?  @relation(fields: [projectId], references: [id])
+  task      Task?     @relation(fields: [taskId], references: [id])
+
+  @@index([timesheetId])
+  @@index([projectId, workDate])
+  @@map("timesheet_entries")
+}
+
+/// อัตราต้นทุนต่อชั่วโมง ต่อบุคคล หรือต่อบทบาทโครงการ (userId ว่าง)
+model CostRate {
+  id            String       @id @default(uuid(7)) @db.Uuid
+  userId        String?      @map("user_id") @db.Uuid
+  projectRole   ProjectRole? @map("project_role")
+  ratePerHour   Decimal      @map("rate_per_hour") @db.Decimal(10, 2)
+  effectiveFrom DateTime     @map("effective_from") @db.Date
+  effectiveTo   DateTime?    @map("effective_to") @db.Date
+  createdAt     DateTime     @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  user User? @relation(fields: [userId], references: [id])
+
+  @@index([userId, effectiveFrom])
+  @@map("cost_rates")
+}

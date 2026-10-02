@@ -1,0 +1,226 @@
+// ═══════════════════ M03 โครงการ — เฟส 1 (Project, ProjectMember) / เฟส 2 (Task, PaymentMilestone) ═══════════════════
+// สเปก: docs/modules/M03-projects.md
+
+enum ProjectType {
+  DESIGN
+  DESIGN_BUILD
+  CONSTRUCTION
+  OPERATION_MAINTENANCE
+  MONITORING // สัญญาตรวจวัดคุณภาพน้ำรายงวด
+  CONSULTING
+  OTHER
+}
+
+enum ProjectStatus {
+  PLANNING
+  ACTIVE
+  ON_HOLD
+  COMPLETED
+  CLOSED // ปิดโครงการ: อ่านอย่างเดียว
+  CANCELLED
+}
+
+/// บทบาทในโครงการ ใช้กำหนดผู้ที่เลือกเป็นผู้ตรวจ/ผู้อนุมัติได้ และสิทธิ์จัดการโครงการ (docs/06-security.md §3)
+enum ProjectRole {
+  PROJECT_MANAGER
+  DESIGN_MANAGER
+  ENGINEER
+  DRAFTER
+  DOCUMENT_CONTROLLER
+  SITE_ENGINEER
+  FOREMAN
+  VIEWER
+}
+
+/// ALPHA_NUMERIC: A,B,C… ก่อนออกเพื่อก่อสร้าง แล้ว 0,1,2… ; ISO19650: P01,P02… แล้ว C01,C02… (BR-DOC-020)
+enum RevisionScheme {
+  ALPHA_NUMERIC
+  ISO19650
+}
+
+enum TaskType {
+  PHASE
+  TASK
+  MILESTONE
+}
+
+enum TaskStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  ON_HOLD
+  COMPLETED
+  CANCELLED
+}
+
+enum DependencyType {
+  FS
+  SS
+  FF
+  SF
+}
+
+enum PaymentMilestoneStatus {
+  PENDING
+  SUBMITTED // ส่งมอบงานงวดแล้ว
+  ACCEPTED // ลูกค้าตรวจรับ
+  INVOICED
+  PAID
+  CANCELLED
+}
+
+model Project {
+  id                        String         @id @default(uuid(7)) @db.Uuid
+  code                      String         @unique
+  name                      String
+  nameEn                    String?        @map("name_en")
+  description               String?
+  clientId                  String         @map("client_id") @db.Uuid
+  siteId                    String?        @map("site_id") @db.Uuid
+  type                      ProjectType
+  status                    ProjectStatus  @default(PLANNING)
+  contractNo                String?        @map("contract_no")
+  contractValue             Decimal?       @map("contract_value") @db.Decimal(14, 2)
+  currency                  String         @default("THB")
+  plannedStartDate          DateTime?      @map("planned_start_date") @db.Date
+  plannedEndDate            DateTime?      @map("planned_end_date") @db.Date
+  actualStartDate           DateTime?      @map("actual_start_date") @db.Date
+  actualEndDate             DateTime?      @map("actual_end_date") @db.Date
+  projectManagerId          String?        @map("project_manager_id") @db.Uuid
+  revisionScheme            RevisionScheme @default(ALPHA_NUMERIC) @map("revision_scheme")
+  /// ห้ามผู้จัดทำเป็นผู้ตรวจ/ผู้อนุมัติ revision ของตัวเอง (BR-DOC-042)
+  requireSeparationOfDuties Boolean        @default(true) @map("require_separation_of_duties")
+  closedAt                  DateTime?      @map("closed_at") @db.Timestamptz(3)
+  createdById               String?        @map("created_by_id") @db.Uuid
+  createdAt                 DateTime       @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt                 DateTime       @updatedAt @map("updated_at") @db.Timestamptz(3)
+  deletedAt                 DateTime?      @map("deleted_at") @db.Timestamptz(3)
+  version                   Int            @default(1)
+
+  client            Client             @relation(fields: [clientId], references: [id])
+  site              Site?              @relation(fields: [siteId], references: [id])
+  projectManager    User?              @relation("ProjectManager", fields: [projectManagerId], references: [id])
+  members           ProjectMember[]
+  tasks             Task[]
+  paymentMilestones PaymentMilestone[]
+  documents         Document[]
+  transmittals      Transmittal[]
+  designBases       DesignBasis[]
+  dailyReports      DailyReport[]
+  issues            Issue[]
+  inspections       Inspection[]
+  siteQueries       SiteQuery[]
+  labJobs           LabJob[]
+  quotations        Quotation[]
+  billingRecords    BillingRecord[]
+  timesheetEntries  TimesheetEntry[]
+
+  @@index([clientId])
+  @@index([status])
+  @@index([name(ops: raw("gin_trgm_ops"))], type: Gin, map: "projects_name_trgm_idx")
+  @@map("projects")
+}
+
+model ProjectMember {
+  projectId String      @map("project_id") @db.Uuid
+  userId    String      @map("user_id") @db.Uuid
+  role      ProjectRole
+  addedById String?     @map("added_by_id") @db.Uuid
+  addedAt   DateTime    @default(now()) @map("added_at") @db.Timestamptz(3)
+  /// ถอดออกจากทีมแล้ว (เก็บประวัติ ไม่ลบแถว)
+  removedAt DateTime?   @map("removed_at") @db.Timestamptz(3)
+
+  project Project @relation(fields: [projectId], references: [id])
+  user    User    @relation(fields: [userId], references: [id])
+
+  @@id([projectId, userId])
+  @@index([userId])
+  @@map("project_members")
+}
+
+/// WBS แบบลำดับชั้น (parentId) — เฟส 2
+model Task {
+  id              String     @id @default(uuid(7)) @db.Uuid
+  projectId       String     @map("project_id") @db.Uuid
+  parentId        String?    @map("parent_id") @db.Uuid
+  wbsCode         String?    @map("wbs_code")
+  name            String
+  description     String?
+  type            TaskType   @default(TASK)
+  status          TaskStatus @default(NOT_STARTED)
+  plannedStart    DateTime?  @map("planned_start") @db.Date
+  plannedEnd      DateTime?  @map("planned_end") @db.Date
+  actualStart     DateTime?  @map("actual_start") @db.Date
+  actualEnd       DateTime?  @map("actual_end") @db.Date
+  progressPercent Decimal    @default(0) @map("progress_percent") @db.Decimal(5, 2)
+  /// น้ำหนักสำหรับคำนวณความคืบหน้ารวม (S-curve)
+  weight          Decimal    @default(1) @db.Decimal(9, 4)
+  sortOrder       Int        @default(0) @map("sort_order")
+  createdAt       DateTime   @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt       DateTime   @updatedAt @map("updated_at") @db.Timestamptz(3)
+  deletedAt       DateTime?  @map("deleted_at") @db.Timestamptz(3)
+  version         Int        @default(1)
+
+  project          Project               @relation(fields: [projectId], references: [id])
+  parent           Task?                 @relation("TaskTree", fields: [parentId], references: [id])
+  children         Task[]                @relation("TaskTree")
+  assignees        TaskAssignee[]
+  successors       TaskDependency[]      @relation("TaskPredecessor")
+  predecessors     TaskDependency[]      @relation("TaskSuccessor")
+  reportActivities DailyReportActivity[]
+  timesheetEntries TimesheetEntry[]
+
+  @@index([projectId, parentId])
+  @@map("tasks")
+}
+
+model TaskAssignee {
+  taskId String @map("task_id") @db.Uuid
+  userId String @map("user_id") @db.Uuid
+
+  task Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id])
+
+  @@id([taskId, userId])
+  @@index([userId])
+  @@map("task_assignees")
+}
+
+model TaskDependency {
+  predecessorId String         @map("predecessor_id") @db.Uuid
+  successorId   String         @map("successor_id") @db.Uuid
+  type          DependencyType @default(FS)
+  lagDays       Int            @default(0) @map("lag_days")
+
+  predecessor Task @relation("TaskPredecessor", fields: [predecessorId], references: [id], onDelete: Cascade)
+  successor   Task @relation("TaskSuccessor", fields: [successorId], references: [id], onDelete: Cascade)
+
+  @@id([predecessorId, successorId])
+  @@index([successorId])
+  @@map("task_dependencies")
+}
+
+/// งวดงานตามสัญญา — เฟส 2
+model PaymentMilestone {
+  id              String                 @id @default(uuid(7)) @db.Uuid
+  projectId       String                 @map("project_id") @db.Uuid
+  seq             Int
+  name            String
+  percent         Decimal?               @db.Decimal(5, 2)
+  amount          Decimal                @db.Decimal(14, 2)
+  dueDate         DateTime?              @map("due_date") @db.Date
+  deliverableNote String?                @map("deliverable_note")
+  status          PaymentMilestoneStatus @default(PENDING)
+  submittedAt     DateTime?              @map("submitted_at") @db.Date
+  acceptedAt      DateTime?              @map("accepted_at") @db.Date
+  invoicedAt      DateTime?              @map("invoiced_at") @db.Date
+  paidAt          DateTime?              @map("paid_at") @db.Date
+  createdAt       DateTime               @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt       DateTime               @updatedAt @map("updated_at") @db.Timestamptz(3)
+  version         Int                    @default(1)
+
+  project        Project         @relation(fields: [projectId], references: [id])
+  billingRecords BillingRecord[]
+
+  @@unique([projectId, seq])
+  @@map("payment_milestones")
+}

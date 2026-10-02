@@ -1,0 +1,13 @@
+code,name_th,name_en,sort_order
+GE,ทั่วไป,General,10
+PR,กระบวนการ,Process,20
+CV,โยธา,Civil,30
+ST,โครงสร้าง,Structural,40
+AR,สถาปัตยกรรม,Architectural,50
+ME,เครื่องกล,Mechanical,60
+PL,ระบบท่อ,Piping,70
+EE,ไฟฟ้า,Electrical,80
+IC,เครื่องมือวัดและระบบควบคุม,Instrumentation & Control,90
+EN,สิ่งแวดล้อม,Environmental,100
+SV,สำรวจ,Survey,110
+GT,ธรณีเทคนิค,Geotechnical,120

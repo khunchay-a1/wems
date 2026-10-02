@@ -1,0 +1,621 @@
+// ═══════════════════════ M01 Platform — เฟส 0 ═══════════════════════
+// ผู้ใช้ สิทธิ์ ใบอนุญาตวิชาชีพ session ไฟล์ ความคิดเห็น เลขเอกสาร แจ้งเตือน audit และ change log สำหรับ sync
+// สเปก: docs/modules/M01-platform.md, docs/06-security.md
+
+enum CalendarPreference {
+  BUDDHIST // แสดงปี พ.ศ.
+  GREGORIAN // แสดงปี ค.ศ.
+}
+
+enum LicenseType {
+  ENGINEER // ใบอนุญาตประกอบวิชาชีพวิศวกรรมควบคุม (กว.)
+  ARCHITECT
+  OTHER
+}
+
+enum LicenseBranch {
+  CIVIL
+  MECHANICAL
+  ELECTRICAL_POWER
+  ELECTRICAL_COMMUNICATION
+  INDUSTRIAL
+  ENVIRONMENTAL
+  CHEMICAL
+  MINING
+  OTHER
+}
+
+enum LicenseLevel {
+  ASSOCIATE // ภาคีวิศวกร
+  ASSOCIATE_SPECIAL // ภาคีวิศวกรพิเศษ
+  PROFESSIONAL // สามัญวิศวกร
+  SENIOR // วุฒิวิศวกร
+}
+
+enum ClientPlatform {
+  WEB
+  ANDROID
+  IOS
+}
+
+enum FileStatus {
+  PENDING_UPLOAD // ออก presigned URL แล้ว รอ client อัปโหลด
+  PROCESSING // worker กำลังคำนวณ sha256 / สแกน / ทำ preview
+  AVAILABLE
+  REJECTED // ไฟล์เสีย ติดไวรัส หรือชนิดไม่อนุญาต
+  DELETED
+}
+
+/// เจ้าของไฟล์แนบทั่วไป (รูปถ่าย เอกสารประกอบ) — ไฟล์ของ revision เอกสารใช้ DocumentFile แทน
+enum AttachmentOwnerType {
+  PROJECT
+  CLIENT
+  SITE
+  TRANSMITTAL
+  DESIGN_BASIS
+  COMMENT
+  DAILY_REPORT
+  ISSUE
+  INSPECTION
+  INSPECTION_RESULT
+  SITE_QUERY
+  LAB_JOB
+  SAMPLE
+  SAMPLING_STOP
+  INSTRUMENT_EVENT
+  QUOTATION
+}
+
+enum CommentOwnerType {
+  DOCUMENT_REVISION
+  TRANSMITTAL
+  DESIGN_BASIS
+  TASK
+  DAILY_REPORT
+  ISSUE
+  SITE_QUERY
+  LAB_JOB
+  SAMPLE
+  QUOTATION
+}
+
+/// NONE = ความเห็นทั่วไป; OPEN/RESPONDED/CLOSED = ความเห็นจากการตรวจเอกสาร (ต้องตอบและปิด)
+enum CommentStatus {
+  NONE
+  OPEN
+  RESPONDED
+  CLOSED
+}
+
+enum NotificationChannel {
+  IN_APP
+  EMAIL
+  PUSH
+  LINE
+}
+
+enum ChangeOp {
+  UPSERT
+  DELETE
+}
+
+enum NumberedEntity {
+  PROJECT
+  DOCUMENT
+  TRANSMITTAL
+  ISSUE
+  INSPECTION
+  SITE_QUERY
+  LAB_JOB
+  SAMPLE
+  ANALYSIS_BATCH
+  TEST_REPORT
+  SAMPLING_TRIP
+  QUOTATION
+  BILLING
+}
+
+enum SequenceReset {
+  NEVER
+  YEARLY
+  MONTHLY
+}
+
+enum SignatureMethod {
+  PASSWORD
+  SIGNING_PIN
+  SSO_REAUTH
+}
+
+enum ActorType {
+  USER
+  SYSTEM
+  PUBLIC_LINK
+}
+
+model Department {
+  id        String   @id @default(uuid(7)) @db.Uuid
+  code      String   @unique
+  nameTh    String   @map("name_th")
+  nameEn    String?  @map("name_en")
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  users User[]
+
+  @@map("departments")
+}
+
+model User {
+  id                   String             @id @default(uuid(7)) @db.Uuid
+  /// เก็บเป็นตัวพิมพ์เล็กเสมอ (normalize ใน service)
+  email                String             @unique
+  /// argon2id; null = ใช้ SSO อย่างเดียว
+  passwordHash         String?            @map("password_hash")
+  employeeCode         String?            @unique @map("employee_code")
+  displayNameTh        String             @map("display_name_th")
+  displayNameEn        String?            @map("display_name_en")
+  position             String?
+  phone                String?
+  departmentId         String?            @map("department_id") @db.Uuid
+  locale               String             @default("th")
+  calendar             CalendarPreference @default(BUDDHIST)
+  isActive             Boolean            @default(true) @map("is_active")
+  mustChangePassword   Boolean            @default(false) @map("must_change_password")
+  mfaEnabled           Boolean            @default(false) @map("mfa_enabled")
+  /// TOTP secret เข้ารหัส AES-256-GCM ด้วย APP_ENCRYPTION_KEY
+  mfaSecretEnc         String?            @map("mfa_secret_enc")
+  /// PIN 6 หลักสำหรับลงนาม (argon2id) — ทางเลือกแทนการพิมพ์รหัสผ่านตอนอนุมัติ
+  signingPinHash       String?            @map("signing_pin_hash")
+  /// FileObject ของรูปลายมือชื่อ ใช้พิมพ์ลงเอกสาร PDF
+  signatureImageFileId String?            @map("signature_image_file_id") @db.Uuid
+  avatarFileId         String?            @map("avatar_file_id") @db.Uuid
+  failedLoginCount     Int                @default(0) @map("failed_login_count")
+  lockedUntil          DateTime?          @map("locked_until") @db.Timestamptz(3)
+  lastLoginAt          DateTime?          @map("last_login_at") @db.Timestamptz(3)
+  createdAt            DateTime           @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt            DateTime           @updatedAt @map("updated_at") @db.Timestamptz(3)
+  deletedAt            DateTime?          @map("deleted_at") @db.Timestamptz(3)
+  version              Int                @default(1)
+
+  department Department? @relation(fields: [departmentId], references: [id])
+
+  // ── M01 ──
+  roles                   UserRole[]
+  licenses                ProfessionalLicense[]
+  sessions                Session[]
+  pushDevices             PushDevice[]
+  notifications           Notification[]
+  notificationPreferences NotificationPreference[]
+  uploadedFiles           FileObject[]
+  attachments             Attachment[]
+  comments                Comment[]                @relation("CommentAuthor")
+  resolvedComments        Comment[]                @relation("CommentResolvedBy")
+  signatures              SignatureEvent[]
+
+  // ── M03 ──
+  managedProjects    Project[]       @relation("ProjectManager")
+  projectMemberships ProjectMember[]
+  taskAssignments    TaskAssignee[]
+
+  // ── M04 ──
+  ownedDocuments        Document[]         @relation("DocumentOwner")
+  preparedRevisions     DocumentRevision[] @relation("RevisionPreparedBy")
+  checkedRevisions      DocumentRevision[] @relation("RevisionCheckedBy")
+  approvedRevisions     DocumentRevision[] @relation("RevisionApprovedBy")
+  uploadedDocumentFiles DocumentFile[]
+  submittedReviewCycles ReviewCycle[]
+  reviewSteps           ReviewStep[]
+  sentTransmittals      Transmittal[]
+  approvedDesignBases   DesignBasis[]
+
+  // ── M05 ──
+  submittedDailyReports DailyReport[] @relation("DailyReportSubmittedBy")
+  approvedDailyReports  DailyReport[] @relation("DailyReportApprovedBy")
+  raisedIssues          Issue[]       @relation("IssueRaisedBy")
+  assignedIssues        Issue[]       @relation("IssueAssignee")
+  inspections           Inspection[]
+  raisedSiteQueries     SiteQuery[]   @relation("SiteQueryRaisedBy")
+  assignedSiteQueries   SiteQuery[]   @relation("SiteQueryAssignedTo")
+
+  // ── M06 ──
+  collectedSamples      Sample[]          @relation("SampleSampledBy")
+  receivedSamples       Sample[]          @relation("SampleReceivedBy")
+  analyzedTests         SampleTest[]      @relation("SampleTestAnalyst")
+  reviewedTests         SampleTest[]      @relation("SampleTestReviewedBy")
+  approvedTests         SampleTest[]      @relation("SampleTestApprovedBy")
+  analysisBatches       AnalysisBatch[]
+  preparedTestReports   TestReport[]      @relation("TestReportPreparedBy")
+  authorizedTestReports TestReport[]      @relation("TestReportAuthorizedBy")
+  custodyReceived       CustodyTransfer[]
+
+  // ── M07 ──
+  ledSamplingTrips        SamplingTrip[]
+  samplingTripMemberships SamplingTripMember[]
+  fieldMeasurements       FieldMeasurement[]
+
+  // ── M08 ──
+  preparedQuotations Quotation[] @relation("QuotationPreparedBy")
+  approvedQuotations Quotation[] @relation("QuotationApprovedBy")
+  timesheets         Timesheet[] @relation("TimesheetOwner")
+  approvedTimesheets Timesheet[] @relation("TimesheetApprovedBy")
+  costRates          CostRate[]
+
+  @@index([departmentId])
+  @@map("users")
+}
+
+model Role {
+  id          String   @id @default(uuid(7)) @db.Uuid
+  code        String   @unique
+  nameTh      String   @map("name_th")
+  nameEn      String?  @map("name_en")
+  description String?
+  /// บทบาทระบบ (seed) ลบไม่ได้ แต่แก้สิทธิ์ได้
+  isSystem    Boolean  @default(false) @map("is_system")
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  permissions RolePermission[]
+  users       UserRole[]
+
+  @@map("roles")
+}
+
+/// รหัสสิทธิ์เป็น string ที่ประกาศในโค้ด (apps/api/src/common/auth/permissions.ts) — ดู docs/06-security.md
+model RolePermission {
+  roleId     String @map("role_id") @db.Uuid
+  permission String
+
+  role Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permission])
+  @@map("role_permissions")
+}
+
+model UserRole {
+  userId      String   @map("user_id") @db.Uuid
+  roleId      String   @map("role_id") @db.Uuid
+  grantedById String?  @map("granted_by_id") @db.Uuid
+  grantedAt   DateTime @default(now()) @map("granted_at") @db.Timestamptz(3)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([userId, roleId])
+  @@index([roleId])
+  @@map("user_roles")
+}
+
+/// ใบอนุญาตประกอบวิชาชีพ ใช้ตรวจสิทธิ์ผู้อนุมัติแบบ (BR-DOC-040)
+model ProfessionalLicense {
+  id           String         @id @default(uuid(7)) @db.Uuid
+  userId       String         @map("user_id") @db.Uuid
+  type         LicenseType
+  branch       LicenseBranch?
+  level        LicenseLevel?
+  licenseNo    String         @map("license_no")
+  issuedAt     DateTime?      @map("issued_at") @db.Date
+  expiresAt    DateTime       @map("expires_at") @db.Date
+  /// สำเนาใบอนุญาต (FileObject)
+  fileId       String?        @map("file_id") @db.Uuid
+  verifiedById String?        @map("verified_by_id") @db.Uuid
+  verifiedAt   DateTime?      @map("verified_at") @db.Timestamptz(3)
+  isActive     Boolean        @default(true) @map("is_active")
+  createdAt    DateTime       @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt    DateTime       @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  user       User             @relation(fields: [userId], references: [id])
+  signatures SignatureEvent[]
+
+  @@unique([type, licenseNo])
+  @@index([userId])
+  @@map("professional_licenses")
+}
+
+/// refresh token แบบหมุนเวียน: ทุกครั้งที่ refresh สร้างแถวใหม่ในตระกูลเดียวกัน (familyId)
+/// ถ้ามีการใช้ token ที่ถูกหมุนไปแล้ว = ถูกขโมย → เพิกถอนทั้งตระกูล (docs/06-security.md §2)
+model Session {
+  id                  String         @id @default(uuid(7)) @db.Uuid
+  userId              String         @map("user_id") @db.Uuid
+  familyId            String         @map("family_id") @db.Uuid
+  /// SHA-256 ของ refresh token (ไม่เก็บ token จริง)
+  refreshTokenHash    String         @unique @map("refresh_token_hash")
+  platform            ClientPlatform
+  deviceId            String?        @map("device_id")
+  deviceName          String?        @map("device_name")
+  ip                  String?
+  userAgent           String?        @map("user_agent")
+  createdAt           DateTime       @default(now()) @map("created_at") @db.Timestamptz(3)
+  lastUsedAt          DateTime       @default(now()) @map("last_used_at") @db.Timestamptz(3)
+  expiresAt           DateTime       @map("expires_at") @db.Timestamptz(3)
+  revokedAt           DateTime?      @map("revoked_at") @db.Timestamptz(3)
+  revokedReason       String?        @map("revoked_reason")
+  replacedBySessionId String?        @map("replaced_by_session_id") @db.Uuid
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([familyId])
+  @@map("sessions")
+}
+
+model PushDevice {
+  id          String         @id @default(uuid(7)) @db.Uuid
+  userId      String         @map("user_id") @db.Uuid
+  platform    ClientPlatform
+  fcmToken    String         @unique @map("fcm_token")
+  appVersion  String?        @map("app_version")
+  deviceModel String?        @map("device_model")
+  lastSeenAt  DateTime       @default(now()) @map("last_seen_at") @db.Timestamptz(3)
+  disabledAt  DateTime?      @map("disabled_at") @db.Timestamptz(3)
+  createdAt   DateTime       @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("push_devices")
+}
+
+/// ค่าตั้งต้นของระบบแบบ key-value เช่น company.profile, tax.vatRate — ดูรายการ key ใน M01 §7
+model Setting {
+  key         String   @id
+  value       Json
+  updatedById String?  @map("updated_by_id") @db.Uuid
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@map("settings")
+}
+
+/// รูปแบบเลขเอกสาร เช่น "{PROJECT}-{DISCIPLINE}-{TYPE}-{SEQ:3}" — token ทั้งหมดดู M01 §4
+/// scope = "GLOBAL" หรือ "project:<uuid>" (override ต่อโครงการ)
+model NumberingScheme {
+  id          String         @id @default(uuid(7)) @db.Uuid
+  entity      NumberedEntity
+  scope       String         @default("GLOBAL")
+  pattern     String
+  resetPolicy SequenceReset  @default(YEARLY) @map("reset_policy")
+  isActive    Boolean        @default(true) @map("is_active")
+  createdAt   DateTime       @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime       @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@unique([entity, scope])
+  @@map("numbering_schemes")
+}
+
+/// ตัวนับเลขรัน — key ประกอบจาก entity + ค่าที่ reset เช่น "DOCUMENT|P26-001|PR|DWG" หรือ "SAMPLE|2026"
+/// เพิ่มค่าด้วย UPDATE ... RETURNING ภายใน transaction เดียวกับการสร้างเอกสาร (BR-PLT-010)
+model NumberSequence {
+  key          String   @id
+  currentValue Int      @default(0) @map("current_value")
+  updatedAt    DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@map("number_sequences")
+}
+
+/// รองรับ header Idempotency-Key (docs/04-api-conventions.md §8) เก็บ 24 ชั่วโมง
+model IdempotencyRecord {
+  userId         String   @map("user_id") @db.Uuid
+  key            String
+  method         String
+  path           String
+  requestHash    String   @map("request_hash")
+  responseStatus Int      @map("response_status")
+  responseBody   Json?    @map("response_body")
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  expiresAt      DateTime @map("expires_at") @db.Timestamptz(3)
+
+  @@id([userId, key])
+  @@index([expiresAt])
+  @@map("idempotency_records")
+}
+
+/// Audit log แบบ append-only — ห้าม UPDATE/DELETE (บังคับด้วยสิทธิ์ DB ใน production)
+/// ไม่มี relation เพื่อให้แยกจากข้อมูลธุรกิจและเขียนได้เร็ว
+model AuditLog {
+  id         BigInt    @id @default(autoincrement())
+  occurredAt DateTime  @default(now()) @map("occurred_at") @db.Timestamptz(3)
+  actorType  ActorType @default(USER) @map("actor_type")
+  actorId    String?   @map("actor_id") @db.Uuid
+  /// รูปแบบ "<entity>.<verb>" เช่น "document.revision.submit", "auth.login_failed"
+  action     String
+  entityType String    @map("entity_type")
+  entityId   String?   @map("entity_id")
+  projectId  String?   @map("project_id") @db.Uuid
+  summary    String?
+  /// { before: {...}, after: {...} } เฉพาะฟิลด์ที่เปลี่ยน
+  changes    Json?
+  reason     String?
+  ip         String?
+  userAgent  String?   @map("user_agent")
+  requestId  String?   @map("request_id")
+
+  @@index([entityType, entityId])
+  @@index([actorId, occurredAt])
+  @@index([projectId, occurredAt])
+  @@index([occurredAt])
+  @@map("audit_logs")
+}
+
+/// Transactional outbox: เขียนใน transaction เดียวกับข้อมูลธุรกิจ แล้ว outbox relay ส่งต่อเข้า BullMQ
+/// ใช้กับ side effect ทุกชนิด (อีเมล push สร้าง PDF แจ้งเตือน) — docs/02-architecture.md §6
+model OutboxEvent {
+  id          String    @id @default(uuid(7)) @db.Uuid
+  /// ชื่อเหตุการณ์ เช่น "review.step.activated", "transmittal.sent" — รายการใน docs/05-workflows.md §9
+  type        String
+  payload     Json
+  aggregateId String?   @map("aggregate_id") @db.Uuid
+  availableAt DateTime  @default(now()) @map("available_at") @db.Timestamptz(3)
+  attempts    Int       @default(0)
+  lastError   String?   @map("last_error")
+  processedAt DateTime? @map("processed_at") @db.Timestamptz(3)
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  @@index([processedAt, availableAt])
+  @@map("outbox_events")
+}
+
+/// บันทึกการเปลี่ยนแปลงสำหรับ pull sync ของแอปมือถือ (docs/08-mobile.md §5)
+/// เขียนใน transaction เดียวกับการเปลี่ยนข้อมูล; scopeKey เช่น "project:<uuid>", "user:<uuid>", "lab", "global"
+model ChangeLog {
+  seq        BigInt   @id @default(autoincrement())
+  scopeKey   String   @map("scope_key")
+  entityType String   @map("entity_type")
+  entityId   String   @map("entity_id") @db.Uuid
+  op         ChangeOp
+  changedAt  DateTime @default(now()) @map("changed_at") @db.Timestamptz(3)
+
+  @@index([scopeKey, seq])
+  @@index([changedAt])
+  @@map("change_logs")
+}
+
+model Notification {
+  id         String    @id @default(uuid(7)) @db.Uuid
+  userId     String    @map("user_id") @db.Uuid
+  /// รหัสเหตุการณ์ เช่น "review.step.assigned" — ดูตารางใน M01 §6
+  type       String
+  title      String
+  body       String
+  data       Json?
+  entityType String?   @map("entity_type")
+  entityId   String?   @map("entity_id") @db.Uuid
+  projectId  String?   @map("project_id") @db.Uuid
+  readAt     DateTime? @map("read_at") @db.Timestamptz(3)
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, readAt])
+  @@index([userId, createdAt])
+  @@map("notifications")
+}
+
+model NotificationPreference {
+  userId   String                @map("user_id") @db.Uuid
+  type     String
+  channels NotificationChannel[]
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, type])
+  @@map("notification_preferences")
+}
+
+/// metadata ของไฟล์ใน object storage (S3/MinIO) — เนื้อไฟล์ไม่อยู่ใน DB
+/// คอลัมน์ *FileId ในตารางอื่นที่ไม่มี relation = อ้างอิงแบบหลวม ตรวจความมีอยู่ใน FilesService
+model FileObject {
+  id           String     @id @default(uuid(7)) @db.Uuid
+  bucket       String
+  storageKey   String     @unique @map("storage_key")
+  originalName String     @map("original_name")
+  mimeType     String     @map("mime_type")
+  sizeBytes    BigInt     @map("size_bytes")
+  sha256       String?
+  status       FileStatus @default(PENDING_UPLOAD)
+  pageCount    Int?       @map("page_count")
+  /// key ของรูป preview หน้าแรก (PNG)
+  previewKey   String?    @map("preview_key")
+  metadata     Json?
+  uploadedById String     @map("uploaded_by_id") @db.Uuid
+  createdAt    DateTime   @default(now()) @map("created_at") @db.Timestamptz(3)
+  processedAt  DateTime?  @map("processed_at") @db.Timestamptz(3)
+  deletedAt    DateTime?  @map("deleted_at") @db.Timestamptz(3)
+
+  uploadedBy    User           @relation(fields: [uploadedById], references: [id])
+  attachments   Attachment[]
+  documentFiles DocumentFile[]
+
+  @@index([sha256])
+  @@index([uploadedById, createdAt])
+  @@map("file_objects")
+}
+
+/// ไฟล์แนบทั่วไป (รูปถ่ายหน้างาน เอกสารประกอบ) แบบ polymorphic: ownerType + ownerId
+model Attachment {
+  id          String              @id @default(uuid(7)) @db.Uuid
+  ownerType   AttachmentOwnerType @map("owner_type")
+  ownerId     String              @map("owner_id") @db.Uuid
+  fileId      String              @map("file_id") @db.Uuid
+  caption     String?
+  sortOrder   Int                 @default(0) @map("sort_order")
+  /// เวลาถ่ายภาพจากอุปกรณ์ (EXIF หรือเวลาเครื่อง)
+  takenAt     DateTime?           @map("taken_at") @db.Timestamptz(3)
+  latitude    Decimal?            @db.Decimal(9, 6)
+  longitude   Decimal?            @db.Decimal(9, 6)
+  createdById String              @map("created_by_id") @db.Uuid
+  createdAt   DateTime            @default(now()) @map("created_at") @db.Timestamptz(3)
+  deletedAt   DateTime?           @map("deleted_at") @db.Timestamptz(3)
+
+  file      FileObject @relation(fields: [fileId], references: [id])
+  createdBy User       @relation(fields: [createdById], references: [id])
+
+  @@index([ownerType, ownerId])
+  @@map("attachments")
+}
+
+/// ความเห็นแบบ polymorphic มี thread (parentId) และ anchor บน PDF สำหรับ markup
+/// anchor = { page: number, x: 0..1, y: 0..1, w?: 0..1, h?: 0..1, kind: "PIN" | "RECT" }
+model Comment {
+  id                   String           @id @default(uuid(7)) @db.Uuid
+  ownerType            CommentOwnerType @map("owner_type")
+  ownerId              String           @map("owner_id") @db.Uuid
+  parentId             String?          @map("parent_id") @db.Uuid
+  authorId             String           @map("author_id") @db.Uuid
+  body                 String
+  /// userId ที่ถูก @mention
+  mentions             String[]         @db.Uuid
+  anchor               Json?
+  status               CommentStatus    @default(NONE)
+  /// ความเห็นที่เกิดระหว่างขั้นตอนตรวจใด (M04)
+  reviewStepId         String?          @map("review_step_id") @db.Uuid
+  /// ความเห็นที่ยกมาจาก revision ก่อนหน้า (BR-DOC-034)
+  carriedFromCommentId String?          @map("carried_from_comment_id") @db.Uuid
+  responseNote         String?          @map("response_note")
+  resolvedById         String?          @map("resolved_by_id") @db.Uuid
+  resolvedAt           DateTime?        @map("resolved_at") @db.Timestamptz(3)
+  createdAt            DateTime         @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt            DateTime         @updatedAt @map("updated_at") @db.Timestamptz(3)
+  deletedAt            DateTime?        @map("deleted_at") @db.Timestamptz(3)
+  version              Int              @default(1)
+
+  parent      Comment?    @relation("CommentThread", fields: [parentId], references: [id])
+  replies     Comment[]   @relation("CommentThread")
+  author      User        @relation("CommentAuthor", fields: [authorId], references: [id])
+  resolvedBy  User?       @relation("CommentResolvedBy", fields: [resolvedById], references: [id])
+  reviewStep  ReviewStep? @relation(fields: [reviewStepId], references: [id])
+  carriedFrom Comment?    @relation("CommentCarryOver", fields: [carriedFromCommentId], references: [id])
+  carriedInto Comment[]   @relation("CommentCarryOver")
+
+  @@index([ownerType, ownerId])
+  @@index([reviewStepId])
+  @@map("comments")
+}
+
+/// หลักฐานการลงนามอิเล็กทรอนิกส์: ใคร ลงนามอะไร ด้วยวิธีใด กับไฟล์ hash ใด (docs/06-security.md §5)
+model SignatureEvent {
+  id            String          @id @default(uuid(7)) @db.Uuid
+  userId        String          @map("user_id") @db.Uuid
+  /// เช่น "review.approve", "review.check", "lab.result.approve", "lab.report.issue"
+  purpose       String
+  entityType    String          @map("entity_type")
+  entityId      String          @map("entity_id") @db.Uuid
+  method        SignatureMethod
+  /// SHA-256 ของไฟล์ที่ลงนาม (ถ้ามี)
+  fileSha256    String?         @map("file_sha256")
+  /// SHA-256 ของ canonical JSON { purpose, entityId, decision, note, fileSha256, signedAt }
+  payloadSha256 String          @map("payload_sha256")
+  licenseId     String?         @map("license_id") @db.Uuid
+  ip            String?
+  userAgent     String?         @map("user_agent")
+  signedAt      DateTime        @default(now()) @map("signed_at") @db.Timestamptz(3)
+
+  user        User                 @relation(fields: [userId], references: [id])
+  license     ProfessionalLicense? @relation(fields: [licenseId], references: [id])
+  reviewSteps ReviewStep[]
+
+  @@index([entityType, entityId])
+  @@index([userId, signedAt])
+  @@map("signature_events")
+}

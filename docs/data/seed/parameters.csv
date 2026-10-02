@@ -1,0 +1,38 @@
+code,name_th,name_en,category,default_unit,decimals,is_field_parameter,default_method_ref,holding_time_hours,preservation,container,sort_order
+PH,ความเป็นกรด-ด่าง,pH,PHYSICAL,-,1,true,SM 4500-H+ B,0.25,วัดทันที,P/G,10
+TEMP,อุณหภูมิ,Temperature,PHYSICAL,°C,1,true,SM 2550 B,0.25,วัดทันที,P/G,20
+COLOR_ADMI,สี,Color (ADMI),PHYSICAL,ADMI,0,false,SM 2120 F,48,แช่เย็น ≤ 6 °C,P/G,30
+TDS,ของแข็งละลายน้ำทั้งหมด,Total Dissolved Solids,PHYSICAL,mg/L,0,false,SM 2540 C,168,แช่เย็น ≤ 6 °C,P/G,40
+TSS,สารแขวนลอย (ของแข็งแขวนลอยทั้งหมด),Total Suspended Solids,PHYSICAL,mg/L,0,false,SM 2540 D,168,แช่เย็น ≤ 6 °C,P/G,50
+SETTLEABLE_SOLIDS,ตะกอนหนัก,Settleable Solids,PHYSICAL,mL/L,1,false,SM 2540 F,48,แช่เย็น ≤ 6 °C,P/G,60
+TURBIDITY,ความขุ่น,Turbidity,PHYSICAL,NTU,1,true,SM 2130 B,48,แช่เย็น ≤ 6 °C,P/G,70
+EC,การนำไฟฟ้า,Electrical Conductivity,PHYSICAL,µS/cm,0,true,SM 2510 B,672,แช่เย็น ≤ 6 °C,P/G,80
+DO,ออกซิเจนละลายน้ำ,Dissolved Oxygen,INORGANIC,mg/L,1,true,SM 4500-O G,0.25,วัดทันที,G,90
+BOD5,บีโอดี,Biochemical Oxygen Demand (5 days),ORGANIC,mg/L,0,false,SM 5210 B,48,แช่เย็น ≤ 6 °C,P/G,100
+COD,ซีโอดี,Chemical Oxygen Demand,ORGANIC,mg/L,0,false,SM 5220 C,672,"H2SO4 pH < 2, แช่เย็น ≤ 6 °C",P/G,110
+OIL_GREASE,น้ำมันและไขมัน,Oil and Grease,ORGANIC,mg/L,1,false,SM 5520 B,672,"HCl หรือ H2SO4 pH < 2, แช่เย็น ≤ 6 °C",G,120
+SULFIDE,ซัลไฟด์,Sulfide,INORGANIC,mg/L,2,false,SM 4500-S2- F,168,"Zn acetate + NaOH pH > 9, แช่เย็น ≤ 6 °C",P/G,130
+CYANIDE,ไซยาไนด์,Cyanide (CN),INORGANIC,mg/L,3,false,"SM 4500-CN- C, E",336,"NaOH pH > 12, แช่เย็น ≤ 6 °C",P/G,140
+FORMALDEHYDE,ฟอร์มาลดีไฮด์,Formaldehyde,ORGANIC,mg/L,2,false,Colorimetric (ห้องปฏิบัติการกำหนด),,แช่เย็น ≤ 6 °C,G,150
+PHENOLS,สารประกอบฟีนอล,Phenols,ORGANIC,mg/L,3,false,"SM 5530 B, D",672,"H2SO4 pH < 2, แช่เย็น ≤ 6 °C",G,160
+FREE_CHLORINE,คลอรีนอิสระ,Free Chlorine,INORGANIC,mg/L,2,true,SM 4500-Cl G,0.25,วัดทันที,P/G,170
+PESTICIDES,สารฆ่าศัตรูพืชและสัตว์,Pesticides,ORGANIC,mg/L,4,false,GC / HPLC (ห้องปฏิบัติการกำหนด),,แช่เย็น ≤ 6 °C,G (amber),180
+TKN,ทีเคเอ็น,Total Kjeldahl Nitrogen,NUTRIENT,mg/L,1,false,SM 4500-Norg B,672,"H2SO4 pH < 2, แช่เย็น ≤ 6 °C",P/G,190
+NH3_N,แอมโมเนีย-ไนโตรเจน,Ammonia Nitrogen,NUTRIENT,mg/L,2,false,SM 4500-NH3,672,"H2SO4 pH < 2, แช่เย็น ≤ 6 °C",P/G,200
+NO3_N,ไนเตรต-ไนโตรเจน,Nitrate Nitrogen,NUTRIENT,mg/L,2,false,SM 4500-NO3-,48,แช่เย็น ≤ 6 °C,P/G,210
+TP,ฟอสฟอรัสทั้งหมด,Total Phosphorus,NUTRIENT,mg/L,2,false,SM 4500-P,672,"H2SO4 pH < 2, แช่เย็น ≤ 6 °C",P/G,220
+ZN,สังกะสี,Zinc (Zn),METAL,mg/L,3,false,SM 3030 + 3111 B / 3120 B,4320,HNO3 pH < 2,P,230
+CR_TOTAL,โครเมียมทั้งหมด,Total Chromium,METAL,mg/L,3,false,SM 3030 + 3111 B / 3120 B,4320,HNO3 pH < 2,P,240
+CR6,โครเมียมเฮกซะวาเลนท์,Hexavalent Chromium,METAL,mg/L,3,false,SM 3500-Cr B,24,แช่เย็น ≤ 6 °C,P/G,250
+CR3,โครเมียมไตรวาเลนท์,Trivalent Chromium,METAL,mg/L,3,false,คำนวณ: Cr ทั้งหมด − Cr6+,24,ตามการเก็บของ Cr6+ และ Cr ทั้งหมด,P,260
+AS,สารหนู,Arsenic (As),METAL,mg/L,4,false,SM 3114 (Hydride AAS) / 3120 B,4320,HNO3 pH < 2,P,270
+CU,ทองแดง,Copper (Cu),METAL,mg/L,3,false,SM 3030 + 3111 B / 3120 B,4320,HNO3 pH < 2,P,280
+HG,ปรอท,Mercury (Hg),METAL,mg/L,4,false,SM 3112 B (Cold vapor AAS),672,HNO3 pH < 2,P/G,290
+CD,แคดเมียม,Cadmium (Cd),METAL,mg/L,4,false,SM 3030 + 3111 B / 3120 B,4320,HNO3 pH < 2,P,300
+BA,แบเรียม,Barium (Ba),METAL,mg/L,3,false,SM 3030 + 3111 D / 3120 B,4320,HNO3 pH < 2,P,310
+SE,ซีลีเนียม,Selenium (Se),METAL,mg/L,4,false,SM 3114 (Hydride AAS) / 3120 B,4320,HNO3 pH < 2,P,320
+PB,ตะกั่ว,Lead (Pb),METAL,mg/L,3,false,SM 3030 + 3111 B / 3120 B,4320,HNO3 pH < 2,P,330
+NI,นิกเกิล,Nickel (Ni),METAL,mg/L,3,false,SM 3030 + 3111 B / 3120 B,4320,HNO3 pH < 2,P,340
+MN,แมงกานีส,Manganese (Mn),METAL,mg/L,3,false,SM 3030 + 3111 B / 3120 B,4320,HNO3 pH < 2,P,350
+TCB,โคลิฟอร์มแบคทีเรียทั้งหมด,Total Coliform Bacteria,MICROBIOLOGICAL,MPN/100 mL,0,false,SM 9221 B,8,"Na2S2O3 (ถ้ามีคลอรีน), แช่เย็น < 10 °C",ขวดปลอดเชื้อ,360
+FCB,ฟีคอลโคลิฟอร์มแบคทีเรีย,Fecal Coliform Bacteria,MICROBIOLOGICAL,MPN/100 mL,0,false,SM 9221 E,8,"Na2S2O3 (ถ้ามีคลอรีน), แช่เย็น < 10 °C",ขวดปลอดเชื้อ,370

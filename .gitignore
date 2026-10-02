@@ -1,0 +1,38 @@
+# dependencies / build
+node_modules/
+dist/
+build/
+.next/
+.turbo/
+coverage/
+*.tsbuildinfo
+
+# generated code (สร้างใหม่ได้เสมอ)
+apps/api/src/generated/
+
+# env / secrets
+.env
+.env.*
+!.env.example
+apps/mobile/env/*.json
+!apps/mobile/env/*.example.json
+
+# Flutter
+apps/mobile/.dart_tool/
+apps/mobile/build/
+apps/mobile/.flutter-plugins
+apps/mobile/.flutter-plugins-dependencies
+apps/mobile/android/key.properties
+apps/mobile/android/app/google-services.json
+apps/mobile/ios/Runner/GoogleService-Info.plist
+
+# Claude Code (ส่วนตัว)
+CLAUDE.local.md
+.claude/settings.local.json
+
+# OS / editor
+.DS_Store
+*.log
+.idea/
+.vscode/*
+!.vscode/extensions.json

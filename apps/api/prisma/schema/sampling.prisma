@@ -1,0 +1,110 @@
+// ═══════════════════ M07 เก็บตัวอย่างภาคสนาม — เฟส 3 ═══════════════════
+// ทริป → จุดแวะ (stop) → ตัวอย่าง + ค่าตรวจวัดภาคสนาม; ทำงานบนมือถือแบบออฟไลน์
+// สเปก: docs/modules/M07-sampling.md
+
+enum SamplingTripStatus {
+  PLANNED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum SamplingStopStatus {
+  PENDING
+  SAMPLED
+  SKIPPED
+}
+
+model SamplingTrip {
+  id          String             @id @default(uuid(7)) @db.Uuid
+  number      String             @unique
+  plannedDate DateTime           @map("planned_date") @db.Date
+  status      SamplingTripStatus @default(PLANNED)
+  leaderId    String             @map("leader_id") @db.Uuid
+  vehicle     String?
+  notes       String?
+  startedAt   DateTime?          @map("started_at") @db.Timestamptz(3)
+  completedAt DateTime?          @map("completed_at") @db.Timestamptz(3)
+  createdById String?            @map("created_by_id") @db.Uuid
+  createdAt   DateTime           @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime           @updatedAt @map("updated_at") @db.Timestamptz(3)
+  version     Int                @default(1)
+
+  leader  User                 @relation(fields: [leaderId], references: [id])
+  members SamplingTripMember[]
+  stops   SamplingStop[]
+
+  @@index([plannedDate, status])
+  @@map("sampling_trips")
+}
+
+model SamplingTripMember {
+  tripId String @map("trip_id") @db.Uuid
+  userId String @map("user_id") @db.Uuid
+
+  trip SamplingTrip @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  user User         @relation(fields: [userId], references: [id])
+
+  @@id([tripId, userId])
+  @@index([userId])
+  @@map("sampling_trip_members")
+}
+
+model SamplingStop {
+  id                       String             @id @default(uuid(7)) @db.Uuid
+  tripId                   String             @map("trip_id") @db.Uuid
+  seq                      Int
+  siteId                   String             @map("site_id") @db.Uuid
+  samplingPointId          String             @map("sampling_point_id") @db.Uuid
+  /// งานวิเคราะห์ที่ตัวอย่างจากจุดนี้จะเข้าไป
+  labJobId                 String?            @map("lab_job_id") @db.Uuid
+  packageId                String?            @map("package_id") @db.Uuid
+  /// วิธีวิเคราะห์เพิ่มเติมนอกแพ็กเกจ
+  methodIds                String[]           @map("method_ids") @db.Uuid
+  status                   SamplingStopStatus @default(PENDING)
+  arrivedAt                DateTime?          @map("arrived_at") @db.Timestamptz(3)
+  latitude                 Decimal?           @db.Decimal(9, 6)
+  longitude                Decimal?           @db.Decimal(9, 6)
+  weather                  String?
+  observations             String?
+  skippedReason            String?            @map("skipped_reason")
+  clientRepName            String?            @map("client_rep_name")
+  clientRepSignatureFileId String?            @map("client_rep_signature_file_id") @db.Uuid
+  createdAt                DateTime           @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt                DateTime           @updatedAt @map("updated_at") @db.Timestamptz(3)
+  version                  Int                @default(1)
+
+  trip              SamplingTrip       @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  site              Site               @relation(fields: [siteId], references: [id])
+  samplingPoint     SamplingPoint      @relation(fields: [samplingPointId], references: [id])
+  labJob            LabJob?            @relation(fields: [labJobId], references: [id])
+  package           TestPackage?       @relation(fields: [packageId], references: [id])
+  samples           Sample[]
+  fieldMeasurements FieldMeasurement[]
+
+  @@unique([tripId, seq])
+  @@map("sampling_stops")
+}
+
+/// ค่าตรวจวัดภาคสนาม (pH อุณหภูมิ DO EC ความขุ่น คลอรีนอิสระ …)
+model FieldMeasurement {
+  id           String   @id @db.Uuid /// สร้างจาก client
+  stopId       String   @map("stop_id") @db.Uuid
+  sampleId     String?  @map("sample_id") @db.Uuid
+  parameterId  String   @map("parameter_id") @db.Uuid
+  value        Decimal  @db.Decimal(24, 10)
+  unit         String
+  instrumentId String?  @map("instrument_id") @db.Uuid
+  measuredAt   DateTime @map("measured_at") @db.Timestamptz(3)
+  measuredById String   @map("measured_by_id") @db.Uuid
+  notes        String?
+
+  stop       SamplingStop @relation(fields: [stopId], references: [id], onDelete: Cascade)
+  sample     Sample?      @relation(fields: [sampleId], references: [id])
+  parameter  Parameter    @relation(fields: [parameterId], references: [id])
+  instrument Instrument?  @relation(fields: [instrumentId], references: [id])
+  measuredBy User         @relation(fields: [measuredById], references: [id])
+
+  @@index([stopId])
+  @@map("field_measurements")
+}

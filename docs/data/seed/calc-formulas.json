@@ -1,0 +1,304 @@
+{
+  "$comment": "สูตรคำนวณตั้งต้น (M06 §3) — ห้องปฏิบัติการต้องยืนยันกับ SOP ก่อนใช้งานจริง; testVectors ใช้เป็น unit test ของ formula engine",
+  "formulas": [
+    {
+      "code": "BOD5_SEEDED",
+      "version": 1,
+      "name": "BOD5 (มีการเติมเชื้อ) — SM 5210 B",
+      "expression": "((D1 - D2) - S * Vs) / P",
+      "outputUnit": "mg/L",
+      "inputs": [
+        {
+          "key": "D1",
+          "label": "DO เริ่มต้น",
+          "unit": "mg/L",
+          "required": true
+        },
+        {
+          "key": "D2",
+          "label": "DO หลังบ่ม 5 วัน",
+          "unit": "mg/L",
+          "required": true
+        },
+        {
+          "key": "S",
+          "label": "ออกซิเจนที่เชื้อใช้ต่อ mL เชื้อ",
+          "unit": "mg/L per mL",
+          "required": true
+        },
+        {
+          "key": "Vs",
+          "label": "ปริมาตรเชื้อในขวด",
+          "unit": "mL",
+          "required": true
+        },
+        {
+          "key": "P",
+          "label": "สัดส่วนปริมาตรตัวอย่าง (ทศนิยม)",
+          "unit": "-",
+          "required": true
+        }
+      ],
+      "validations": [
+        {
+          "expr": "D1 - D2 >= 2",
+          "message": "DO ลดลงน้อยกว่า 2.0 mg/L — dilution นี้ใช้ไม่ได้",
+          "severity": "ERROR"
+        },
+        {
+          "expr": "D2 >= 1",
+          "message": "DO คงเหลือน้อยกว่า 1.0 mg/L — dilution นี้ใช้ไม่ได้",
+          "severity": "ERROR"
+        }
+      ],
+      "testVectors": [
+        {
+          "inputs": {
+            "D1": 8.5,
+            "D2": 4.3,
+            "S": 0.1,
+            "Vs": 2,
+            "P": 0.1
+          },
+          "expected": "40"
+        },
+        {
+          "inputs": {
+            "D1": 8.5,
+            "D2": 8.0,
+            "S": 0.1,
+            "Vs": 2,
+            "P": 0.1
+          },
+          "expectedError": "D1 - D2 >= 2"
+        }
+      ]
+    },
+    {
+      "code": "BOD5_UNSEEDED",
+      "version": 1,
+      "name": "BOD5 (ไม่เติมเชื้อ) — SM 5210 B",
+      "expression": "(D1 - D2) / P",
+      "outputUnit": "mg/L",
+      "inputs": [
+        {
+          "key": "D1",
+          "label": "DO เริ่มต้น",
+          "unit": "mg/L",
+          "required": true
+        },
+        {
+          "key": "D2",
+          "label": "DO หลังบ่ม 5 วัน",
+          "unit": "mg/L",
+          "required": true
+        },
+        {
+          "key": "P",
+          "label": "สัดส่วนปริมาตรตัวอย่าง (ทศนิยม)",
+          "unit": "-",
+          "required": true
+        }
+      ],
+      "validations": [
+        {
+          "expr": "D1 - D2 >= 2",
+          "message": "DO ลดลงน้อยกว่า 2.0 mg/L — dilution นี้ใช้ไม่ได้",
+          "severity": "ERROR"
+        },
+        {
+          "expr": "D2 >= 1",
+          "message": "DO คงเหลือน้อยกว่า 1.0 mg/L — dilution นี้ใช้ไม่ได้",
+          "severity": "ERROR"
+        }
+      ],
+      "testVectors": [
+        {
+          "inputs": {
+            "D1": 8.2,
+            "D2": 5.1,
+            "P": 0.2
+          },
+          "expected": "15.5"
+        }
+      ]
+    },
+    {
+      "code": "COD_TITRIMETRIC",
+      "version": 1,
+      "name": "COD (closed reflux, titrimetric) — SM 5220 C",
+      "expression": "(A - B) * M * 8000 / V",
+      "outputUnit": "mg/L",
+      "inputs": [
+        {
+          "key": "A",
+          "label": "FAS ที่ใช้กับ blank",
+          "unit": "mL",
+          "required": true
+        },
+        {
+          "key": "B",
+          "label": "FAS ที่ใช้กับตัวอย่าง",
+          "unit": "mL",
+          "required": true
+        },
+        {
+          "key": "M",
+          "label": "ความเข้มข้น FAS",
+          "unit": "mol/L",
+          "required": true
+        },
+        {
+          "key": "V",
+          "label": "ปริมาตรตัวอย่าง",
+          "unit": "mL",
+          "required": true
+        }
+      ],
+      "validations": [
+        {
+          "expr": "A >= B",
+          "message": "FAS ของตัวอย่างมากกว่า blank — ตรวจสอบการไทเทรต",
+          "severity": "ERROR"
+        }
+      ],
+      "testVectors": [
+        {
+          "inputs": {
+            "A": 10.0,
+            "B": 7.5,
+            "M": 0.1,
+            "V": 2.5
+          },
+          "expected": "800"
+        }
+      ]
+    },
+    {
+      "code": "TSS_GRAVIMETRIC",
+      "version": 1,
+      "name": "TSS — SM 2540 D",
+      "expression": "(A - B) * 1000 / V",
+      "outputUnit": "mg/L",
+      "inputs": [
+        {
+          "key": "A",
+          "label": "น้ำหนักกระดาษกรอง + ตะกอนหลังอบ",
+          "unit": "mg",
+          "required": true
+        },
+        {
+          "key": "B",
+          "label": "น้ำหนักกระดาษกรอง",
+          "unit": "mg",
+          "required": true
+        },
+        {
+          "key": "V",
+          "label": "ปริมาตรตัวอย่าง",
+          "unit": "mL",
+          "required": true
+        }
+      ],
+      "validations": [
+        {
+          "expr": "A - B >= 0",
+          "message": "น้ำหนักหลังอบน้อยกว่าก่อนกรอง",
+          "severity": "ERROR"
+        }
+      ],
+      "testVectors": [
+        {
+          "inputs": {
+            "A": 1250.4,
+            "B": 1245.2,
+            "V": 100
+          },
+          "expected": "52"
+        }
+      ]
+    },
+    {
+      "code": "TDS_GRAVIMETRIC",
+      "version": 1,
+      "name": "TDS — SM 2540 C",
+      "expression": "(A - B) * 1000 / V",
+      "outputUnit": "mg/L",
+      "inputs": [
+        {
+          "key": "A",
+          "label": "น้ำหนักถ้วย + ของแข็งหลังอบ",
+          "unit": "mg",
+          "required": true
+        },
+        {
+          "key": "B",
+          "label": "น้ำหนักถ้วย",
+          "unit": "mg",
+          "required": true
+        },
+        {
+          "key": "V",
+          "label": "ปริมาตรตัวอย่าง",
+          "unit": "mL",
+          "required": true
+        }
+      ],
+      "validations": [
+        {
+          "expr": "A - B >= 0",
+          "message": "น้ำหนักหลังอบน้อยกว่าถ้วยเปล่า",
+          "severity": "ERROR"
+        }
+      ],
+      "testVectors": [
+        {
+          "inputs": {
+            "A": 48210.5,
+            "B": 48190.5,
+            "V": 50
+          },
+          "expected": "400"
+        }
+      ]
+    },
+    {
+      "code": "OG_GRAVIMETRIC",
+      "version": 1,
+      "name": "น้ำมันและไขมัน — SM 5520 B",
+      "expression": "(A - B) * 1000 / V",
+      "outputUnit": "mg/L",
+      "inputs": [
+        {
+          "key": "A",
+          "label": "น้ำหนักที่เพิ่มขึ้นของขวดกลั่น",
+          "unit": "mg",
+          "required": true
+        },
+        {
+          "key": "B",
+          "label": "ค่าจาก solvent blank",
+          "unit": "mg",
+          "required": true
+        },
+        {
+          "key": "V",
+          "label": "ปริมาตรตัวอย่าง",
+          "unit": "mL",
+          "required": true
+        }
+      ],
+      "validations": [],
+      "testVectors": [
+        {
+          "inputs": {
+            "A": 15.2,
+            "B": 0.4,
+            "V": 1000
+          },
+          "expected": "14.8"
+        }
+      ]
+    }
+  ]
+}

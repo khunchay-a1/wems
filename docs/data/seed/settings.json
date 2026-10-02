@@ -1,0 +1,38 @@
+{
+  "$comment": "ค่าตั้งต้นของ Setting (M01 §7) — seed ใส่เฉพาะ key ที่ยังไม่มี (ไม่ทับค่าที่ผู้ดูแลแก้แล้ว)",
+  "settings": {
+    "company.profile": {
+      "nameTh": "บริษัท ตัวอย่าง วิศวกรรมน้ำ จำกัด",
+      "nameEn": "Example Water Engineering Co., Ltd.",
+      "addressTh": "",
+      "addressEn": "",
+      "taxId": "",
+      "branchCode": "00000",
+      "phone": "",
+      "email": "",
+      "website": "",
+      "logoFileId": null
+    },
+    "calendar.holidays": [],
+    "calendar.workdayEnd": "17:00",
+    "review.defaultDueDays": 3,
+    "review.reminderTime": "08:30",
+    "transmittal.maxAttachmentMb": 20,
+    "transmittal.linkExpiryDays": 30,
+    "revision.skipLetters": [],
+    "security.sessionIdleMinutes": 120,
+    "security.requireMfaRoles": [
+      "ADMIN"
+    ],
+    "tax.vatRate": 7,
+    "tax.defaultWithholdingRate": 3,
+    "quotation.approvalAmount": 500000,
+    "quotation.maxDiscountPercent": 10,
+    "lab.receiptMaxTempC": 6,
+    "lab.reportFooterNote": "ผลการทดสอบนี้ใช้กับตัวอย่างที่ทดสอบเท่านั้น ห้ามคัดสำเนาเพียงบางส่วนโดยไม่ได้รับอนุญาตจากห้องปฏิบัติการ",
+    "mobile.minSupportedVersion": {
+      "android": "1.0.0",
+      "ios": "1.0.0"
+    }
+  }
+}

@@ -1,0 +1,522 @@
+// ═══════════════════ M04 งานออกแบบและเอกสาร ★ MVP — เฟส 1 ═══════════════════
+// ทะเบียนเอกสาร, revision, ไฟล์, workflow ตรวจ/อนุมัติ, ใบนำส่ง, design basis
+// สเปก: docs/modules/M04-design-documents.md, สถานะ: docs/05-workflows.md
+
+enum DocumentSource {
+  INTERNAL // จัดทำโดยบริษัท
+  EXTERNAL // ได้รับจากภายนอก เช่น แบบเดิมของลูกค้า ผลสำรวจ
+}
+
+enum DocumentStatus {
+  ACTIVE
+  ON_HOLD
+  CANCELLED // ยกเลิกรายการส่งมอบนี้
+  SUPERSEDED // ถูกแทนที่ด้วยเอกสารเลขอื่น (supersededByDocumentId)
+}
+
+enum Confidentiality {
+  INTERNAL
+  CLIENT_SHAREABLE
+  CONFIDENTIAL
+}
+
+/// วัตถุประสงค์การออกเอกสาร (Issue purpose) — ป้ายภาษาไทยดู docs/01-glossary.md §3
+enum PurposeCode {
+  FI // เพื่อทราบ
+  FR // เพื่อพิจารณา/ให้ความเห็น
+  FA // เพื่ออนุมัติ
+  FT // เพื่อประกวดราคา
+  FC // เพื่อก่อสร้าง
+  AB // แบบก่อสร้างจริง (As-built)
+}
+
+enum RevisionStatus {
+  DRAFT
+  IN_REVIEW
+  APPROVED
+  ISSUED
+  SUPERSEDED
+  VOID
+}
+
+enum DocumentFileRole {
+  PDF_RENDITION // ไฟล์ PDF สำหรับดู/ตรวจ/ส่ง (บังคับเมื่อ DocumentType.requiresPdfRendition)
+  NATIVE // ไฟล์ต้นฉบับ DWG/RVT/XLSX/DOCX
+  SUPPORTING // ไฟล์ประกอบอื่น
+}
+
+enum ReviewCycleStatus {
+  IN_PROGRESS
+  APPROVED
+  REJECTED
+  CANCELLED
+}
+
+enum ReviewStepKind {
+  CHECK // ผู้ตรวจสอบ
+  REVIEW // ผู้ทบทวน (เช่น หัวหน้าสาขา)
+  APPROVE // ผู้อนุมัติ
+}
+
+enum ReviewStepStatus {
+  PENDING // รอขั้นก่อนหน้า
+  ACTIVE // ถึงคิว แจ้งผู้รับผิดชอบแล้ว
+  APPROVED
+  APPROVED_WITH_COMMENTS
+  REJECTED
+  SKIPPED
+  CANCELLED
+}
+
+enum TransmittalStatus {
+  DRAFT
+  SENT
+  ACKNOWLEDGED
+  CANCELLED
+}
+
+enum DeliveryMethod {
+  EMAIL_ATTACHMENT
+  EMAIL_LINK // ลิงก์ดาวน์โหลดมีวันหมดอายุ ไม่ต้องล็อกอิน
+  HARD_COPY
+  OTHER
+}
+
+enum TransmittalFormat {
+  PDF
+  NATIVE
+  PDF_AND_NATIVE
+  HARD_COPY
+}
+
+/// รหัสผลตอบกลับของลูกค้า — ป้ายภาษาไทยดู docs/01-glossary.md §4
+enum ClientReturnCode {
+  CODE_1 // อนุมัติ
+  CODE_2 // อนุมัติตามความเห็น
+  CODE_3 // แก้ไขแล้วส่งใหม่
+  CODE_4 // ไม่อนุมัติ
+  INFO // รับทราบ (ไม่ต้องอนุมัติ)
+}
+
+enum DesignBasisStatus {
+  DRAFT
+  APPROVED
+  SUPERSEDED
+}
+
+enum DesignValueSource {
+  ASSUMED
+  MEASURED // จากผลแล็บ (sampleTestIds)
+  CLIENT_PROVIDED
+  STANDARD // จากมาตรฐาน/ตำรา
+  CALCULATED
+}
+
+model Discipline {
+  id        String   @id @default(uuid(7)) @db.Uuid
+  code      String   @unique
+  nameTh    String   @map("name_th")
+  nameEn    String   @map("name_en")
+  sortOrder Int      @default(0) @map("sort_order")
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  documents Document[]
+
+  @@map("disciplines")
+}
+
+model DocumentType {
+  id                        String          @id @default(uuid(7)) @db.Uuid
+  code                      String          @unique
+  nameTh                    String          @map("name_th")
+  nameEn                    String          @map("name_en")
+  requiresPdfRendition      Boolean         @default(true) @map("requires_pdf_rendition")
+  /// ผู้อนุมัติต้องมีใบอนุญาตวิชาชีพที่ยังไม่หมดอายุ (BR-DOC-040)
+  requiresLicensedApprover  Boolean         @default(false) @map("requires_licensed_approver")
+  /// ว่าง = สาขาใดก็ได้
+  allowedLicenseBranches    LicenseBranch[] @map("allowed_license_branches")
+  minLicenseLevel           LicenseLevel?   @map("min_license_level")
+  defaultWorkflowTemplateId String?         @map("default_workflow_template_id") @db.Uuid
+  sortOrder                 Int             @default(0) @map("sort_order")
+  isActive                  Boolean         @default(true) @map("is_active")
+  createdAt                 DateTime        @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt                 DateTime        @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  defaultWorkflowTemplate WorkflowTemplate? @relation(fields: [defaultWorkflowTemplateId], references: [id])
+  documents               Document[]
+
+  @@map("document_types")
+}
+
+model WorkflowTemplate {
+  id          String   @id @default(uuid(7)) @db.Uuid
+  code        String   @unique
+  name        String
+  description String?
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  steps         WorkflowTemplateStep[]
+  documentTypes DocumentType[]
+  documents     Document[]
+  reviewCycles  ReviewCycle[]
+
+  @@map("workflow_templates")
+}
+
+/// ขั้นตอนที่มี stepOrder เท่ากัน = ทำขนานกัน ต้องผ่านทุกขั้นในกลุ่มจึงไปกลุ่มถัดไป (BR-DOC-031)
+model WorkflowTemplateStep {
+  id                  String         @id @default(uuid(7)) @db.Uuid
+  templateId          String         @map("template_id") @db.Uuid
+  stepOrder           Int            @map("step_order")
+  kind                ReviewStepKind
+  name                String
+  /// ว่าง = สมาชิกโครงการบทบาทใดก็ได้ที่มีสิทธิ์ตามชนิดขั้นตอน
+  allowedProjectRoles ProjectRole[]  @map("allowed_project_roles")
+  requiresSignature   Boolean        @default(false) @map("requires_signature")
+  /// ใช้กับขั้น APPROVE ร่วมกับ DocumentType.requiresLicensedApprover
+  requiresLicense     Boolean        @default(false) @map("requires_license")
+  dueDays             Int            @default(3) @map("due_days")
+  isOptional          Boolean        @default(false) @map("is_optional")
+
+  template WorkflowTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+
+  @@index([templateId, stepOrder])
+  @@map("workflow_template_steps")
+}
+
+model Document {
+  id                       String          @id @default(uuid(7)) @db.Uuid
+  projectId                String          @map("project_id") @db.Uuid
+  /// เลขเอกสาร ออกโดย NumberingService ห้ามแก้หลังมี revision ที่ APPROVED (BR-DOC-011)
+  number                   String          @unique
+  title                    String
+  titleEn                  String?         @map("title_en")
+  disciplineId             String          @map("discipline_id") @db.Uuid
+  documentTypeId           String          @map("document_type_id") @db.Uuid
+  source                   DocumentSource  @default(INTERNAL)
+  /// ผู้จัดทำภายนอก (เมื่อ source = EXTERNAL)
+  originator               String?
+  externalNumber           String?         @map("external_number")
+  status                   DocumentStatus  @default(ACTIVE)
+  confidentiality          Confidentiality @default(CLIENT_SHAREABLE)
+  sheetSize                String?         @map("sheet_size")
+  scale                    String?
+  /// ผู้รับผิดชอบเอกสาร (ได้รับแจ้งเมื่อมีผลตรวจ/ผลตอบกลับลูกค้า)
+  ownerId                  String?         @map("owner_id") @db.Uuid
+  /// override workflow ของ DocumentType
+  workflowTemplateId       String?         @map("workflow_template_id") @db.Uuid
+  /// revision ล่าสุดที่ไม่ใช่ VOID (อาจเป็น DRAFT)
+  currentRevisionId        String?         @unique @map("current_revision_id") @db.Uuid
+  /// revision ล่าสุดที่ APPROVED/ISSUED = "ฉบับใช้งาน" ที่หน้างานต้องใช้
+  latestApprovedRevisionId String?         @unique @map("latest_approved_revision_id") @db.Uuid
+  supersededByDocumentId   String?         @map("superseded_by_document_id") @db.Uuid
+  tags                     String[]
+  remarks                  String?
+  createdById              String?         @map("created_by_id") @db.Uuid
+  createdAt                DateTime        @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt                DateTime        @updatedAt @map("updated_at") @db.Timestamptz(3)
+  deletedAt                DateTime?       @map("deleted_at") @db.Timestamptz(3)
+  version                  Int             @default(1)
+
+  project                Project            @relation(fields: [projectId], references: [id])
+  discipline             Discipline         @relation(fields: [disciplineId], references: [id])
+  documentType           DocumentType       @relation(fields: [documentTypeId], references: [id])
+  owner                  User?              @relation("DocumentOwner", fields: [ownerId], references: [id])
+  workflowTemplate       WorkflowTemplate?  @relation(fields: [workflowTemplateId], references: [id])
+  currentRevision        DocumentRevision?  @relation("DocumentCurrentRevision", fields: [currentRevisionId], references: [id])
+  latestApprovedRevision DocumentRevision?  @relation("DocumentLatestApprovedRevision", fields: [latestApprovedRevisionId], references: [id])
+  supersededBy           Document?          @relation("DocumentSupersession", fields: [supersededByDocumentId], references: [id])
+  supersedes             Document[]         @relation("DocumentSupersession")
+  revisions              DocumentRevision[] @relation("DocumentRevisions")
+  plans                  DocumentPlan[]
+  siteQueries            SiteQuery[]
+
+  @@index([projectId, disciplineId, documentTypeId])
+  @@index([projectId, status])
+  @@index([ownerId])
+  @@index([title(ops: raw("gin_trgm_ops"))], type: Gin, map: "documents_title_trgm_idx")
+  @@index([number(ops: raw("gin_trgm_ops"))], type: Gin, map: "documents_number_trgm_idx")
+  @@map("documents")
+}
+
+/// แผนส่งมอบ (Master Deliverable List): วันที่วางแผน/คาดการณ์/จริง ต่อวัตถุประสงค์การออก
+model DocumentPlan {
+  id           String      @id @default(uuid(7)) @db.Uuid
+  documentId   String      @map("document_id") @db.Uuid
+  purposeCode  PurposeCode @map("purpose_code")
+  plannedDate  DateTime?   @map("planned_date") @db.Date
+  forecastDate DateTime?   @map("forecast_date") @db.Date
+  /// ตั้งอัตโนมัติเมื่อส่งใบนำส่งครั้งแรกด้วยวัตถุประสงค์นี้ (BR-DOC-063)
+  actualDate   DateTime?   @map("actual_date") @db.Date
+
+  document Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@unique([documentId, purposeCode])
+  @@map("document_plans")
+}
+
+model DocumentRevision {
+  id               String             @id @default(uuid(7)) @db.Uuid
+  documentId       String             @map("document_id") @db.Uuid
+  /// "A", "B", "0", "1" หรือ "P01", "C01" ตาม RevisionScheme
+  revLabel         String             @map("rev_label")
+  /// ลำดับสำหรับเรียง (1, 2, 3, …)
+  revIndex         Int                @map("rev_index")
+  purposeCode      PurposeCode        @map("purpose_code")
+  status           RevisionStatus     @default(DRAFT)
+  /// คำอธิบายการแก้ไขใน revision นี้ (แสดงในตาราง revision ของแบบ)
+  description      String?
+  preparedById     String             @map("prepared_by_id") @db.Uuid
+  checkedById      String?            @map("checked_by_id") @db.Uuid
+  approvedById     String?            @map("approved_by_id") @db.Uuid
+  approvedAt       DateTime?          @map("approved_at") @db.Timestamptz(3)
+  /// ออกครั้งแรกผ่านใบนำส่ง
+  issuedAt         DateTime?          @map("issued_at") @db.Timestamptz(3)
+  /// ล็อกไฟล์เมื่อส่งตรวจ/อนุมัติ
+  lockedAt         DateTime?          @map("locked_at") @db.Timestamptz(3)
+  lastCycleOutcome ReviewCycleStatus? @map("last_cycle_outcome")
+  /// ผลตอบกลับล่าสุดจากลูกค้า (denormalized จาก TransmittalItem)
+  clientReturnCode ClientReturnCode?  @map("client_return_code")
+  clientReturnedAt DateTime?          @map("client_returned_at") @db.Date
+  voidedAt         DateTime?          @map("voided_at") @db.Timestamptz(3)
+  voidedById       String?            @map("voided_by_id") @db.Uuid
+  voidReason       String?            @map("void_reason")
+  createdById      String?            @map("created_by_id") @db.Uuid
+  createdAt        DateTime           @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt        DateTime           @updatedAt @map("updated_at") @db.Timestamptz(3)
+  version          Int                @default(1)
+
+  document         Document          @relation("DocumentRevisions", fields: [documentId], references: [id])
+  currentOf        Document?         @relation("DocumentCurrentRevision")
+  latestApprovedOf Document?         @relation("DocumentLatestApprovedRevision")
+  preparedBy       User              @relation("RevisionPreparedBy", fields: [preparedById], references: [id])
+  checkedBy        User?             @relation("RevisionCheckedBy", fields: [checkedById], references: [id])
+  approvedBy       User?             @relation("RevisionApprovedBy", fields: [approvedById], references: [id])
+  files            DocumentFile[]
+  reviewCycles     ReviewCycle[]
+  transmittalItems TransmittalItem[]
+  issues           Issue[]
+
+  @@unique([documentId, revLabel])
+  @@unique([documentId, revIndex])
+  @@index([status])
+  @@map("document_revisions")
+}
+
+/// ไฟล์ของ revision; อัปโหลดซ้ำได้ขณะ DRAFT (uploadVersion เพิ่มขึ้น, isCurrent ย้าย) — ห้ามลบไฟล์เก่า
+model DocumentFile {
+  id            String           @id @default(uuid(7)) @db.Uuid
+  revisionId    String           @map("revision_id") @db.Uuid
+  fileId        String           @map("file_id") @db.Uuid
+  role          DocumentFileRole
+  uploadVersion Int              @default(1) @map("upload_version")
+  isCurrent     Boolean          @default(true) @map("is_current")
+  note          String?
+  uploadedById  String           @map("uploaded_by_id") @db.Uuid
+  uploadedAt    DateTime         @default(now()) @map("uploaded_at") @db.Timestamptz(3)
+
+  revision   DocumentRevision @relation(fields: [revisionId], references: [id])
+  file       FileObject       @relation(fields: [fileId], references: [id])
+  uploadedBy User             @relation(fields: [uploadedById], references: [id])
+
+  @@index([revisionId, role, isCurrent])
+  @@map("document_files")
+}
+
+/// รอบการตรวจ 1 รอบต่อการส่งตรวจ 1 ครั้ง; ถูกตีกลับแล้วส่งใหม่ = รอบใหม่ (cycleNo + 1)
+model ReviewCycle {
+  id                 String            @id @default(uuid(7)) @db.Uuid
+  revisionId         String            @map("revision_id") @db.Uuid
+  cycleNo            Int               @map("cycle_no")
+  templateId         String?           @map("template_id") @db.Uuid
+  status             ReviewCycleStatus @default(IN_PROGRESS)
+  /// FileObject ของ PDF ที่ถูกตรวจในรอบนี้ (ต้องไม่เปลี่ยนระหว่างตรวจ)
+  reviewedFileId     String?           @map("reviewed_file_id") @db.Uuid
+  reviewedFileSha256 String?           @map("reviewed_file_sha256")
+  submittedById      String            @map("submitted_by_id") @db.Uuid
+  submittedAt        DateTime          @default(now()) @map("submitted_at") @db.Timestamptz(3)
+  submitNote         String?           @map("submit_note")
+  completedAt        DateTime?         @map("completed_at") @db.Timestamptz(3)
+  cancelledReason    String?           @map("cancelled_reason")
+  version            Int               @default(1)
+
+  revision    DocumentRevision  @relation(fields: [revisionId], references: [id])
+  template    WorkflowTemplate? @relation(fields: [templateId], references: [id])
+  submittedBy User              @relation(fields: [submittedById], references: [id])
+  steps       ReviewStep[]
+
+  @@unique([revisionId, cycleNo])
+  @@index([status])
+  @@map("review_cycles")
+}
+
+model ReviewStep {
+  id                  String           @id @default(uuid(7)) @db.Uuid
+  cycleId             String           @map("cycle_id") @db.Uuid
+  stepOrder           Int              @map("step_order")
+  kind                ReviewStepKind
+  name                String
+  assigneeId          String           @map("assignee_id") @db.Uuid
+  status              ReviewStepStatus @default(PENDING)
+  requiresSignature   Boolean          @default(false) @map("requires_signature")
+  requiresLicense     Boolean          @default(false) @map("requires_license")
+  isOptional          Boolean          @default(false) @map("is_optional")
+  activatedAt         DateTime?        @map("activated_at") @db.Timestamptz(3)
+  dueAt               DateTime?        @map("due_at") @db.Timestamptz(3)
+  decidedAt           DateTime?        @map("decided_at") @db.Timestamptz(3)
+  decisionNote        String?          @map("decision_note")
+  /// ผู้รับมอบเดิม เมื่อมีการมอบหมายแทน (BR-DOC-037)
+  delegatedFromUserId String?          @map("delegated_from_user_id") @db.Uuid
+  signatureEventId    String?          @map("signature_event_id") @db.Uuid
+  lastRemindedAt      DateTime?        @map("last_reminded_at") @db.Timestamptz(3)
+  createdAt           DateTime         @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt           DateTime         @updatedAt @map("updated_at") @db.Timestamptz(3)
+  version             Int              @default(1)
+
+  cycle     ReviewCycle     @relation(fields: [cycleId], references: [id], onDelete: Cascade)
+  assignee  User            @relation(fields: [assigneeId], references: [id])
+  signature SignatureEvent? @relation(fields: [signatureEventId], references: [id])
+  comments  Comment[]
+
+  @@index([cycleId, stepOrder])
+  @@index([assigneeId, status])
+  @@map("review_steps")
+}
+
+model Transmittal {
+  id                    String            @id @default(uuid(7)) @db.Uuid
+  projectId             String            @map("project_id") @db.Uuid
+  number                String            @unique
+  subject               String
+  recipientClientId     String?           @map("recipient_client_id") @db.Uuid
+  recipientName         String            @map("recipient_name")
+  recipientEmails       String[]          @map("recipient_emails")
+  ccEmails              String[]          @map("cc_emails")
+  purposeCode           PurposeCode       @map("purpose_code")
+  message               String?
+  status                TransmittalStatus @default(DRAFT)
+  deliveryMethod        DeliveryMethod    @map("delivery_method")
+  /// ใบนำส่ง PDF ที่ generate ตอนส่ง (FileObject)
+  coverSheetFileId      String?           @map("cover_sheet_file_id") @db.Uuid
+  /// ZIP รวมไฟล์ (สร้างเมื่อ deliveryMethod = EMAIL_LINK)
+  packageFileId         String?           @map("package_file_id") @db.Uuid
+  /// SHA-256 ของ token ในลิงก์ดาวน์โหลดสาธารณะ
+  publicTokenHash       String?           @unique @map("public_token_hash")
+  linkExpiresAt         DateTime?         @map("link_expires_at") @db.Timestamptz(3)
+  linkRevokedAt         DateTime?         @map("link_revoked_at") @db.Timestamptz(3)
+  sentAt                DateTime?         @map("sent_at") @db.Timestamptz(3)
+  sentById              String?           @map("sent_by_id") @db.Uuid
+  acknowledgedAt        DateTime?         @map("acknowledged_at") @db.Timestamptz(3)
+  acknowledgedNote      String?           @map("acknowledged_note")
+  acknowledgedById      String?           @map("acknowledged_by_id") @db.Uuid
+  acknowledgementFileId String?           @map("acknowledgement_file_id") @db.Uuid
+  cancelledAt           DateTime?         @map("cancelled_at") @db.Timestamptz(3)
+  cancelReason          String?           @map("cancel_reason")
+  createdById           String?           @map("created_by_id") @db.Uuid
+  createdAt             DateTime          @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt             DateTime          @updatedAt @map("updated_at") @db.Timestamptz(3)
+  version               Int               @default(1)
+
+  project         Project               @relation(fields: [projectId], references: [id])
+  recipientClient Client?               @relation(fields: [recipientClientId], references: [id])
+  sentBy          User?                 @relation(fields: [sentById], references: [id])
+  items           TransmittalItem[]
+  downloads       TransmittalDownload[]
+
+  @@index([projectId, status])
+  @@map("transmittals")
+}
+
+model TransmittalItem {
+  id                  String            @id @default(uuid(7)) @db.Uuid
+  transmittalId       String            @map("transmittal_id") @db.Uuid
+  revisionId          String            @map("revision_id") @db.Uuid
+  copies              Int               @default(1)
+  format              TransmittalFormat @default(PDF)
+  remark              String?
+  clientReturnCode    ClientReturnCode? @map("client_return_code")
+  clientReturnedAt    DateTime?         @map("client_returned_at") @db.Date
+  clientResponseNote  String?           @map("client_response_note")
+  /// ไฟล์ความเห็นของลูกค้า (FileObject)
+  clientCommentFileId String?           @map("client_comment_file_id") @db.Uuid
+  recordedById        String?           @map("recorded_by_id") @db.Uuid
+  sortOrder           Int               @default(0) @map("sort_order")
+
+  transmittal Transmittal      @relation(fields: [transmittalId], references: [id], onDelete: Cascade)
+  revision    DocumentRevision @relation(fields: [revisionId], references: [id])
+
+  @@unique([transmittalId, revisionId])
+  @@index([revisionId])
+  @@map("transmittal_items")
+}
+
+/// บันทึกทุกครั้งที่มีการดาวน์โหลดผ่านลิงก์สาธารณะ
+model TransmittalDownload {
+  id            String   @id @default(uuid(7)) @db.Uuid
+  transmittalId String   @map("transmittal_id") @db.Uuid
+  fileId        String?  @map("file_id") @db.Uuid
+  ip            String?
+  userAgent     String?  @map("user_agent")
+  downloadedAt  DateTime @default(now()) @map("downloaded_at") @db.Timestamptz(3)
+
+  transmittal Transmittal @relation(fields: [transmittalId], references: [id], onDelete: Cascade)
+
+  @@index([transmittalId])
+  @@map("transmittal_downloads")
+}
+
+/// ค่าออกแบบของโครงการ (อัตราการไหล คุณภาพน้ำดิบ เป้าหมายน้ำทิ้ง) — มีหลาย revNo, APPROVED ได้ครั้งละ 1
+model DesignBasis {
+  id                   String            @id @default(uuid(7)) @db.Uuid
+  projectId            String            @map("project_id") @db.Uuid
+  revNo                Int               @map("rev_no")
+  title                String
+  status               DesignBasisStatus @default(DRAFT)
+  averageFlowM3PerDay  Decimal?          @map("average_flow_m3_per_day") @db.Decimal(12, 2)
+  peakFactor           Decimal?          @map("peak_factor") @db.Decimal(6, 3)
+  designHorizonYear    Int?              @map("design_horizon_year")
+  populationEquivalent Int?              @map("population_equivalent")
+  targetStandardId     String?           @map("target_standard_id") @db.Uuid
+  notes                String?
+  approvedById         String?           @map("approved_by_id") @db.Uuid
+  approvedAt           DateTime?         @map("approved_at") @db.Timestamptz(3)
+  createdById          String?           @map("created_by_id") @db.Uuid
+  createdAt            DateTime          @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt            DateTime          @updatedAt @map("updated_at") @db.Timestamptz(3)
+  version              Int               @default(1)
+
+  project        Project             @relation(fields: [projectId], references: [id])
+  targetStandard RegulatoryStandard? @relation(fields: [targetStandardId], references: [id])
+  approvedBy     User?               @relation(fields: [approvedById], references: [id])
+  items          DesignBasisItem[]
+
+  @@unique([projectId, revNo])
+  @@map("design_bases")
+}
+
+model DesignBasisItem {
+  id                  String            @id @default(uuid(7)) @db.Uuid
+  designBasisId       String            @map("design_basis_id") @db.Uuid
+  parameterId         String?           @map("parameter_id") @db.Uuid
+  name                String
+  unit                String
+  influentValue       Decimal?          @map("influent_value") @db.Decimal(24, 10)
+  influentMin         Decimal?          @map("influent_min") @db.Decimal(24, 10)
+  influentMax         Decimal?          @map("influent_max") @db.Decimal(24, 10)
+  targetEffluentValue Decimal?          @map("target_effluent_value") @db.Decimal(24, 10)
+  source              DesignValueSource @default(ASSUMED)
+  sourceNote          String?           @map("source_note")
+  /// SampleTest ที่ใช้เป็นที่มา (เฟส 3)
+  sampleTestIds       String[]          @map("sample_test_ids") @db.Uuid
+  sortOrder           Int               @default(0) @map("sort_order")
+
+  designBasis DesignBasis @relation(fields: [designBasisId], references: [id], onDelete: Cascade)
+  parameter   Parameter?  @relation(fields: [parameterId], references: [id])
+
+  @@index([designBasisId])
+  @@map("design_basis_items")
+}

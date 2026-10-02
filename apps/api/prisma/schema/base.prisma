@@ -1,0 +1,25 @@
+// WEMS database schema — Prisma multi-file schema
+// ทุกไฟล์ .prisma ในโฟลเดอร์นี้รวมเป็น schema เดียว (ตั้ง `schema: "prisma/schema"` ใน prisma.config.ts)
+// Convention ทั้งหมดอยู่ใน docs/03-data-model.md — อ่านก่อนแก้ไฟล์ใดๆ ในโฟลเดอร์นี้
+//
+// ไฟล์ตามโมดูล:
+//   core.prisma        M01 Platform (ผู้ใช้ สิทธิ์ ไฟล์ เลขเอกสาร แจ้งเตือน audit sync)  — เฟส 0
+//   crm.prisma         M02 ลูกค้า สถานที่ จุดเก็บตัวอย่าง                            — เฟส 1/3
+//   project.prisma     M03 โครงการ ทีม แผนงาน งวดงาน                               — เฟส 1/2
+//   document.prisma    M04 งานออกแบบและเอกสาร ★ MVP                                — เฟส 1
+//   site.prisma        M05 บริหารหน้างาน                                           — เฟส 2
+//   lab.prisma         M06 ห้องปฏิบัติการ (LIMS)                                   — เฟส 3
+//   sampling.prisma    M07 เก็บตัวอย่างภาคสนาม                                     — เฟส 3
+//   commercial.prisma  M08 ใบเสนอราคา วางบิล Timesheet                             — เฟส 4
+
+// Prisma 7: URL ของฐานข้อมูลอยู่ใน prisma.config.ts, PrismaClient ต้องใช้ driver adapter (@prisma/adapter-pg)
+// NestJS คอมไพล์เป็น CommonJS จึงตั้ง moduleFormat = "cjs" (ตาม NestJS Prisma recipe)
+generator client {
+  provider     = "prisma-client"
+  output       = "../../src/generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}

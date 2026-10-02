@@ -1,0 +1,307 @@
+// ═══════════════════ M05 บริหารหน้างาน — เฟส 2 ═══════════════════
+// รายงานประจำวัน ปัญหา/ข้อบกพร่อง การตรวจตาม checklist คำถามหน้างาน (RFI ภายใน)
+// สเปก: docs/modules/M05-site-management.md — ข้อมูลส่วนใหญ่สร้างจากมือถือแบบออฟไลน์ (id สร้างจาก client)
+
+enum DailyReportStatus {
+  DRAFT
+  SUBMITTED
+  APPROVED
+  RETURNED
+}
+
+enum Weather {
+  SUNNY
+  CLOUDY
+  RAIN
+  HEAVY_RAIN
+  STORM
+}
+
+enum IssueCategory {
+  DEFECT
+  SAFETY
+  QUALITY
+  DESIGN
+  ENVIRONMENT
+  OTHER
+}
+
+enum IssueSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum IssueStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  VERIFIED
+  CLOSED
+  CANCELLED
+}
+
+enum InspectionStatus {
+  DRAFT
+  SUBMITTED
+  APPROVED
+  REJECTED
+}
+
+enum InspectionOutcome {
+  PASS
+  FAIL
+  CONDITIONAL
+}
+
+enum ChecklistResponseType {
+  PASS_FAIL_NA
+  NUMBER
+  TEXT
+  PHOTO
+}
+
+enum PassFail {
+  PASS
+  FAIL
+  NA
+}
+
+enum SiteQueryStatus {
+  OPEN
+  ANSWERED
+  CLOSED
+  CANCELLED
+}
+
+/// 1 ผู้รายงาน : 1 โครงการ : 1 วัน
+model DailyReport {
+  id               String            @id @db.Uuid /// สร้างจาก client (UUIDv7) เพื่อรองรับออฟไลน์
+  projectId        String            @map("project_id") @db.Uuid
+  reportDate       DateTime          @map("report_date") @db.Date
+  status           DailyReportStatus @default(DRAFT)
+  weatherMorning   Weather?          @map("weather_morning")
+  weatherAfternoon Weather?          @map("weather_afternoon")
+  /// "HH:mm"
+  workStart        String?           @map("work_start")
+  workEnd          String?           @map("work_end")
+  summary          String?
+  safetyNotes      String?           @map("safety_notes")
+  delayNotes       String?           @map("delay_notes")
+  submittedById    String?           @map("submitted_by_id") @db.Uuid
+  submittedAt      DateTime?         @map("submitted_at") @db.Timestamptz(3)
+  approvedById     String?           @map("approved_by_id") @db.Uuid
+  approvedAt       DateTime?         @map("approved_at") @db.Timestamptz(3)
+  returnReason     String?           @map("return_reason")
+  createdById      String            @map("created_by_id") @db.Uuid
+  createdAt        DateTime          @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt        DateTime          @updatedAt @map("updated_at") @db.Timestamptz(3)
+  deletedAt        DateTime?         @map("deleted_at") @db.Timestamptz(3)
+  version          Int               @default(1)
+
+  project     Project                @relation(fields: [projectId], references: [id])
+  submittedBy User?                  @relation("DailyReportSubmittedBy", fields: [submittedById], references: [id])
+  approvedBy  User?                  @relation("DailyReportApprovedBy", fields: [approvedById], references: [id])
+  manpower    DailyReportManpower[]
+  equipment   DailyReportEquipment[]
+  activities  DailyReportActivity[]
+
+  @@unique([projectId, reportDate, createdById])
+  @@index([projectId, status])
+  @@map("daily_reports")
+}
+
+model DailyReportManpower {
+  id        String   @id @db.Uuid
+  reportId  String   @map("report_id") @db.Uuid
+  trade     String
+  company   String?
+  headcount Int
+  hours     Decimal? @db.Decimal(6, 2)
+
+  report DailyReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
+
+  @@index([reportId])
+  @@map("daily_report_manpower")
+}
+
+model DailyReportEquipment {
+  id       String   @id @db.Uuid
+  reportId String   @map("report_id") @db.Uuid
+  name     String
+  quantity Int      @default(1)
+  hours    Decimal? @db.Decimal(6, 2)
+
+  report DailyReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
+
+  @@index([reportId])
+  @@map("daily_report_equipment")
+}
+
+model DailyReportActivity {
+  id              String   @id @db.Uuid
+  reportId        String   @map("report_id") @db.Uuid
+  taskId          String?  @map("task_id") @db.Uuid
+  description     String
+  quantity        Decimal? @db.Decimal(14, 4)
+  unit            String?
+  /// ความคืบหน้าของ task หลังวันนี้ (เสนอ; PM ยืนยันตอนอนุมัติ)
+  progressPercent Decimal? @map("progress_percent") @db.Decimal(5, 2)
+
+  report DailyReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  task   Task?       @relation(fields: [taskId], references: [id])
+
+  @@index([reportId])
+  @@map("daily_report_activities")
+}
+
+model Issue {
+  id                 String        @id @db.Uuid /// สร้างจาก client ได้
+  projectId          String        @map("project_id") @db.Uuid
+  /// ออกเลขตอน sync ถึง server (ออฟไลน์แสดง "รอเลข")
+  number             String?       @unique
+  title              String
+  description        String?
+  category           IssueCategory
+  severity           IssueSeverity @default(MEDIUM)
+  status             IssueStatus   @default(OPEN)
+  locationText       String?       @map("location_text")
+  latitude           Decimal?      @db.Decimal(9, 6)
+  longitude          Decimal?      @db.Decimal(9, 6)
+  /// ปักหมุดบนแบบ (revision ที่ใช้งานอยู่ขณะแจ้ง)
+  documentRevisionId String?       @map("document_revision_id") @db.Uuid
+  /// { page, x, y } แบบเดียวกับ Comment.anchor
+  drawingAnchor      Json?         @map("drawing_anchor")
+  assigneeId         String?       @map("assignee_id") @db.Uuid
+  dueDate            DateTime?     @map("due_date") @db.Date
+  raisedById         String        @map("raised_by_id") @db.Uuid
+  raisedAt           DateTime      @map("raised_at") @db.Timestamptz(3)
+  resolvedAt         DateTime?     @map("resolved_at") @db.Timestamptz(3)
+  resolutionNote     String?       @map("resolution_note")
+  verifiedById       String?       @map("verified_by_id") @db.Uuid
+  verifiedAt         DateTime?     @map("verified_at") @db.Timestamptz(3)
+  closedAt           DateTime?     @map("closed_at") @db.Timestamptz(3)
+  cancelReason       String?       @map("cancel_reason")
+  createdAt          DateTime      @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt          DateTime      @updatedAt @map("updated_at") @db.Timestamptz(3)
+  deletedAt          DateTime?     @map("deleted_at") @db.Timestamptz(3)
+  version            Int           @default(1)
+
+  project          Project           @relation(fields: [projectId], references: [id])
+  documentRevision DocumentRevision? @relation(fields: [documentRevisionId], references: [id])
+  assignee         User?             @relation("IssueAssignee", fields: [assigneeId], references: [id])
+  raisedBy         User              @relation("IssueRaisedBy", fields: [raisedById], references: [id])
+
+  @@index([projectId, status])
+  @@index([assigneeId, status])
+  @@map("issues")
+}
+
+model InspectionTemplate {
+  id          String   @id @default(uuid(7)) @db.Uuid
+  code        String   @unique
+  name        String
+  category    String?
+  description String?
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  items       InspectionTemplateItem[]
+  inspections Inspection[]
+
+  @@map("inspection_templates")
+}
+
+model InspectionTemplateItem {
+  id                 String                @id @default(uuid(7)) @db.Uuid
+  templateId         String                @map("template_id") @db.Uuid
+  seq                Int
+  section            String?
+  question           String
+  responseType       ChecklistResponseType @map("response_type")
+  isRequired         Boolean               @default(true) @map("is_required")
+  acceptanceCriteria String?               @map("acceptance_criteria")
+  unit               String?
+
+  template InspectionTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  results  InspectionResult[]
+
+  @@unique([templateId, seq])
+  @@map("inspection_template_items")
+}
+
+model Inspection {
+  id            String             @id @db.Uuid /// สร้างจาก client ได้
+  projectId     String             @map("project_id") @db.Uuid
+  templateId    String             @map("template_id") @db.Uuid
+  number        String?            @unique
+  title         String
+  locationText  String?            @map("location_text")
+  status        InspectionStatus   @default(DRAFT)
+  outcome       InspectionOutcome?
+  inspectedById String             @map("inspected_by_id") @db.Uuid
+  inspectedAt   DateTime           @map("inspected_at") @db.Timestamptz(3)
+  approvedById  String?            @map("approved_by_id") @db.Uuid
+  approvedAt    DateTime?          @map("approved_at") @db.Timestamptz(3)
+  remarks       String?
+  createdAt     DateTime           @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt     DateTime           @updatedAt @map("updated_at") @db.Timestamptz(3)
+  version       Int                @default(1)
+
+  project     Project            @relation(fields: [projectId], references: [id])
+  template    InspectionTemplate @relation(fields: [templateId], references: [id])
+  inspectedBy User               @relation(fields: [inspectedById], references: [id])
+  results     InspectionResult[]
+
+  @@index([projectId, status])
+  @@map("inspections")
+}
+
+model InspectionResult {
+  id             String    @id @db.Uuid
+  inspectionId   String    @map("inspection_id") @db.Uuid
+  templateItemId String    @map("template_item_id") @db.Uuid
+  passFail       PassFail? @map("pass_fail")
+  numberValue    Decimal?  @map("number_value") @db.Decimal(18, 6)
+  textValue      String?   @map("text_value")
+  note           String?
+
+  inspection   Inspection             @relation(fields: [inspectionId], references: [id], onDelete: Cascade)
+  templateItem InspectionTemplateItem @relation(fields: [templateItemId], references: [id])
+
+  @@unique([inspectionId, templateItemId])
+  @@map("inspection_results")
+}
+
+/// คำถามจากหน้างานถึงทีมออกแบบ (RFI ภายใน) อาจนำไปสู่ revision ใหม่ของเอกสาร
+model SiteQuery {
+  id                String          @id @db.Uuid
+  projectId         String          @map("project_id") @db.Uuid
+  number            String?         @unique
+  subject           String
+  question          String
+  status            SiteQueryStatus @default(OPEN)
+  raisedById        String          @map("raised_by_id") @db.Uuid
+  raisedAt          DateTime        @map("raised_at") @db.Timestamptz(3)
+  assignedToId      String?         @map("assigned_to_id") @db.Uuid
+  requiredBy        DateTime?       @map("required_by") @db.Date
+  answer            String?
+  answeredById      String?         @map("answered_by_id") @db.Uuid
+  answeredAt        DateTime?       @map("answered_at") @db.Timestamptz(3)
+  relatedDocumentId String?         @map("related_document_id") @db.Uuid
+  requiresRevision  Boolean         @default(false) @map("requires_revision")
+  closedAt          DateTime?       @map("closed_at") @db.Timestamptz(3)
+  createdAt         DateTime        @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt         DateTime        @updatedAt @map("updated_at") @db.Timestamptz(3)
+  version           Int             @default(1)
+
+  project         Project   @relation(fields: [projectId], references: [id])
+  raisedBy        User      @relation("SiteQueryRaisedBy", fields: [raisedById], references: [id])
+  assignedTo      User?     @relation("SiteQueryAssignedTo", fields: [assignedToId], references: [id])
+  relatedDocument Document? @relation(fields: [relatedDocumentId], references: [id])
+
+  @@index([projectId, status])
+  @@map("site_queries")
+}

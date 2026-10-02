@@ -1,0 +1,689 @@
+// ═══════════════════ M06 ห้องปฏิบัติการ (LIMS) — เฟส 3 ═══════════════════
+// master data (Parameter, วิธีวิเคราะห์, สูตรคำนวณ, มาตรฐาน), งาน → ตัวอย่าง → รายการทดสอบ → QC → รายงานผล
+// สเปก: docs/modules/M06-lab-lims.md — แนวปฏิบัติ ISO/IEC 17025: ทุกการแก้ผลต้องมีเหตุผลและร่องรอย
+// หมายเหตุ: Parameter และ RegulatoryStandard ถูกใช้ตั้งแต่เฟส 1 (Design Basis) จึง seed ตั้งแต่เฟส 1
+
+enum ParameterCategory {
+  PHYSICAL
+  INORGANIC
+  ORGANIC
+  NUTRIENT
+  METAL
+  MICROBIOLOGICAL
+  OTHER
+}
+
+enum Matrix {
+  DRINKING_WATER
+  SURFACE_WATER
+  GROUNDWATER
+  WASTEWATER
+  TREATED_WASTEWATER
+  SEAWATER
+  SLUDGE
+  OTHER
+}
+
+enum RoundingMode {
+  HALF_UP
+  HALF_EVEN
+}
+
+enum StandardCategory {
+  INDUSTRIAL_EFFLUENT
+  BUILDING_EFFLUENT
+  INDUSTRIAL_ESTATE
+  DRINKING_WATER
+  SURFACE_WATER
+  GROUNDWATER
+  CUSTOM
+}
+
+enum LimitComparator {
+  MAX // ไม่เกิน maxValue
+  MIN // ไม่น้อยกว่า minValue
+  RANGE // ระหว่าง minValue–maxValue
+  NOT_DETECTED // ต้องตรวจไม่พบ
+  MAX_INCREASE_OVER_BASELINE // เพิ่มจากค่าพื้นฐาน (เช่น น้ำใช้) ไม่เกิน maxValue
+  INFO // แสดงค่าอย่างเดียว ไม่ประเมิน
+}
+
+enum LimitEvaluation {
+  AUTO
+  MANUAL // มีเงื่อนไขที่ระบบประเมินเองไม่ได้ ผู้อนุมัติต้องตัดสิน
+}
+
+enum ComplianceStatus {
+  PASS
+  FAIL
+  NOT_EVALUATED
+}
+
+enum LabJobStatus {
+  DRAFT
+  OPEN
+  IN_PROGRESS
+  COMPLETED
+  REPORTED
+  CLOSED
+  CANCELLED
+}
+
+enum LabPriority {
+  NORMAL
+  URGENT
+}
+
+enum SampleStatus {
+  REGISTERED
+  RECEIVED
+  IN_ANALYSIS
+  ANALYSIS_COMPLETE
+  REPORTED
+  REJECTED
+  CANCELLED
+  DISPOSED
+}
+
+enum ReceiptCondition {
+  ACCEPTABLE
+  ACCEPTED_WITH_DEVIATION // รับโดยมีข้อสังเกต (ต้องระบุในรายงานผล)
+  REJECTED
+}
+
+enum SampleTestStatus {
+  PENDING
+  IN_PROGRESS
+  RESULT_ENTERED
+  REVIEWED
+  APPROVED
+  CANCELLED
+}
+
+enum ResultQualifier {
+  NONE
+  LESS_THAN // "< LOQ"
+  GREATER_THAN // "> ช่วงวัด"
+  NOT_DETECTED
+}
+
+enum BatchStatus {
+  OPEN
+  COMPLETED
+  QC_FAILED
+  APPROVED
+}
+
+enum QcType {
+  METHOD_BLANK
+  LCS
+  LCS_DUPLICATE
+  SAMPLE_DUPLICATE
+  MATRIX_SPIKE
+  MATRIX_SPIKE_DUPLICATE
+  CALIBRATION_CHECK
+}
+
+enum InstrumentStatus {
+  IN_SERVICE
+  OUT_OF_SERVICE
+  RETIRED
+}
+
+enum InstrumentEventType {
+  CALIBRATION
+  VERIFICATION
+  MAINTENANCE
+  REPAIR
+}
+
+enum EventResult {
+  PASS
+  FAIL
+}
+
+enum TestReportStatus {
+  DRAFT
+  IN_REVIEW
+  ISSUED
+  SUPERSEDED
+  CANCELLED
+}
+
+model Parameter {
+  id               String            @id @default(uuid(7)) @db.Uuid
+  code             String            @unique
+  nameTh           String            @map("name_th")
+  nameEn           String            @map("name_en")
+  casNo            String?           @map("cas_no")
+  category         ParameterCategory
+  defaultUnit      String            @map("default_unit")
+  decimals         Int               @default(2)
+  /// วัดภาคสนามได้ (pH, อุณหภูมิ, DO …)
+  isFieldParameter Boolean           @default(false) @map("is_field_parameter")
+  sortOrder        Int               @default(0) @map("sort_order")
+  isActive         Boolean           @default(true) @map("is_active")
+  createdAt        DateTime          @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt        DateTime          @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  methods           AnalyticalMethod[]
+  standardLimits    StandardLimit[]
+  designBasisItems  DesignBasisItem[]
+  sampleTests       SampleTest[]
+  fieldMeasurements FieldMeasurement[]
+
+  @@map("parameters")
+}
+
+/// สูตรคำนวณแบบมีเวอร์ชัน: แก้สูตร = สร้างแถวใหม่ (version + 1) ห้ามแก้แถวเดิม (BR-LAB-021)
+/// inputs = [{ key: "D1", label: "DO เริ่มต้น", unit: "mg/L", required: true }, …]
+model CalcFormula {
+  id          String   @id @default(uuid(7)) @db.Uuid
+  code        String
+  version     Int
+  name        String
+  expression  String
+  inputs      Json
+  /// เงื่อนไขความใช้ได้ของข้อมูล เช่น [{ expr: "D1 - D2 >= 2", message: "DO ลดลงน้อยกว่า 2 mg/L" }]
+  validations Json?
+  outputUnit  String?  @map("output_unit")
+  notes       String?
+  isActive    Boolean  @default(true) @map("is_active")
+  createdById String?  @map("created_by_id") @db.Uuid
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  methods     AnalyticalMethod[]
+  sampleTests SampleTest[]
+
+  @@unique([code, version])
+  @@map("calc_formulas")
+}
+
+model AnalyticalMethod {
+  id                 String       @id @default(uuid(7)) @db.Uuid
+  parameterId        String       @map("parameter_id") @db.Uuid
+  code               String
+  name               String
+  /// เช่น "Standard Methods 5210 B"
+  reference          String?
+  matrices           Matrix[]
+  unit               String
+  lod                Decimal?     @db.Decimal(24, 10)
+  loq                Decimal?     @db.Decimal(24, 10)
+  rangeMin           Decimal?     @map("range_min") @db.Decimal(24, 10)
+  rangeMax           Decimal?     @map("range_max") @db.Decimal(24, 10)
+  decimals           Int?
+  significantFigures Int?         @map("significant_figures")
+  roundingMode       RoundingMode @default(HALF_UP) @map("rounding_mode")
+  holdingTimeHours   Int?         @map("holding_time_hours")
+  preservation       String?
+  containerType      String?      @map("container_type")
+  containerVolumeMl  Int?         @map("container_volume_ml")
+  /// อยู่ในขอบข่ายการรับรอง ISO/IEC 17025
+  isAccredited       Boolean      @default(false) @map("is_accredited")
+  tatDays            Int          @default(7) @map("tat_days")
+  price              Decimal?     @db.Decimal(12, 2)
+  calcFormulaId      String?      @map("calc_formula_id") @db.Uuid
+  isDefault          Boolean      @default(false) @map("is_default")
+  isActive           Boolean      @default(true) @map("is_active")
+  createdAt          DateTime     @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt          DateTime     @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  parameter      Parameter         @relation(fields: [parameterId], references: [id])
+  calcFormula    CalcFormula?      @relation(fields: [calcFormulaId], references: [id])
+  qcCriteria     QcCriterion[]
+  packageItems   TestPackageItem[]
+  sampleTests    SampleTest[]
+  batches        AnalysisBatch[]
+  quotationItems QuotationItem[]
+
+  @@unique([parameterId, code])
+  @@map("analytical_methods")
+}
+
+model QcCriterion {
+  id          String   @id @default(uuid(7)) @db.Uuid
+  methodId    String   @map("method_id") @db.Uuid
+  qcType      QcType   @map("qc_type")
+  /// ทำ 1 ครั้งต่อทุก N ตัวอย่างใน batch (null = ครั้งเดียวต่อ batch)
+  everyN      Int?     @map("every_n")
+  minRecovery Decimal? @map("min_recovery") @db.Decimal(6, 2)
+  maxRecovery Decimal? @map("max_recovery") @db.Decimal(6, 2)
+  maxRpd      Decimal? @map("max_rpd") @db.Decimal(6, 2)
+  /// blank ต้องน้อยกว่าค่านี้ (หน่วยเดียวกับวิธี)
+  maxBlank    Decimal? @map("max_blank") @db.Decimal(24, 10)
+  notes       String?
+
+  method AnalyticalMethod @relation(fields: [methodId], references: [id], onDelete: Cascade)
+
+  @@unique([methodId, qcType])
+  @@map("qc_criteria")
+}
+
+model TestPackage {
+  id          String   @id @default(uuid(7)) @db.Uuid
+  code        String   @unique
+  name        String
+  description String?
+  price       Decimal? @db.Decimal(12, 2)
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  items          TestPackageItem[]
+  samplingStops  SamplingStop[]
+  quotationItems QuotationItem[]
+
+  @@map("test_packages")
+}
+
+model TestPackageItem {
+  packageId String @map("package_id") @db.Uuid
+  methodId  String @map("method_id") @db.Uuid
+  sortOrder Int    @default(0) @map("sort_order")
+
+  package TestPackage      @relation(fields: [packageId], references: [id], onDelete: Cascade)
+  method  AnalyticalMethod @relation(fields: [methodId], references: [id])
+
+  @@id([packageId, methodId])
+  @@map("test_package_items")
+}
+
+/// มาตรฐานคุณภาพน้ำ/น้ำทิ้ง; มาตรฐานเฉพาะราย (เช่น ตามใบอนุญาต/EIA) = isCustom พร้อม baseStandardId
+model RegulatoryStandard {
+  id             String           @id @default(uuid(7)) @db.Uuid
+  code           String           @unique
+  nameTh         String           @map("name_th")
+  nameEn         String?          @map("name_en")
+  category       StandardCategory
+  /// เช่น ประเภทอาคาร "ก"
+  subtype        String?
+  /// ชื่อประกาศ/กฎหมายต้นทาง
+  sourceRef      String?          @map("source_ref")
+  /// อ้างอิงราชกิจจานุเบกษา
+  gazetteRef     String?          @map("gazette_ref")
+  effectiveDate  DateTime?        @map("effective_date") @db.Date
+  isCustom       Boolean          @default(false) @map("is_custom")
+  baseStandardId String?          @map("base_standard_id") @db.Uuid
+  notes          String?
+  isActive       Boolean          @default(true) @map("is_active")
+  createdAt      DateTime         @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt      DateTime         @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  baseStandard     RegulatoryStandard?  @relation("StandardDerivation", fields: [baseStandardId], references: [id])
+  derivedStandards RegulatoryStandard[] @relation("StandardDerivation")
+  limits           StandardLimit[]
+  sites            Site[]
+  samplingPoints   SamplingPoint[]
+  designBases      DesignBasis[]
+  labJobs          LabJob[]
+  samples          Sample[]
+  testReports      TestReport[]
+
+  @@map("regulatory_standards")
+}
+
+model StandardLimit {
+  id          String          @id @default(uuid(7)) @db.Uuid
+  standardId  String          @map("standard_id") @db.Uuid
+  parameterId String          @map("parameter_id") @db.Uuid
+  comparator  LimitComparator
+  minValue    Decimal?        @map("min_value") @db.Decimal(24, 10)
+  maxValue    Decimal?        @map("max_value") @db.Decimal(24, 10)
+  unit        String
+  evaluation  LimitEvaluation @default(AUTO)
+  note        String?
+  sortOrder   Int             @default(0) @map("sort_order")
+
+  standard  RegulatoryStandard @relation(fields: [standardId], references: [id], onDelete: Cascade)
+  parameter Parameter          @relation(fields: [parameterId], references: [id])
+
+  @@unique([standardId, parameterId])
+  @@map("standard_limits")
+}
+
+/// งานวิเคราะห์ (คำขอของลูกค้า 1 ครั้ง) มีได้หลายตัวอย่าง
+model LabJob {
+  id          String       @id @default(uuid(7)) @db.Uuid
+  number      String       @unique
+  clientId    String       @map("client_id") @db.Uuid
+  siteId      String?      @map("site_id") @db.Uuid
+  projectId   String?      @map("project_id") @db.Uuid
+  contactId   String?      @map("contact_id") @db.Uuid
+  quotationId String?      @map("quotation_id") @db.Uuid
+  standardId  String?      @map("standard_id") @db.Uuid
+  status      LabJobStatus @default(DRAFT)
+  priority    LabPriority  @default(NORMAL)
+  requestedAt DateTime     @default(now()) @map("requested_at") @db.Timestamptz(3)
+  dueDate     DateTime?    @map("due_date") @db.Date
+  notes       String?
+  createdById String?      @map("created_by_id") @db.Uuid
+  createdAt   DateTime     @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime     @updatedAt @map("updated_at") @db.Timestamptz(3)
+  deletedAt   DateTime?    @map("deleted_at") @db.Timestamptz(3)
+  version     Int          @default(1)
+
+  client         Client              @relation(fields: [clientId], references: [id])
+  site           Site?               @relation(fields: [siteId], references: [id])
+  project        Project?            @relation(fields: [projectId], references: [id])
+  contact        ClientContact?      @relation(fields: [contactId], references: [id])
+  quotation      Quotation?          @relation(fields: [quotationId], references: [id])
+  standard       RegulatoryStandard? @relation(fields: [standardId], references: [id])
+  samples        Sample[]
+  testReports    TestReport[]
+  samplingStops  SamplingStop[]
+  billingRecords BillingRecord[]
+
+  @@index([clientId, status])
+  @@index([status, dueDate])
+  @@map("lab_jobs")
+}
+
+model Sample {
+  id                  String            @id @db.Uuid /// สร้างจาก client ได้ (เก็บตัวอย่างออฟไลน์)
+  jobId               String            @map("job_id") @db.Uuid
+  /// รหัสตัวอย่าง ออกตอนลงทะเบียนที่ server
+  code                String?           @unique
+  samplingPointId     String?           @map("sampling_point_id") @db.Uuid
+  samplingStopId      String?           @map("sampling_stop_id") @db.Uuid
+  matrix              Matrix
+  description         String?
+  clientSampleRef     String?           @map("client_sample_ref")
+  sampledAt           DateTime?         @map("sampled_at") @db.Timestamptz(3)
+  sampledById         String?           @map("sampled_by_id") @db.Uuid
+  /// ผู้เก็บที่ไม่ใช่พนักงาน (ลูกค้านำส่งเอง)
+  sampledByName       String?           @map("sampled_by_name")
+  receivedAt          DateTime?         @map("received_at") @db.Timestamptz(3)
+  receivedById        String?           @map("received_by_id") @db.Uuid
+  receiptTemperatureC Decimal?          @map("receipt_temperature_c") @db.Decimal(5, 2)
+  receiptCondition    ReceiptCondition? @map("receipt_condition")
+  receiptNotes        String?           @map("receipt_notes")
+  containerCount      Int?              @map("container_count")
+  storageLocation     String?           @map("storage_location")
+  status              SampleStatus      @default(REGISTERED)
+  standardId          String?           @map("standard_id") @db.Uuid
+  /// ค่าพื้นฐานสำหรับ MAX_INCREASE_OVER_BASELINE เช่น { "TDS": 180 }
+  baselineValues      Json?             @map("baseline_values")
+  disposedAt          DateTime?         @map("disposed_at") @db.Timestamptz(3)
+  createdAt           DateTime          @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt           DateTime          @updatedAt @map("updated_at") @db.Timestamptz(3)
+  version             Int               @default(1)
+
+  job               LabJob                  @relation(fields: [jobId], references: [id])
+  samplingPoint     SamplingPoint?          @relation(fields: [samplingPointId], references: [id])
+  samplingStop      SamplingStop?           @relation(fields: [samplingStopId], references: [id])
+  sampledBy         User?                   @relation("SampleSampledBy", fields: [sampledById], references: [id])
+  receivedBy        User?                   @relation("SampleReceivedBy", fields: [receivedById], references: [id])
+  standard          RegulatoryStandard?     @relation(fields: [standardId], references: [id])
+  containers        SampleContainer[]
+  tests             SampleTest[]
+  reports           TestReportSample[]
+  custody           CustodyTransferSample[]
+  fieldMeasurements FieldMeasurement[]
+
+  @@index([jobId])
+  @@index([status])
+  @@map("samples")
+}
+
+/// ขวดตัวอย่าง: label = ข้อความใน QR ที่พิมพ์ติดขวดล่วงหน้า
+model SampleContainer {
+  id            String   @id @db.Uuid
+  sampleId      String   @map("sample_id") @db.Uuid
+  label         String   @unique
+  containerType String?  @map("container_type")
+  volumeMl      Int?     @map("volume_ml")
+  preservation  String?
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  sample Sample @relation(fields: [sampleId], references: [id], onDelete: Cascade)
+
+  @@map("sample_containers")
+}
+
+/// รายการทดสอบ 1 parameter ต่อ 1 ตัวอย่าง; วิเคราะห์ซ้ำใช้แถวเดิม (attempt + 1) ประวัติอยู่ใน ResultAudit
+model SampleTest {
+  id                  String            @id @default(uuid(7)) @db.Uuid
+  sampleId            String            @map("sample_id") @db.Uuid
+  methodId            String            @map("method_id") @db.Uuid
+  parameterId         String            @map("parameter_id") @db.Uuid
+  status              SampleTestStatus  @default(PENDING)
+  attempt             Int               @default(1)
+  analystId           String?           @map("analyst_id") @db.Uuid
+  batchId             String?           @map("batch_id") @db.Uuid
+  instrumentId        String?           @map("instrument_id") @db.Uuid
+  startedAt           DateTime?         @map("started_at") @db.Timestamptz(3)
+  analyzedAt          DateTime?         @map("analyzed_at") @db.Timestamptz(3)
+  /// ค่าดิบตาม CalcFormula.inputs เช่น { D1: 8.2, D2: 4.1, P: 0.1 }
+  rawData             Json?             @map("raw_data")
+  /// สูตร (เวอร์ชัน) ที่ใช้คำนวณจริง
+  calcFormulaId       String?           @map("calc_formula_id") @db.Uuid
+  dilutionFactor      Decimal?          @map("dilution_factor") @db.Decimal(14, 6)
+  /// ค่าที่คำนวณก่อนปัดเศษ
+  resultValue         Decimal?          @map("result_value") @db.Decimal(24, 10)
+  qualifier           ResultQualifier   @default(NONE)
+  /// ข้อความที่แสดงในรายงาน หลังปัดเศษตามวิธี เช่น "12", "<2", "ND"
+  resultText          String?           @map("result_text")
+  unit                String
+  holdingDeadline     DateTime?         @map("holding_deadline") @db.Timestamptz(3)
+  holdingTimeExceeded Boolean           @default(false) @map("holding_time_exceeded")
+  complianceStatus    ComplianceStatus? @map("compliance_status")
+  reviewedById        String?           @map("reviewed_by_id") @db.Uuid
+  reviewedAt          DateTime?         @map("reviewed_at") @db.Timestamptz(3)
+  approvedById        String?           @map("approved_by_id") @db.Uuid
+  approvedAt          DateTime?         @map("approved_at") @db.Timestamptz(3)
+  rejectionReason     String?           @map("rejection_reason")
+  cancelReason        String?           @map("cancel_reason")
+  remark              String?
+  createdAt           DateTime          @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt           DateTime          @updatedAt @map("updated_at") @db.Timestamptz(3)
+  version             Int               @default(1)
+
+  sample      Sample           @relation(fields: [sampleId], references: [id])
+  method      AnalyticalMethod @relation(fields: [methodId], references: [id])
+  parameter   Parameter        @relation(fields: [parameterId], references: [id])
+  analyst     User?            @relation("SampleTestAnalyst", fields: [analystId], references: [id])
+  batch       AnalysisBatch?   @relation(fields: [batchId], references: [id])
+  instrument  Instrument?      @relation(fields: [instrumentId], references: [id])
+  calcFormula CalcFormula?     @relation(fields: [calcFormulaId], references: [id])
+  reviewedBy  User?            @relation("SampleTestReviewedBy", fields: [reviewedById], references: [id])
+  approvedBy  User?            @relation("SampleTestApprovedBy", fields: [approvedById], references: [id])
+  audits      ResultAudit[]
+  qcResults   QcResult[]
+
+  @@unique([sampleId, methodId])
+  @@index([status, analystId])
+  @@index([batchId])
+  @@map("sample_tests")
+}
+
+/// ประวัติการแก้ผล (ISO/IEC 17025 7.5/7.11) — เขียนทุกครั้งที่ค่า/สถานะเปลี่ยนหลัง RESULT_ENTERED
+model ResultAudit {
+  id           BigInt   @id @default(autoincrement())
+  sampleTestId String   @map("sample_test_id") @db.Uuid
+  changedById  String   @map("changed_by_id") @db.Uuid
+  changedAt    DateTime @default(now()) @map("changed_at") @db.Timestamptz(3)
+  field        String
+  oldValue     String?  @map("old_value")
+  newValue     String?  @map("new_value")
+  reason       String?
+
+  sampleTest SampleTest @relation(fields: [sampleTestId], references: [id])
+
+  @@index([sampleTestId])
+  @@map("result_audits")
+}
+
+model AnalysisBatch {
+  id           String      @id @default(uuid(7)) @db.Uuid
+  number       String      @unique
+  methodId     String      @map("method_id") @db.Uuid
+  analystId    String      @map("analyst_id") @db.Uuid
+  instrumentId String?     @map("instrument_id") @db.Uuid
+  status       BatchStatus @default(OPEN)
+  startedAt    DateTime    @default(now()) @map("started_at") @db.Timestamptz(3)
+  completedAt  DateTime?   @map("completed_at") @db.Timestamptz(3)
+  approvedById String?     @map("approved_by_id") @db.Uuid
+  approvedAt   DateTime?   @map("approved_at") @db.Timestamptz(3)
+  notes        String?
+  createdAt    DateTime    @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt    DateTime    @updatedAt @map("updated_at") @db.Timestamptz(3)
+  version      Int         @default(1)
+
+  method     AnalyticalMethod @relation(fields: [methodId], references: [id])
+  analyst    User             @relation(fields: [analystId], references: [id])
+  instrument Instrument?      @relation(fields: [instrumentId], references: [id])
+  tests      SampleTest[]
+  qcResults  QcResult[]
+
+  @@index([methodId, status])
+  @@map("analysis_batches")
+}
+
+model QcResult {
+  id              String   @id @default(uuid(7)) @db.Uuid
+  batchId         String   @map("batch_id") @db.Uuid
+  qcType          QcType   @map("qc_type")
+  /// ตัวอย่างที่ใช้ทำ duplicate/spike
+  sampleTestId    String?  @map("sample_test_id") @db.Uuid
+  expectedValue   Decimal? @map("expected_value") @db.Decimal(24, 10)
+  measuredValue   Decimal? @map("measured_value") @db.Decimal(24, 10)
+  duplicateValue  Decimal? @map("duplicate_value") @db.Decimal(24, 10)
+  spikeAddedValue Decimal? @map("spike_added_value") @db.Decimal(24, 10)
+  recoveryPct     Decimal? @map("recovery_pct") @db.Decimal(8, 2)
+  rpdPct          Decimal? @map("rpd_pct") @db.Decimal(8, 2)
+  passed          Boolean?
+  notes           String?
+  createdById     String   @map("created_by_id") @db.Uuid
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  batch      AnalysisBatch @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  sampleTest SampleTest?   @relation(fields: [sampleTestId], references: [id])
+
+  @@index([batchId])
+  @@map("qc_results")
+}
+
+model Instrument {
+  id                      String           @id @default(uuid(7)) @db.Uuid
+  code                    String           @unique
+  name                    String
+  type                    String?
+  manufacturer            String?
+  model                   String?
+  serialNo                String?          @map("serial_no")
+  location                String?
+  status                  InstrumentStatus @default(IN_SERVICE)
+  calibrationIntervalDays Int?             @map("calibration_interval_days")
+  lastCalibratedAt        DateTime?        @map("last_calibrated_at") @db.Date
+  nextCalibrationDue      DateTime?        @map("next_calibration_due") @db.Date
+  /// ห้ามบันทึกผลด้วยเครื่องที่เลยกำหนดสอบเทียบ (BR-LAB-030)
+  blockWhenOverdue        Boolean          @default(true) @map("block_when_overdue")
+  notes                   String?
+  createdAt               DateTime         @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt               DateTime         @updatedAt @map("updated_at") @db.Timestamptz(3)
+  version                 Int              @default(1)
+
+  events            InstrumentEvent[]
+  sampleTests       SampleTest[]
+  batches           AnalysisBatch[]
+  fieldMeasurements FieldMeasurement[]
+
+  @@map("instruments")
+}
+
+model InstrumentEvent {
+  id                String              @id @default(uuid(7)) @db.Uuid
+  instrumentId      String              @map("instrument_id") @db.Uuid
+  type              InstrumentEventType
+  performedAt       DateTime            @map("performed_at") @db.Date
+  performedById     String?             @map("performed_by_id") @db.Uuid
+  /// ผู้ให้บริการภายนอก
+  performedByName   String?             @map("performed_by_name")
+  result            EventResult?
+  certificateNo     String?             @map("certificate_no")
+  certificateFileId String?             @map("certificate_file_id") @db.Uuid
+  nextDueDate       DateTime?           @map("next_due_date") @db.Date
+  notes             String?
+  createdById       String?             @map("created_by_id") @db.Uuid
+  createdAt         DateTime            @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  instrument Instrument @relation(fields: [instrumentId], references: [id])
+
+  @@index([instrumentId, performedAt])
+  @@map("instrument_events")
+}
+
+/// ใบรายงานผล; แก้หลังออกแล้ว = ออกฉบับใหม่ (reportVersion + 1) อ้างถึงฉบับเดิม (BR-LAB-050)
+model TestReport {
+  id              String           @id @default(uuid(7)) @db.Uuid
+  number          String
+  reportVersion   Int              @default(1) @map("report_version")
+  jobId           String           @map("job_id") @db.Uuid
+  status          TestReportStatus @default(DRAFT)
+  amendsReportId  String?          @unique @map("amends_report_id") @db.Uuid
+  amendmentReason String?          @map("amendment_reason")
+  standardId      String?          @map("standard_id") @db.Uuid
+  preparedById    String           @map("prepared_by_id") @db.Uuid
+  authorizedById  String?          @map("authorized_by_id") @db.Uuid
+  issuedAt        DateTime?        @map("issued_at") @db.Timestamptz(3)
+  pdfFileId       String?          @map("pdf_file_id") @db.Uuid
+  sentAt          DateTime?        @map("sent_at") @db.Timestamptz(3)
+  sentTo          String[]         @map("sent_to")
+  notes           String?
+  createdAt       DateTime         @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt       DateTime         @updatedAt @map("updated_at") @db.Timestamptz(3)
+  version         Int              @default(1)
+
+  job          LabJob              @relation(fields: [jobId], references: [id])
+  standard     RegulatoryStandard? @relation(fields: [standardId], references: [id])
+  preparedBy   User                @relation("TestReportPreparedBy", fields: [preparedById], references: [id])
+  authorizedBy User?               @relation("TestReportAuthorizedBy", fields: [authorizedById], references: [id])
+  amends       TestReport?         @relation("ReportAmendment", fields: [amendsReportId], references: [id])
+  amendedBy    TestReport?         @relation("ReportAmendment")
+  samples      TestReportSample[]
+
+  @@unique([number, reportVersion])
+  @@index([jobId])
+  @@map("test_reports")
+}
+
+model TestReportSample {
+  reportId String @map("report_id") @db.Uuid
+  sampleId String @map("sample_id") @db.Uuid
+
+  report TestReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  sample Sample     @relation(fields: [sampleId], references: [id])
+
+  @@id([reportId, sampleId])
+  @@map("test_report_samples")
+}
+
+/// การส่งมอบตัวอย่าง (chain of custody) จากผู้เก็บ/ลูกค้า ถึงผู้รับที่แล็บ
+model CustodyTransfer {
+  id                        String   @id @db.Uuid
+  relinquishedByUserId      String?  @map("relinquished_by_user_id") @db.Uuid
+  relinquishedByName        String?  @map("relinquished_by_name")
+  receivedById              String   @map("received_by_id") @db.Uuid
+  transferredAt             DateTime @map("transferred_at") @db.Timestamptz(3)
+  relinquishSignatureFileId String?  @map("relinquish_signature_file_id") @db.Uuid
+  receiveSignatureFileId    String?  @map("receive_signature_file_id") @db.Uuid
+  notes                     String?
+  createdAt                 DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  receivedBy User                    @relation(fields: [receivedById], references: [id])
+  samples    CustodyTransferSample[]
+
+  @@map("custody_transfers")
+}
+
+model CustodyTransferSample {
+  transferId String @map("transfer_id") @db.Uuid
+  sampleId   String @map("sample_id") @db.Uuid
+
+  transfer CustodyTransfer @relation(fields: [transferId], references: [id], onDelete: Cascade)
+  sample   Sample          @relation(fields: [sampleId], references: [id])
+
+  @@id([transferId, sampleId])
+  @@map("custody_transfer_samples")
+}
