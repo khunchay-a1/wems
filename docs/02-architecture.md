@@ -15,7 +15,7 @@ flowchart TB
     WK[Worker<br/>NestJS + BullMQ]
     DB[(PostgreSQL)]
     RD[(Redis)]
-    S3[(Object storage<br/>MinIO / S3)]
+    S3[(Object storage<br/>S3-compatible)]
     GB[Gotenberg<br/>HTML→PDF]
   end
   CL[ลูกค้า<br/>รับอีเมล/ลิงก์ดาวน์โหลด]
@@ -52,8 +52,8 @@ flowchart TB
 | API | NestJS + TypeScript (strict) | `class-validator` + `class-transformer` สำหรับ DTO, `@nestjs/swagger` (เปิด CLI plugin) |
 | ORM | **Prisma 7.x** | ณ วันที่เขียน stable ล่าสุดคือ 7.10.0 และ npm tag `latest` ชี้ไป 8.0.0-rc — ให้ติดตั้ง `prisma@7` จนกว่า 8.x จะออก GA; generator `prisma-client` + `moduleFormat = "cjs"` (Nest เป็น CommonJS), PrismaClient ต้องส่ง `adapter: new PrismaPg(...)`, URL และคำสั่ง seed อยู่ใน `apps/api/prisma.config.ts`, Prisma 7 ไม่โหลด `.env` เอง (ใช้ `dotenv/config`) — ต้องการ Node ≥ 20.19 (แนะนำ 22) และ TypeScript ≥ 5.4 |
 | ฐานข้อมูล | PostgreSQL 16 ขึ้นไป | extension `pg_trgm` (ค้นหา) |
-| Queue/Cache | Redis 7 + BullMQ | queue, rate limit, SSE fan-out (pub/sub) |
-| Object storage | S3-compatible (MinIO on-prem / AWS S3 / R2) | bucket versioning เปิด |
+| Queue/Cache | Redis 7.2 (BSD — 7.4+ เปลี่ยน license, ดู ADR-0007) หรือ Valkey + BullMQ | queue, rate limit, SSE fan-out (pub/sub) |
+| Object storage | S3-compatible (dev: RustFS ดู ADR-0007; production ตาม Q22: เช่น AWS S3 / R2 / ระบบ on-prem ที่เข้ากับ S3) | bucket versioning เปิด; โค้ดใช้ S3 API มาตรฐานเท่านั้น |
 | PDF | Gotenberg (Chromium) + HTML template | **ตัดคำภาษาไทยถูกต้อง** (ICU) — ดู ADR-0003 |
 | จัดการ PDF | `pdf-lib` | ประทับตรา/ลายน้ำบน PDF แบบ; หน้าปก/ใบนำส่งใช้ Gotenberg |
 | Preview | `pdftoppm` (poppler-utils) ใน worker image | ทำรูปหน้าแรก PNG |
@@ -102,7 +102,7 @@ wems/
 │   └── config/                   # eslint, tsconfig, prettier ที่ใช้ร่วม
 ├── tools/                        # สคริปต์ตรวจสเปก เช่น check-enum-labels.mjs
 ├── infra/
-│   ├── docker-compose.yml        # dev: postgres, redis, minio, mailpit, gotenberg
+│   ├── docker-compose.yml        # dev: postgres, redis, storage (S3), mailpit, gotenberg
 │   ├── docker-compose.prod.yml
 │   └── caddy/Caddyfile
 └── .github/workflows/
@@ -207,7 +207,7 @@ sequenceDiagram
 
 | Env | ที่อยู่ | หมายเหตุ |
 |---|---|---|
-| local | `docker compose -f infra/docker-compose.yml up` | postgres, redis, minio, mailpit (ดูอีเมล), gotenberg |
+| local | `docker compose -f infra/docker-compose.yml up -d --wait` | postgres (+ DB `wems_test`), redis, storage (RustFS + สร้าง bucket `wems-dev`/`wems-test`), mailpit (ดูอีเมล), gotenberg — พอร์ตดู `README.md` |
 | staging | เซิร์ฟเวอร์/VM แยก | ข้อมูลทดสอบ, ใช้สำหรับ UAT |
 | production | on-prem หรือ cloud (ยืนยันใน open-questions) | Docker Compose + Caddy (TLS อัตโนมัติ) |
 
@@ -244,7 +244,7 @@ flowchart LR
 |---|---|---|
 | `DATABASE_URL` | api, worker | `postgresql://wems:***@db:5432/wems` |
 | `REDIS_URL` | api, worker | `redis://redis:6379` |
-| `S3_ENDPOINT`, `S3_REGION`, `S3_BUCKET`, `S3_ACCESS_KEY`, `S3_SECRET_KEY`, `S3_FORCE_PATH_STYLE` | api, worker | MinIO ใช้ path style |
+| `S3_ENDPOINT`, `S3_REGION`, `S3_BUCKET`, `S3_ACCESS_KEY`, `S3_SECRET_KEY`, `S3_FORCE_PATH_STYLE` | api, worker | storage ที่ไม่ใช่ AWS ใช้ path style (`S3_FORCE_PATH_STYLE=true`) |
 | `JWT_ACCESS_SECRET`, `JWT_ACCESS_TTL=900` | api | secret ยาว ≥ 32 ไบต์ |
 | `REFRESH_TTL_WEB_DAYS=7`, `REFRESH_TTL_MOBILE_DAYS=30` | api | idle timeout ของเว็บอยู่ใน setting `security.sessionIdleMinutes` |
 | `APP_ENCRYPTION_KEY` | api | AES-256-GCM สำหรับ TOTP secret (base64 32 ไบต์) |
@@ -265,3 +265,4 @@ flowchart LR
 | `adr/0004-offline-sync.md` | Outbox ฝั่งมือถือ + change log ฝั่ง server |
 | `adr/0005-ids-and-concurrency.md` | UUIDv7, optimistic locking ด้วย `version` |
 | `adr/0006-transactional-outbox.md` | side effect ผ่าน outbox table |
+| `adr/0007-local-infra-images.md` | image ของ stack dev: S3-compatible storage แทน MinIO, Redis 7.2 (BSD) |

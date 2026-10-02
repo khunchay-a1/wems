@@ -18,7 +18,7 @@
 
 - [x] **P0-01 Monorepo** — pnpm workspaces + Turborepo, `packages/config` (tsconfig strict, ESLint, Prettier), `.editorconfig`, `.gitignore`, `.env.example`, script รวม `dev/build/lint/typecheck/test`
   - รับงาน: `pnpm install && pnpm lint && pnpm typecheck` ผ่านบน repo เปล่า
-- [ ] **P0-02 Infra dev** — `infra/docker-compose.yml`: PostgreSQL 16, Redis 7, MinIO (+ สร้าง bucket อัตโนมัติ), Mailpit, Gotenberg · อ้างอิง `02-architecture.md` §9
+- [x] **P0-02 Infra dev** — `infra/docker-compose.yml`: PostgreSQL 16, Redis 7.2, S3-compatible storage (RustFS แทน MinIO — ADR-0007; + สร้าง bucket อัตโนมัติ), Mailpit, Gotenberg · อ้างอิง `02-architecture.md` §9
   - รับงาน: `docker compose up -d` ทุก service healthy; README มีขั้นตอน dev
 - [ ] **P0-03 API skeleton** — NestJS: config (ตรวจ env ด้วย zod), pino + requestId, prefix `/api/v1`, exception filter แบบ problem+json + catalog ข้อความ th/en, ValidationPipe (whitelist, forbidNonWhitelisted, transform), helmet, throttler, `/health/*`, Swagger (non-prod) · `04-api-conventions.md`
   - รับงาน: DTO ผิดได้ 400 problem+json มี `errors[]`; test ของ filter
@@ -33,7 +33,7 @@
 - [ ] **P0-08 Numbering** — token, reset, concurrency, API จัดการ + preview · M01 §4
   - รับงาน: AT-PLT-04; unit test token รวมปี พ.ศ.
 - [ ] **P0-09 Files** — upload-url/complete/download-url, worker (sha256, magic bytes, จำนวนหน้า, preview), attachments, cleanup · M01 §5
-  - รับงาน: AT-PLT-05; integration test กับ MinIO
+  - รับงาน: AT-PLT-05; integration test กับ S3-compatible storage ใน compose
 - [ ] **P0-10 Notifications** — handler สร้าง Notification, อีเมล (Handlebars th/en → Mailpit), push (FCM, stub ใน dev), SSE + Redis pub/sub, preferences, ปฏิทินวันทำการ · M01 §6, `05-workflows.md` §10
   - รับงาน: AT-PLT-07; e2e event → แถว notification + อีเมลใน Mailpit
 - [ ] **P0-11 PDF** — Gotenberg client, layout HTML ฐาน + ฟอนต์ Sarabun, header/footer เลขหน้า, บริการประทับตราด้วย pdf-lib · `02-architecture.md` §8

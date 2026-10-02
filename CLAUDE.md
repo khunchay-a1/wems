@@ -44,7 +44,8 @@ infra/        docker compose (dev/prod), Caddy
 
 ## คำสั่ง (สร้างใน P0-01…P0-16 — อัปเดตส่วนนี้เมื่อคำสั่งจริงต่างไป)
 ```bash
-docker compose -f infra/docker-compose.yml up -d     # postgres redis minio mailpit gotenberg
+pnpm infra:up                                        # docker compose up -d --wait: postgres redis storage(S3) mailpit gotenberg
+pnpm infra:down                                      # หยุด (ข้อมูลอยู่ใน volume; ล้างด้วย pnpm infra:reset)
 corepack enable && pnpm install                     # pnpm ตาม "packageManager" ใน package.json
 pnpm dev                                             # api + worker + web
 pnpm lint && pnpm typecheck && pnpm test             # turbo run ทุก package (+ eslint ระดับ root สำหรับ tools/)
@@ -81,6 +82,7 @@ node tools/check-enum-labels.mjs && node tools/check-spec-refs.mjs
 - **Prisma 7**: URL อยู่ใน `apps/api/prisma.config.ts`; `PrismaClient` ต้องส่ง `adapter: new PrismaPg(...)`; generator `prisma-client` + `moduleFormat = "cjs"`; ไม่โหลด `.env` เอง; seed ต้องรัน `prisma db seed` เอง; npm tag `latest` เคยชี้ไป 8.0.0-rc — ติดตั้ง `prisma@7` จนกว่า 8 จะ GA
 - **Next.js 16+**: ใช้ `proxy.ts` แทน `middleware.ts`
 - **Flutter**: Material/Cupertino แยกเป็นแพ็กเกจ `material_ui`/`cupertino_ui` — ใช้ตาม template ของ `flutter create` เวอร์ชันที่ใช้ และห้าม import ปน
+- **MinIO** เลิกเผยแพร่ Docker image แล้ว — dev ใช้ RustFS (S3-compatible) และ **Redis 7.4+** เปลี่ยน license — ใช้ 7.2 หรือ Valkey (ADR-0007); โค้ดใช้ S3 API มาตรฐานเท่านั้น
 - **LINE Notify** ปิดบริการแล้ว — ถ้าต้องแจ้งเตือนผ่าน LINE ใช้ Messaging API (เฟส 5)
 
 ## วิธีทำงาน

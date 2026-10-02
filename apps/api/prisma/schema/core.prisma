@@ -503,7 +503,7 @@ model NotificationPreference {
   @@map("notification_preferences")
 }
 
-/// metadata ของไฟล์ใน object storage (S3/MinIO) — เนื้อไฟล์ไม่อยู่ใน DB
+/// metadata ของไฟล์ใน object storage (S3-compatible) — เนื้อไฟล์ไม่อยู่ใน DB
 /// คอลัมน์ *FileId ในตารางอื่นที่ไม่มี relation = อ้างอิงแบบหลวม ตรวจความมีอยู่ใน FilesService
 model FileObject {
   id           String     @id @default(uuid(7)) @db.Uuid

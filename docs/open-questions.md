@@ -26,3 +26,4 @@
 | Q19 | (เฟส 3) มาตรฐานอื่นที่ใช้บ่อย (นิคมอุตสาหกรรม น้ำประปา แหล่งน้ำผิวดิน) และยืนยันว่ามาตรฐานอาคาร พ.ศ. 2548 ยังเป็นฉบับที่ใช้บังคับ | seed เฉพาะโรงงาน 2560 และอาคาร 2548 | `standards.csv` | เฟส 3 | ⏳ |
 | Q20 | (เฟส 4) ซอฟต์แวร์บัญชีที่ใช้และรูปแบบไฟล์นำเข้า; เกณฑ์อนุมัติใบเสนอราคา | ส่งออก CSV/Excel ทั่วไป; เกณฑ์ใน `settings.json` | M08 | เฟส 4 | ⏳ |
 | Q21 | (เฟส 5) ต้องการแจ้งเตือนผ่าน LINE Official Account หรือไม่ | ไม่ทำจนถึงเฟส 5 | ช่องทางแจ้งเตือน | เฟส 5 | ⏳ |
+| Q22 | Object storage และ Redis ของ staging/production: MinIO เลิกเผยแพร่ image ฉบับ community แล้ว — เลือก AWS S3/Cloudflare R2, MinIO เชิงพาณิชย์ (AIStor), RustFS หรือ SeaweedFS on-prem; Redis 7.2 (BSD) หรือ Valkey | dev ใช้ RustFS + Redis 7.2 (ADR-0007); production ตามคำตอบ Q03 | infra, backup ไฟล์, ค่าใช้จ่าย | ก่อน staging | ⏳ |

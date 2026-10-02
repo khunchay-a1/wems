@@ -11,6 +11,31 @@
 5. สั่ง `/next-task P0-01` แล้วทำต่อทีละ task ตาม `docs/10-roadmap.md` (หลังจากนั้นพิมพ์ `/next-task` เฉยๆ ได้)
 6. ก่อนเปิด PR แต่ละโมดูล ใช้ `/spec-check M04` (เปลี่ยนเลขโมดูลตามงาน)
 
+## พัฒนาในเครื่อง (local dev)
+
+ต้องมี Docker Desktop (Windows/macOS) หรือ Docker Engine + Compose v2 (Linux)
+
+```bash
+cp .env.example .env            # Windows PowerShell: Copy-Item .env.example .env
+corepack enable
+pnpm install
+pnpm infra:up                   # = docker compose -f infra/docker-compose.yml up -d --wait
+pnpm infra:ps                   # ทุก service ต้องเป็น (healthy)
+```
+
+| Service | พอร์ตในเครื่อง | ใช้ทำอะไร |
+|---|---|---|
+| postgres (16) | 5432 | DB `wems` และ `wems_test` (user/pass `wems`/`wems`) |
+| redis (7.2) | 6379 | BullMQ, cache, pub/sub |
+| storage (RustFS, S3-compatible) | 9000 (S3), 9001 (console) | bucket `wems-dev`, `wems-test` สร้างอัตโนมัติ — key `wemsdev` / `wemsdev-secret-change-me` |
+| mailpit | 1025 (SMTP), 8025 (UI) | ดูอีเมลที่ระบบส่งที่ http://localhost:8025 |
+| gotenberg (Chromium) | 3001 | HTML → PDF |
+
+- เปลี่ยนพอร์ตที่ชนได้ด้วยตัวแปร `WEMS_*_PORT` ก่อนรัน (ดูใน `infra/docker-compose.yml`) แล้วแก้ค่าใน `.env` ให้ตรง
+- `pnpm infra:down` หยุด (ข้อมูลยังอยู่), `pnpm infra:reset` ลบข้อมูลทั้งหมด, `pnpm infra:logs` ดู log
+- ค่ารหัสผ่านในนี้ใช้ในเครื่องนักพัฒนาเท่านั้น
+- ทำไมใช้ RustFS แทน MinIO และ Redis 7.2: ดู `docs/adr/0007-local-infra-images.md`
+
 ## เนื้อหา
 
 ```text

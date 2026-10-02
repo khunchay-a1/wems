@@ -5,7 +5,7 @@
 | ระดับ | ทดสอบอะไร | เครื่องมือ | รันเมื่อ |
 |---|---|---|---|
 | Unit — domain | state machine, label revision, สิทธิ์/eligibility, numbering token, working days, สูตรคำนวณ, ปัดเศษ, compliance, bahtText | Jest/Vitest (API), `flutter_test` | ทุก commit |
-| Integration — API | service + PostgreSQL จริง + MinIO + Redis: transaction, audit/change/outbox, concurrency, file flow | Jest + Testcontainers (หรือ service container ใน CI) | ทุก PR |
+| Integration — API | service + PostgreSQL จริง + S3-compatible storage + Redis: transaction, audit/change/outbox, concurrency, file flow | Jest + Testcontainers (หรือ service container ใน CI) | ทุก PR |
 | E2E — API | HTTP ครบวงจรตาม AT-xxx (สิทธิ์ 401/403/404, problem+json, idempotency) | Supertest | ทุก PR |
 | E2E — Web | flow หลักของผู้ใช้ | Playwright กับ stack docker compose + seed demo | ทุก PR (smoke) / nightly (ครบ) |
 | Mobile | outbox/pull/เอกสารออฟไลน์, widget หลัก, integration | `flutter_test`, `integration_test` | ทุก PR (unit/widget) / ก่อน release (integration) |
