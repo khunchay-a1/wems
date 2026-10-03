@@ -27,6 +27,7 @@ import { NotificationsModule } from './modules/platform/notifications/notificati
 import { UsersModule } from './modules/platform/users/users.module';
 import { ClientsModule } from './modules/clients/clients.module';
 import { ProjectsModule } from './modules/projects/projects.module';
+import { DocumentsModule } from './modules/documents/documents.module';
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { ProjectsModule } from './modules/projects/projects.module';
     NotificationsModule,
     ClientsModule,
     ProjectsModule,
+    DocumentsModule,
   ],
   providers: [
     { provide: APP_FILTER, useClass: ProblemFilter },

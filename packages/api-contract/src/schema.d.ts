@@ -1284,6 +1284,112 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/disciplines": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Disciplines (active unless includeInactive) */
+        get: operations["MasterData_listDisciplines"];
+        put?: never;
+        /** Create a discipline */
+        post: operations["MasterData_createDiscipline"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/disciplines/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update or deactivate a discipline */
+        patch: operations["MasterData_updateDiscipline"];
+        trace?: never;
+    };
+    "/api/v1/document-types": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Document types (active unless includeInactive) */
+        get: operations["MasterData_listDocumentTypes"];
+        put?: never;
+        /** Create a document type */
+        post: operations["MasterData_createDocumentType"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/document-types/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update or deactivate a document type */
+        patch: operations["MasterData_updateDocumentType"];
+        trace?: never;
+    };
+    "/api/v1/workflow-templates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Workflow templates with steps */
+        get: operations["MasterData_listWorkflowTemplates"];
+        put?: never;
+        /** Create a workflow template (BR-DOC-031) */
+        post: operations["MasterData_createWorkflowTemplate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workflow-templates/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Workflow template */
+        get: operations["MasterData_getWorkflowTemplate"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update a template; steps are replaced as a set */
+        patch: operations["MasterData_updateWorkflowTemplate"];
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -2336,6 +2442,130 @@ export interface components {
             /** @description null = use the global pattern */
             pattern?: string | null;
         };
+        DisciplineDto: {
+            /** Format: uuid */
+            id: string;
+            /** @example PR */
+            code: string;
+            nameTh: string;
+            nameEn: string;
+            sortOrder: number;
+            isActive: boolean;
+        };
+        CreateDisciplineDto: {
+            /**
+             * @description Used in document numbers; fixed after creation
+             * @example PR
+             */
+            code: string;
+            nameTh: string;
+            nameEn: string;
+            sortOrder?: number;
+            isActive?: boolean;
+        };
+        UpdateDisciplineDto: {
+            nameTh?: string;
+            nameEn?: string;
+            sortOrder?: number;
+            isActive?: boolean;
+        };
+        DocumentTypeDto: {
+            /** Format: uuid */
+            id: string;
+            /** @example DWG */
+            code: string;
+            nameTh: string;
+            nameEn: string;
+            requiresPdfRendition: boolean;
+            requiresLicensedApprover: boolean;
+            allowedLicenseBranches: components["schemas"]["LicenseBranch"][];
+            minLicenseLevel: components["schemas"]["LicenseLevel"] | null;
+            /** Format: uuid */
+            defaultWorkflowTemplateId: string | null;
+            sortOrder: number;
+            isActive: boolean;
+        };
+        CreateDocumentTypeDto: {
+            /**
+             * @description Used in document numbers; fixed after creation
+             * @example DWG
+             */
+            code: string;
+            nameTh: string;
+            nameEn: string;
+            requiresPdfRendition?: boolean;
+            /** @description BR-DOC-040 */
+            requiresLicensedApprover?: boolean;
+            allowedLicenseBranches?: components["schemas"]["LicenseBranch"][];
+            minLicenseLevel?: components["schemas"]["LicenseLevel"] | null;
+            /** Format: uuid */
+            defaultWorkflowTemplateId?: string | null;
+            sortOrder?: number;
+            isActive?: boolean;
+        };
+        UpdateDocumentTypeDto: {
+            nameTh?: string;
+            nameEn?: string;
+            requiresPdfRendition?: boolean;
+            /** @description BR-DOC-040 */
+            requiresLicensedApprover?: boolean;
+            allowedLicenseBranches?: components["schemas"]["LicenseBranch"][];
+            minLicenseLevel?: components["schemas"]["LicenseLevel"] | null;
+            /** Format: uuid */
+            defaultWorkflowTemplateId?: string | null;
+            sortOrder?: number;
+            isActive?: boolean;
+        };
+        /** @enum {string} */
+        ReviewStepKind: "CHECK" | "REVIEW" | "APPROVE";
+        WorkflowStepDto: {
+            /** Format: uuid */
+            id: string;
+            stepOrder: number;
+            kind: components["schemas"]["ReviewStepKind"];
+            name: string;
+            allowedProjectRoles: components["schemas"]["ProjectRole"][];
+            requiresSignature: boolean;
+            requiresLicense: boolean;
+            dueDays: number;
+            isOptional: boolean;
+        };
+        WorkflowTemplateDto: {
+            /** Format: uuid */
+            id: string;
+            code: string;
+            name: string;
+            description: string | null;
+            isActive: boolean;
+            steps: components["schemas"]["WorkflowStepDto"][];
+        };
+        WorkflowStepInputDto: {
+            /** @description Same stepOrder = parallel group (BR-DOC-031) */
+            stepOrder: number;
+            kind: components["schemas"]["ReviewStepKind"];
+            name: string;
+            allowedProjectRoles?: components["schemas"]["ProjectRole"][];
+            requiresSignature?: boolean;
+            /** @description APPROVE steps only (BR-DOC-040) */
+            requiresLicense?: boolean;
+            /** @default 3 */
+            dueDays: number;
+            isOptional?: boolean;
+        };
+        CreateWorkflowTemplateDto: {
+            /** @example CHECK_APPROVE */
+            code: string;
+            name: string;
+            description?: string | null;
+            isActive?: boolean;
+            steps: components["schemas"]["WorkflowStepInputDto"][];
+        };
+        UpdateWorkflowTemplateDto: {
+            name?: string;
+            description?: string | null;
+            isActive?: boolean;
+            steps?: components["schemas"]["WorkflowStepInputDto"][];
+        };
     };
     responses: never;
     parameters: never;
@@ -2449,6 +2679,18 @@ export type SchemaTransmittalSummaryDto = components['schemas']['TransmittalSumm
 export type SchemaProjectOverviewDto = components['schemas']['ProjectOverviewDto'];
 export type SchemaProjectNumberingDto = components['schemas']['ProjectNumberingDto'];
 export type SchemaPutProjectNumberingDto = components['schemas']['PutProjectNumberingDto'];
+export type SchemaDisciplineDto = components['schemas']['DisciplineDto'];
+export type SchemaCreateDisciplineDto = components['schemas']['CreateDisciplineDto'];
+export type SchemaUpdateDisciplineDto = components['schemas']['UpdateDisciplineDto'];
+export type SchemaDocumentTypeDto = components['schemas']['DocumentTypeDto'];
+export type SchemaCreateDocumentTypeDto = components['schemas']['CreateDocumentTypeDto'];
+export type SchemaUpdateDocumentTypeDto = components['schemas']['UpdateDocumentTypeDto'];
+export type SchemaReviewStepKind = components['schemas']['ReviewStepKind'];
+export type SchemaWorkflowStepDto = components['schemas']['WorkflowStepDto'];
+export type SchemaWorkflowTemplateDto = components['schemas']['WorkflowTemplateDto'];
+export type SchemaWorkflowStepInputDto = components['schemas']['WorkflowStepInputDto'];
+export type SchemaCreateWorkflowTemplateDto = components['schemas']['CreateWorkflowTemplateDto'];
+export type SchemaUpdateWorkflowTemplateDto = components['schemas']['UpdateWorkflowTemplateDto'];
 export type $defs = Record<string, never>;
 export interface operations {
     Health_getLive: {
@@ -4626,6 +4868,237 @@ export interface operations {
             };
         };
     };
+    MasterData_listDisciplines: {
+        parameters: {
+            query?: {
+                /** @description Include inactive rows (masterdata.manage) */
+                includeInactive?: boolean;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DisciplineDto"][];
+                };
+            };
+        };
+    };
+    MasterData_createDiscipline: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateDisciplineDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DisciplineDto"];
+                };
+            };
+        };
+    };
+    MasterData_updateDiscipline: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateDisciplineDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DisciplineDto"];
+                };
+            };
+        };
+    };
+    MasterData_listDocumentTypes: {
+        parameters: {
+            query?: {
+                /** @description Include inactive rows (masterdata.manage) */
+                includeInactive?: boolean;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DocumentTypeDto"][];
+                };
+            };
+        };
+    };
+    MasterData_createDocumentType: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateDocumentTypeDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DocumentTypeDto"];
+                };
+            };
+        };
+    };
+    MasterData_updateDocumentType: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateDocumentTypeDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DocumentTypeDto"];
+                };
+            };
+        };
+    };
+    MasterData_listWorkflowTemplates: {
+        parameters: {
+            query?: {
+                /** @description Include inactive rows (masterdata.manage) */
+                includeInactive?: boolean;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkflowTemplateDto"][];
+                };
+            };
+        };
+    };
+    MasterData_createWorkflowTemplate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateWorkflowTemplateDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkflowTemplateDto"];
+                };
+            };
+        };
+    };
+    MasterData_getWorkflowTemplate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkflowTemplateDto"];
+                };
+            };
+        };
+    };
+    MasterData_updateWorkflowTemplate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateWorkflowTemplateDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkflowTemplateDto"];
+                };
+            };
+        };
+    };
 }
 type FlattenedDeepRequired<T> = {
     [K in keyof T]-?: FlattenedDeepRequired<T[K] extends unknown[] | undefined | null ? Extract<T[K], unknown[]>[number] : T[K]>;
@@ -4660,3 +5133,4 @@ export const projectTypeValues: ReadonlyArray<FlattenedDeepRequired<components>[
 export const projectStatusValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["ProjectStatus"]> = ["PLANNING", "ACTIVE", "ON_HOLD", "COMPLETED", "CLOSED", "CANCELLED"];
 export const revisionSchemeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["RevisionScheme"]> = ["ALPHA_NUMERIC", "ISO19650"];
 export const projectRoleValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["ProjectRole"]> = ["PROJECT_MANAGER", "DESIGN_MANAGER", "ENGINEER", "DRAFTER", "DOCUMENT_CONTROLLER", "SITE_ENGINEER", "FOREMAN", "VIEWER"];
+export const reviewStepKindValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["ReviewStepKind"]> = ["CHECK", "REVIEW", "APPROVE"];

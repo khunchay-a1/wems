@@ -3521,6 +3521,353 @@
           "Projects"
         ]
       }
+    },
+    "/api/v1/disciplines": {
+      "get": {
+        "operationId": "MasterData_listDisciplines",
+        "parameters": [
+          {
+            "name": "includeInactive",
+            "required": false,
+            "in": "query",
+            "description": "Include inactive rows (masterdata.manage)",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DisciplineDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Disciplines (active unless includeInactive)",
+        "tags": [
+          "MasterData"
+        ]
+      },
+      "post": {
+        "operationId": "MasterData_createDiscipline",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDisciplineDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DisciplineDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create a discipline",
+        "tags": [
+          "MasterData"
+        ]
+      }
+    },
+    "/api/v1/disciplines/{id}": {
+      "patch": {
+        "operationId": "MasterData_updateDiscipline",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateDisciplineDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DisciplineDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Update or deactivate a discipline",
+        "tags": [
+          "MasterData"
+        ]
+      }
+    },
+    "/api/v1/document-types": {
+      "get": {
+        "operationId": "MasterData_listDocumentTypes",
+        "parameters": [
+          {
+            "name": "includeInactive",
+            "required": false,
+            "in": "query",
+            "description": "Include inactive rows (masterdata.manage)",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DocumentTypeDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Document types (active unless includeInactive)",
+        "tags": [
+          "MasterData"
+        ]
+      },
+      "post": {
+        "operationId": "MasterData_createDocumentType",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDocumentTypeDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentTypeDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create a document type",
+        "tags": [
+          "MasterData"
+        ]
+      }
+    },
+    "/api/v1/document-types/{id}": {
+      "patch": {
+        "operationId": "MasterData_updateDocumentType",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateDocumentTypeDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentTypeDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Update or deactivate a document type",
+        "tags": [
+          "MasterData"
+        ]
+      }
+    },
+    "/api/v1/workflow-templates": {
+      "get": {
+        "operationId": "MasterData_listWorkflowTemplates",
+        "parameters": [
+          {
+            "name": "includeInactive",
+            "required": false,
+            "in": "query",
+            "description": "Include inactive rows (masterdata.manage)",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WorkflowTemplateDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Workflow templates with steps",
+        "tags": [
+          "MasterData"
+        ]
+      },
+      "post": {
+        "operationId": "MasterData_createWorkflowTemplate",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateWorkflowTemplateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkflowTemplateDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create a workflow template (BR-DOC-031)",
+        "tags": [
+          "MasterData"
+        ]
+      }
+    },
+    "/api/v1/workflow-templates/{id}": {
+      "get": {
+        "operationId": "MasterData_getWorkflowTemplate",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkflowTemplateDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Workflow template",
+        "tags": [
+          "MasterData"
+        ]
+      },
+      "patch": {
+        "operationId": "MasterData_updateWorkflowTemplate",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateWorkflowTemplateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkflowTemplateDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Update a template; steps are replaced as a set",
+        "tags": [
+          "MasterData"
+        ]
+      }
     }
   },
   "info": {
@@ -7342,6 +7689,435 @@
             "type": "string",
             "nullable": true,
             "description": "null = use the global pattern"
+          }
+        }
+      },
+      "DisciplineDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "code": {
+            "type": "string",
+            "example": "PR"
+          },
+          "nameTh": {
+            "type": "string"
+          },
+          "nameEn": {
+            "type": "string"
+          },
+          "sortOrder": {
+            "type": "number"
+          },
+          "isActive": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "code",
+          "nameTh",
+          "nameEn",
+          "sortOrder",
+          "isActive"
+        ]
+      },
+      "CreateDisciplineDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "example": "PR",
+            "description": "Used in document numbers; fixed after creation"
+          },
+          "nameTh": {
+            "type": "string"
+          },
+          "nameEn": {
+            "type": "string"
+          },
+          "sortOrder": {
+            "type": "number"
+          },
+          "isActive": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "code",
+          "nameTh",
+          "nameEn"
+        ]
+      },
+      "UpdateDisciplineDto": {
+        "type": "object",
+        "properties": {
+          "nameTh": {
+            "type": "string"
+          },
+          "nameEn": {
+            "type": "string"
+          },
+          "sortOrder": {
+            "type": "number"
+          },
+          "isActive": {
+            "type": "boolean"
+          }
+        }
+      },
+      "DocumentTypeDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "code": {
+            "type": "string",
+            "example": "DWG"
+          },
+          "nameTh": {
+            "type": "string"
+          },
+          "nameEn": {
+            "type": "string"
+          },
+          "requiresPdfRendition": {
+            "type": "boolean"
+          },
+          "requiresLicensedApprover": {
+            "type": "boolean"
+          },
+          "allowedLicenseBranches": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LicenseBranch"
+            }
+          },
+          "minLicenseLevel": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LicenseLevel"
+              }
+            ]
+          },
+          "defaultWorkflowTemplateId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "sortOrder": {
+            "type": "number"
+          },
+          "isActive": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "code",
+          "nameTh",
+          "nameEn",
+          "requiresPdfRendition",
+          "requiresLicensedApprover",
+          "allowedLicenseBranches",
+          "minLicenseLevel",
+          "defaultWorkflowTemplateId",
+          "sortOrder",
+          "isActive"
+        ]
+      },
+      "CreateDocumentTypeDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "example": "DWG",
+            "description": "Used in document numbers; fixed after creation"
+          },
+          "nameTh": {
+            "type": "string"
+          },
+          "nameEn": {
+            "type": "string"
+          },
+          "requiresPdfRendition": {
+            "type": "boolean"
+          },
+          "requiresLicensedApprover": {
+            "type": "boolean",
+            "description": "BR-DOC-040"
+          },
+          "allowedLicenseBranches": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LicenseBranch"
+            }
+          },
+          "minLicenseLevel": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LicenseLevel"
+              }
+            ]
+          },
+          "defaultWorkflowTemplateId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "sortOrder": {
+            "type": "number"
+          },
+          "isActive": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "code",
+          "nameTh",
+          "nameEn"
+        ]
+      },
+      "UpdateDocumentTypeDto": {
+        "type": "object",
+        "properties": {
+          "nameTh": {
+            "type": "string"
+          },
+          "nameEn": {
+            "type": "string"
+          },
+          "requiresPdfRendition": {
+            "type": "boolean"
+          },
+          "requiresLicensedApprover": {
+            "type": "boolean",
+            "description": "BR-DOC-040"
+          },
+          "allowedLicenseBranches": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LicenseBranch"
+            }
+          },
+          "minLicenseLevel": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LicenseLevel"
+              }
+            ]
+          },
+          "defaultWorkflowTemplateId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "sortOrder": {
+            "type": "number"
+          },
+          "isActive": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ReviewStepKind": {
+        "type": "string",
+        "enum": [
+          "CHECK",
+          "REVIEW",
+          "APPROVE"
+        ]
+      },
+      "WorkflowStepDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "stepOrder": {
+            "type": "number"
+          },
+          "kind": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ReviewStepKind"
+              }
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "allowedProjectRoles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProjectRole"
+            }
+          },
+          "requiresSignature": {
+            "type": "boolean"
+          },
+          "requiresLicense": {
+            "type": "boolean"
+          },
+          "dueDays": {
+            "type": "number"
+          },
+          "isOptional": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "stepOrder",
+          "kind",
+          "name",
+          "allowedProjectRoles",
+          "requiresSignature",
+          "requiresLicense",
+          "dueDays",
+          "isOptional"
+        ]
+      },
+      "WorkflowTemplateDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "code": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "steps": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WorkflowStepDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "code",
+          "name",
+          "description",
+          "isActive",
+          "steps"
+        ]
+      },
+      "WorkflowStepInputDto": {
+        "type": "object",
+        "properties": {
+          "stepOrder": {
+            "type": "number",
+            "minimum": 1,
+            "description": "Same stepOrder = parallel group (BR-DOC-031)"
+          },
+          "kind": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ReviewStepKind"
+              }
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "allowedProjectRoles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProjectRole"
+            }
+          },
+          "requiresSignature": {
+            "type": "boolean"
+          },
+          "requiresLicense": {
+            "type": "boolean",
+            "description": "APPROVE steps only (BR-DOC-040)"
+          },
+          "dueDays": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 60,
+            "default": 3
+          },
+          "isOptional": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "stepOrder",
+          "kind",
+          "name"
+        ]
+      },
+      "CreateWorkflowTemplateDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "example": "CHECK_APPROVE"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "steps": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WorkflowStepInputDto"
+            }
+          }
+        },
+        "required": [
+          "code",
+          "name",
+          "steps"
+        ]
+      },
+      "UpdateWorkflowTemplateDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "steps": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WorkflowStepInputDto"
+            }
           }
         }
       }
