@@ -17,7 +17,8 @@
     "test:e2e": "jest --selectProjects e2e --runInBand",
     "prisma": "prisma",
     "cli": "tsx src/cli.ts",
-    "openapi": "node dist/openapi.js"
+    "openapi": "node dist/openapi.js",
+    "seed:demo": "node dist/demo-seed.js"
   },
   "prisma": {},
   "dependencies": {

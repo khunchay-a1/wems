@@ -36,6 +36,19 @@ pnpm infra:ps                   # ทุก service ต้องเป็น (he
 - ค่ารหัสผ่านในนี้ใช้ในเครื่องนักพัฒนาเท่านั้น
 - ทำไมใช้ RustFS แทน MinIO และ Redis 7.2: ดู `docs/adr/0007-local-infra-images.md`
 
+### เปิดระบบและข้อมูลตัวอย่าง
+
+```bash
+pnpm --filter api prisma migrate deploy        # สร้างตาราง
+pnpm --filter api prisma db seed               # master data (บทบาท สาขา ประเภทเอกสาร workflow มาตรฐาน …)
+pnpm --filter api cli create-admin --email admin@company.co.th --name "ผู้ดูแลระบบ"
+pnpm --filter api build
+DEMO_PASSWORD='ตั้งรหัสผ่านอย่างน้อย 12 ตัว' pnpm --filter api seed:demo   # (ไม่บังคับ) ผู้ใช้ทุกบทบาท ลูกค้า 2 โครงการ 2 เอกสาร 30 ฉบับ
+pnpm dev                                        # เว็บ http://localhost:3000 · API http://localhost:4000/api/v1 · Swagger /api/docs
+```
+
+ผู้ใช้ตัวอย่าง: `pm@demo.wems.local`, `eng1@demo.wems.local` (ผู้ออกแบบ), `eng2@demo.wems.local` (ผู้ตรวจ), `dm@demo.wems.local` (ผู้อนุมัติ มีใบอนุญาต), `dc@demo.wems.local` (ผู้ควบคุมเอกสาร) ฯลฯ — รหัสผ่านตาม `DEMO_PASSWORD`, PIN ลงนาม `135790`
+
 ## เนื้อหา
 
 ```text
