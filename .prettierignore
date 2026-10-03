@@ -11,3 +11,5 @@ apps/mobile/
 
 # Handlebars templates (partials are not supported by the glimmer parser)
 *.hbs
+apps/web/src/data/*.json
+apps/api/src/common/i18n/enum-labels.json

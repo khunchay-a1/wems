@@ -2069,6 +2069,1458 @@
           "Notifications"
         ]
       }
+    },
+    "/api/v1/clients": {
+      "get": {
+        "operationId": "Clients_listClients",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 25,
+              "type": "number"
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "Comma separated, \"-\" prefix = descending, e.g. \"-updatedAt,number\"",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "q",
+            "required": false,
+            "in": "query",
+            "description": "Search text",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "clientType",
+            "required": false,
+            "in": "query",
+            "description": "Comma separated ClientType values",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "isActive",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "province",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ClientDto"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/PageMetaDto"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Clients (filter q, clientType, isActive, province)",
+        "tags": [
+          "Clients"
+        ]
+      },
+      "post": {
+        "operationId": "Clients_createClient",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateClientDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SaveClientResultDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create a client (BR-CRM-001/002)",
+        "tags": [
+          "Clients"
+        ]
+      }
+    },
+    "/api/v1/clients/code-suggestion": {
+      "get": {
+        "operationId": "Clients_suggestClientCode",
+        "parameters": [
+          {
+            "name": "nameEn",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientCodeSuggestionDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Proposed unused client code (BR-CRM-001)",
+        "tags": [
+          "Clients"
+        ]
+      }
+    },
+    "/api/v1/clients/{id}": {
+      "get": {
+        "operationId": "Clients_getClient",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Client detail",
+        "tags": [
+          "Clients"
+        ]
+      },
+      "patch": {
+        "operationId": "Clients_updateClient",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateClientDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SaveClientResultDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Update or (de)activate a client (code is fixed after creation)",
+        "tags": [
+          "Clients"
+        ]
+      },
+      "delete": {
+        "operationId": "Clients_deleteClient",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "version",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "summary": "Delete an unused client (BR-CRM-003)",
+        "tags": [
+          "Clients"
+        ]
+      }
+    },
+    "/api/v1/clients/{id}/summary": {
+      "get": {
+        "operationId": "Clients_getClientSummary",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientSummaryDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Counts of related projects, sites, contacts and jobs",
+        "tags": [
+          "Clients"
+        ]
+      }
+    },
+    "/api/v1/clients/{id}/contacts": {
+      "get": {
+        "operationId": "Clients_listContacts",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ContactDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Contacts of a client",
+        "tags": [
+          "Clients"
+        ]
+      },
+      "post": {
+        "operationId": "Clients_createContact",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateContactDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContactDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Add a contact (BR-CRM-004)",
+        "tags": [
+          "Clients"
+        ]
+      }
+    },
+    "/api/v1/clients/{id}/contacts/{contactId}": {
+      "patch": {
+        "operationId": "Clients_updateContact",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contactId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateContactDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContactDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Update a contact (BR-CRM-004)",
+        "tags": [
+          "Clients"
+        ]
+      },
+      "delete": {
+        "operationId": "Clients_deleteContact",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contactId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "version",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "summary": "Delete a contact",
+        "tags": [
+          "Clients"
+        ]
+      }
+    },
+    "/api/v1/contacts/{id}/anonymize": {
+      "post": {
+        "operationId": "Clients_anonymizeContact",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContactDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Remove personal data of a contact (BR-CRM-007, PDPA)",
+        "tags": [
+          "Clients"
+        ]
+      }
+    },
+    "/api/v1/clients/{id}/sites": {
+      "get": {
+        "operationId": "Clients_listSites",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "isActive",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SiteDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Sites of a client",
+        "tags": [
+          "Clients"
+        ]
+      },
+      "post": {
+        "operationId": "Clients_createSite",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSiteDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SiteDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Add a site (BR-CRM-005/006)",
+        "tags": [
+          "Clients"
+        ]
+      }
+    },
+    "/api/v1/clients/{id}/sites/{siteId}": {
+      "get": {
+        "operationId": "Clients_getSite",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "siteId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SiteDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Site detail",
+        "tags": [
+          "Clients"
+        ]
+      },
+      "patch": {
+        "operationId": "Clients_updateSite",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "siteId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSiteDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SiteDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Update a site (BR-CRM-005/006)",
+        "tags": [
+          "Clients"
+        ]
+      },
+      "delete": {
+        "operationId": "Clients_deleteSite",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "siteId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "version",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "summary": "Delete an unused site",
+        "tags": [
+          "Clients"
+        ]
+      }
+    },
+    "/api/v1/projects": {
+      "get": {
+        "operationId": "Projects_listProjects",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 25,
+              "type": "number"
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "Comma separated, \"-\" prefix = descending, e.g. \"-updatedAt,number\"",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "q",
+            "required": false,
+            "in": "query",
+            "description": "Search text",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "Comma separated ProjectStatus values",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "required": false,
+            "in": "query",
+            "description": "Comma separated ProjectType values",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "clientId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "mine",
+            "required": false,
+            "in": "query",
+            "description": "Only projects where I am an active member",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ProjectDto"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/PageMetaDto"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Projects I can see (filter q, status, type, clientId, mine)",
+        "tags": [
+          "Projects"
+        ]
+      },
+      "post": {
+        "operationId": "Projects_createProject",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProjectDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create a project (code from numbering — BR-PRJ-001/002)",
+        "tags": [
+          "Projects"
+        ]
+      }
+    },
+    "/api/v1/projects/{id}": {
+      "get": {
+        "operationId": "Projects_getProject",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Project detail with allowed actions",
+        "tags": [
+          "Projects"
+        ]
+      },
+      "patch": {
+        "operationId": "Projects_updateProject",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProjectDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Update project fields and settings (BR-PRJ-001/004/010)",
+        "tags": [
+          "Projects"
+        ]
+      }
+    },
+    "/api/v1/projects/{id}/start": {
+      "post": {
+        "operationId": "Projects_startProject",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProjectActionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "PLANNING → ACTIVE",
+        "tags": [
+          "Projects"
+        ]
+      }
+    },
+    "/api/v1/projects/{id}/hold": {
+      "post": {
+        "operationId": "Projects_holdProject",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProjectActionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "ACTIVE → ON_HOLD",
+        "tags": [
+          "Projects"
+        ]
+      }
+    },
+    "/api/v1/projects/{id}/resume": {
+      "post": {
+        "operationId": "Projects_resumeProject",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProjectActionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "ON_HOLD → ACTIVE",
+        "tags": [
+          "Projects"
+        ]
+      }
+    },
+    "/api/v1/projects/{id}/complete": {
+      "post": {
+        "operationId": "Projects_completeProject",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProjectActionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "ACTIVE → COMPLETED",
+        "tags": [
+          "Projects"
+        ]
+      }
+    },
+    "/api/v1/projects/{id}/close": {
+      "post": {
+        "operationId": "Projects_closeProject",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProjectActionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "COMPLETED → CLOSED (BR-PRJ-021)",
+        "tags": [
+          "Projects"
+        ]
+      }
+    },
+    "/api/v1/projects/{id}/reopen": {
+      "post": {
+        "operationId": "Projects_reopenProject",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProjectActionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "CLOSED → ACTIVE (ADMIN, reason required)",
+        "tags": [
+          "Projects"
+        ]
+      }
+    },
+    "/api/v1/projects/{id}/cancel": {
+      "post": {
+        "operationId": "Projects_cancelProject",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProjectActionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "→ CANCELLED (reason required)",
+        "tags": [
+          "Projects"
+        ]
+      }
+    },
+    "/api/v1/projects/{id}/members": {
+      "get": {
+        "operationId": "Projects_listMembers",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MemberDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Active project members",
+        "tags": [
+          "Projects"
+        ]
+      },
+      "post": {
+        "operationId": "Projects_addMember",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddMemberDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MemberDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Add a member (BR-PRJ-010)",
+        "tags": [
+          "Projects"
+        ]
+      }
+    },
+    "/api/v1/projects/{id}/members/{userId}": {
+      "patch": {
+        "operationId": "Projects_updateMember",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateMemberDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MemberDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Change a member role (BR-PRJ-002)",
+        "tags": [
+          "Projects"
+        ]
+      },
+      "delete": {
+        "operationId": "Projects_removeMember",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "summary": "Remove a member (BR-PRJ-003)",
+        "tags": [
+          "Projects"
+        ]
+      }
+    },
+    "/api/v1/projects/{id}/overview": {
+      "get": {
+        "operationId": "Projects_getProjectOverview",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectOverviewDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Document counts, pending reviews and recent transmittals",
+        "tags": [
+          "Projects"
+        ]
+      }
+    },
+    "/api/v1/projects/{id}/numbering-scheme": {
+      "get": {
+        "operationId": "Projects_getProjectNumbering",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectNumberingDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "DOCUMENT numbering pattern used by the project",
+        "tags": [
+          "Projects"
+        ]
+      },
+      "put": {
+        "operationId": "Projects_putProjectNumbering",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PutProjectNumberingDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectNumberingDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Override (or reset) the DOCUMENT pattern for this project",
+        "tags": [
+          "Projects"
+        ]
+      }
     }
   },
   "info": {
@@ -4197,6 +5649,1701 @@
           "fcmToken",
           "platform"
         ]
+      },
+      "ClientType": {
+        "type": "string",
+        "enum": [
+          "COMPANY",
+          "GOVERNMENT",
+          "STATE_ENTERPRISE",
+          "LOCAL_AUTHORITY",
+          "INDIVIDUAL",
+          "OTHER"
+        ]
+      },
+      "BlockedActionDto": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "action",
+          "code"
+        ]
+      },
+      "ClientDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "code": {
+            "type": "string"
+          },
+          "nameTh": {
+            "type": "string"
+          },
+          "nameEn": {
+            "type": "string",
+            "nullable": true
+          },
+          "clientType": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ClientType"
+              }
+            ]
+          },
+          "taxId": {
+            "type": "string",
+            "nullable": true
+          },
+          "branchCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "industry": {
+            "type": "string",
+            "nullable": true
+          },
+          "addressLine": {
+            "type": "string",
+            "nullable": true
+          },
+          "subdistrict": {
+            "type": "string",
+            "nullable": true
+          },
+          "district": {
+            "type": "string",
+            "nullable": true
+          },
+          "province": {
+            "type": "string",
+            "nullable": true
+          },
+          "postcode": {
+            "type": "string",
+            "nullable": true
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "website": {
+            "type": "string",
+            "nullable": true
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "openProjectCount": {
+            "type": "number",
+            "description": "Projects not CLOSED/CANCELLED/COMPLETED"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          },
+          "version": {
+            "type": "number"
+          },
+          "allowedActions": {
+            "example": [
+              "edit",
+              "deactivate"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "blockedActions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BlockedActionDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "code",
+          "nameTh",
+          "nameEn",
+          "clientType",
+          "taxId",
+          "branchCode",
+          "industry",
+          "addressLine",
+          "subdistrict",
+          "district",
+          "province",
+          "postcode",
+          "phone",
+          "email",
+          "website",
+          "notes",
+          "isActive",
+          "openProjectCount",
+          "createdAt",
+          "updatedAt",
+          "version",
+          "allowedActions",
+          "blockedActions"
+        ]
+      },
+      "ClientCodeSuggestionDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "example": "SWS"
+          }
+        },
+        "required": [
+          "code"
+        ]
+      },
+      "CreateClientDto": {
+        "type": "object",
+        "properties": {
+          "nameTh": {
+            "type": "string",
+            "maxLength": 300
+          },
+          "nameEn": {
+            "type": "string",
+            "maxLength": 300,
+            "nullable": true
+          },
+          "clientType": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ClientType"
+              }
+            ]
+          },
+          "taxId": {
+            "type": "string",
+            "description": "13-digit Thai taxpayer id (BR-CRM-002)",
+            "nullable": true
+          },
+          "branchCode": {
+            "type": "string",
+            "description": "\"00000\" = head office",
+            "nullable": true
+          },
+          "industry": {
+            "type": "string",
+            "nullable": true
+          },
+          "addressLine": {
+            "type": "string",
+            "nullable": true
+          },
+          "subdistrict": {
+            "type": "string",
+            "nullable": true
+          },
+          "district": {
+            "type": "string",
+            "nullable": true
+          },
+          "province": {
+            "type": "string",
+            "nullable": true
+          },
+          "postcode": {
+            "type": "string",
+            "nullable": true
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "website": {
+            "type": "string",
+            "nullable": true
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          },
+          "code": {
+            "type": "string",
+            "description": "BR-CRM-001 [A-Z0-9-]{2,12}; omitted = proposed from the English name",
+            "example": "SWS"
+          }
+        },
+        "required": [
+          "nameTh"
+        ]
+      },
+      "ClientWarningDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "example": "CLIENT_TAX_ID_EXISTS"
+          },
+          "clients": {
+            "description": "Codes of the clients that already use it",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "code",
+          "clients"
+        ]
+      },
+      "SaveClientResultDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "code": {
+            "type": "string"
+          },
+          "nameTh": {
+            "type": "string"
+          },
+          "nameEn": {
+            "type": "string",
+            "nullable": true
+          },
+          "clientType": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ClientType"
+              }
+            ]
+          },
+          "taxId": {
+            "type": "string",
+            "nullable": true
+          },
+          "branchCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "industry": {
+            "type": "string",
+            "nullable": true
+          },
+          "addressLine": {
+            "type": "string",
+            "nullable": true
+          },
+          "subdistrict": {
+            "type": "string",
+            "nullable": true
+          },
+          "district": {
+            "type": "string",
+            "nullable": true
+          },
+          "province": {
+            "type": "string",
+            "nullable": true
+          },
+          "postcode": {
+            "type": "string",
+            "nullable": true
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "website": {
+            "type": "string",
+            "nullable": true
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "openProjectCount": {
+            "type": "number",
+            "description": "Projects not CLOSED/CANCELLED/COMPLETED"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          },
+          "version": {
+            "type": "number"
+          },
+          "allowedActions": {
+            "example": [
+              "edit",
+              "deactivate"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "blockedActions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BlockedActionDto"
+            }
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClientWarningDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "code",
+          "nameTh",
+          "nameEn",
+          "clientType",
+          "taxId",
+          "branchCode",
+          "industry",
+          "addressLine",
+          "subdistrict",
+          "district",
+          "province",
+          "postcode",
+          "phone",
+          "email",
+          "website",
+          "notes",
+          "isActive",
+          "openProjectCount",
+          "createdAt",
+          "updatedAt",
+          "version",
+          "allowedActions",
+          "blockedActions",
+          "warnings"
+        ]
+      },
+      "UpdateClientDto": {
+        "type": "object",
+        "properties": {
+          "nameTh": {
+            "type": "string",
+            "maxLength": 300
+          },
+          "nameEn": {
+            "type": "string",
+            "maxLength": 300,
+            "nullable": true
+          },
+          "clientType": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ClientType"
+              }
+            ]
+          },
+          "taxId": {
+            "type": "string",
+            "description": "13-digit Thai taxpayer id (BR-CRM-002)",
+            "nullable": true
+          },
+          "branchCode": {
+            "type": "string",
+            "description": "\"00000\" = head office",
+            "nullable": true
+          },
+          "industry": {
+            "type": "string",
+            "nullable": true
+          },
+          "addressLine": {
+            "type": "string",
+            "nullable": true
+          },
+          "subdistrict": {
+            "type": "string",
+            "nullable": true
+          },
+          "district": {
+            "type": "string",
+            "nullable": true
+          },
+          "province": {
+            "type": "string",
+            "nullable": true
+          },
+          "postcode": {
+            "type": "string",
+            "nullable": true
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "website": {
+            "type": "string",
+            "nullable": true
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          },
+          "version": {
+            "type": "number",
+            "minimum": 1
+          },
+          "isActive": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "version"
+        ]
+      },
+      "ClientProjectRefDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "code": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "code",
+          "name",
+          "status"
+        ]
+      },
+      "ClientSummaryDto": {
+        "type": "object",
+        "properties": {
+          "projectCount": {
+            "type": "number"
+          },
+          "openProjectCount": {
+            "type": "number"
+          },
+          "siteCount": {
+            "type": "number"
+          },
+          "contactCount": {
+            "type": "number"
+          },
+          "labJobCount": {
+            "type": "number"
+          },
+          "quotationCount": {
+            "type": "number"
+          },
+          "recentProjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClientProjectRefDto"
+            }
+          }
+        },
+        "required": [
+          "projectCount",
+          "openProjectCount",
+          "siteCount",
+          "contactCount",
+          "labJobCount",
+          "quotationCount",
+          "recentProjects"
+        ]
+      },
+      "ContactDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "clientId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "position": {
+            "type": "string",
+            "nullable": true
+          },
+          "department": {
+            "type": "string",
+            "nullable": true
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "isPrimary": {
+            "type": "boolean"
+          },
+          "receivesTransmittals": {
+            "type": "boolean"
+          },
+          "receivesLabReports": {
+            "type": "boolean"
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "isAnonymized": {
+            "type": "boolean",
+            "description": "Personal data removed (BR-CRM-007)"
+          },
+          "version": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "clientId",
+          "name",
+          "position",
+          "department",
+          "phone",
+          "email",
+          "isPrimary",
+          "receivesTransmittals",
+          "receivesLabReports",
+          "notes",
+          "isActive",
+          "isAnonymized",
+          "version"
+        ]
+      },
+      "CreateContactDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "position": {
+            "type": "string",
+            "nullable": true
+          },
+          "department": {
+            "type": "string",
+            "nullable": true
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "isPrimary": {
+            "type": "boolean",
+            "description": "BR-CRM-004 one primary contact per client"
+          },
+          "receivesTransmittals": {
+            "type": "boolean"
+          },
+          "receivesLabReports": {
+            "type": "boolean"
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "UpdateContactDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "position": {
+            "type": "string",
+            "nullable": true
+          },
+          "department": {
+            "type": "string",
+            "nullable": true
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "isPrimary": {
+            "type": "boolean",
+            "description": "BR-CRM-004 one primary contact per client"
+          },
+          "receivesTransmittals": {
+            "type": "boolean"
+          },
+          "receivesLabReports": {
+            "type": "boolean"
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          },
+          "version": {
+            "type": "number",
+            "minimum": 1
+          },
+          "isActive": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "version"
+        ]
+      },
+      "SiteType": {
+        "type": "string",
+        "enum": [
+          "FACTORY",
+          "BUILDING",
+          "INDUSTRIAL_ESTATE",
+          "MUNICIPAL",
+          "WATER_TREATMENT_PLANT",
+          "WASTEWATER_TREATMENT_PLANT",
+          "NATURAL_WATER_BODY",
+          "OTHER"
+        ]
+      },
+      "BuildingClass": {
+        "type": "string",
+        "enum": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ]
+      },
+      "StandardRefDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "code": {
+            "type": "string"
+          },
+          "nameTh": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "code",
+          "nameTh"
+        ]
+      },
+      "SiteDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "clientId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "code": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "siteType": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SiteType"
+              }
+            ]
+          },
+          "addressLine": {
+            "type": "string",
+            "nullable": true
+          },
+          "subdistrict": {
+            "type": "string",
+            "nullable": true
+          },
+          "district": {
+            "type": "string",
+            "nullable": true
+          },
+          "province": {
+            "type": "string",
+            "nullable": true
+          },
+          "postcode": {
+            "type": "string",
+            "nullable": true
+          },
+          "latitude": {
+            "type": "string",
+            "nullable": true,
+            "description": "Decimal(9,6) as string"
+          },
+          "longitude": {
+            "type": "string",
+            "nullable": true,
+            "description": "Decimal(9,6) as string"
+          },
+          "buildingClass": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BuildingClass"
+              }
+            ]
+          },
+          "factoryRegistrationNo": {
+            "type": "string",
+            "nullable": true
+          },
+          "factoryTypeCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "defaultStandard": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/StandardRefDto"
+              }
+            ]
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "version": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "clientId",
+          "code",
+          "name",
+          "siteType",
+          "addressLine",
+          "subdistrict",
+          "district",
+          "province",
+          "postcode",
+          "latitude",
+          "longitude",
+          "buildingClass",
+          "factoryRegistrationNo",
+          "factoryTypeCode",
+          "defaultStandard",
+          "notes",
+          "isActive",
+          "version"
+        ]
+      },
+      "CreateSiteDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 300
+          },
+          "siteType": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SiteType"
+              }
+            ]
+          },
+          "addressLine": {
+            "type": "string",
+            "nullable": true
+          },
+          "subdistrict": {
+            "type": "string",
+            "nullable": true
+          },
+          "district": {
+            "type": "string",
+            "nullable": true
+          },
+          "province": {
+            "type": "string",
+            "nullable": true
+          },
+          "postcode": {
+            "type": "string",
+            "nullable": true
+          },
+          "latitude": {
+            "type": "number",
+            "nullable": true,
+            "minimum": -90,
+            "maximum": 90
+          },
+          "longitude": {
+            "type": "number",
+            "nullable": true,
+            "minimum": -180,
+            "maximum": 180
+          },
+          "buildingClass": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BuildingClass"
+              }
+            ]
+          },
+          "factoryRegistrationNo": {
+            "type": "string",
+            "nullable": true
+          },
+          "factoryTypeCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "defaultStandardId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true,
+            "description": "Omitted for a BUILDING with a class → proposed BLD-2548-<class> (BR-CRM-006)"
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          },
+          "code": {
+            "type": "string",
+            "example": "PLANT-1",
+            "description": "Unique within the client (BR-CRM-005)"
+          }
+        },
+        "required": [
+          "name",
+          "siteType",
+          "code"
+        ]
+      },
+      "UpdateSiteDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 300
+          },
+          "siteType": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SiteType"
+              }
+            ]
+          },
+          "addressLine": {
+            "type": "string",
+            "nullable": true
+          },
+          "subdistrict": {
+            "type": "string",
+            "nullable": true
+          },
+          "district": {
+            "type": "string",
+            "nullable": true
+          },
+          "province": {
+            "type": "string",
+            "nullable": true
+          },
+          "postcode": {
+            "type": "string",
+            "nullable": true
+          },
+          "latitude": {
+            "type": "number",
+            "nullable": true,
+            "minimum": -90,
+            "maximum": 90
+          },
+          "longitude": {
+            "type": "number",
+            "nullable": true,
+            "minimum": -180,
+            "maximum": 180
+          },
+          "buildingClass": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BuildingClass"
+              }
+            ]
+          },
+          "factoryRegistrationNo": {
+            "type": "string",
+            "nullable": true
+          },
+          "factoryTypeCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "defaultStandardId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true,
+            "description": "Omitted for a BUILDING with a class → proposed BLD-2548-<class> (BR-CRM-006)"
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          },
+          "version": {
+            "type": "number",
+            "minimum": 1
+          },
+          "isActive": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "version"
+        ]
+      },
+      "ClientRefDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "code": {
+            "type": "string"
+          },
+          "nameTh": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "code",
+          "nameTh"
+        ]
+      },
+      "SiteRefDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "code": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "code",
+          "name"
+        ]
+      },
+      "ProjectType": {
+        "type": "string",
+        "enum": [
+          "DESIGN",
+          "DESIGN_BUILD",
+          "CONSTRUCTION",
+          "OPERATION_MAINTENANCE",
+          "MONITORING",
+          "CONSULTING",
+          "OTHER"
+        ]
+      },
+      "ProjectStatus": {
+        "type": "string",
+        "enum": [
+          "PLANNING",
+          "ACTIVE",
+          "ON_HOLD",
+          "COMPLETED",
+          "CLOSED",
+          "CANCELLED"
+        ]
+      },
+      "RevisionScheme": {
+        "type": "string",
+        "enum": [
+          "ALPHA_NUMERIC",
+          "ISO19650"
+        ]
+      },
+      "ProjectRole": {
+        "type": "string",
+        "enum": [
+          "PROJECT_MANAGER",
+          "DESIGN_MANAGER",
+          "ENGINEER",
+          "DRAFTER",
+          "DOCUMENT_CONTROLLER",
+          "SITE_ENGINEER",
+          "FOREMAN",
+          "VIEWER"
+        ],
+        "description": "My active role in the project"
+      },
+      "ProjectDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "code": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "nameEn": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "client": {
+            "$ref": "#/components/schemas/ClientRefDto"
+          },
+          "site": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SiteRefDto"
+              }
+            ]
+          },
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ProjectType"
+              }
+            ]
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ProjectStatus"
+              }
+            ]
+          },
+          "contractNo": {
+            "type": "string",
+            "nullable": true
+          },
+          "contractValue": {
+            "type": "string",
+            "nullable": true,
+            "description": "Decimal as string"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "plannedStartDate": {
+            "type": "string",
+            "nullable": true,
+            "format": "date"
+          },
+          "plannedEndDate": {
+            "type": "string",
+            "nullable": true,
+            "format": "date"
+          },
+          "actualStartDate": {
+            "type": "string",
+            "nullable": true,
+            "format": "date"
+          },
+          "actualEndDate": {
+            "type": "string",
+            "nullable": true,
+            "format": "date"
+          },
+          "projectManager": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UserRefDto"
+              }
+            ]
+          },
+          "revisionScheme": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RevisionScheme"
+              }
+            ]
+          },
+          "requireSeparationOfDuties": {
+            "type": "boolean"
+          },
+          "closedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "myRole": {
+            "nullable": true,
+            "description": "My active role in the project",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ProjectRole"
+              }
+            ]
+          },
+          "memberCount": {
+            "type": "number"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          },
+          "version": {
+            "type": "number"
+          },
+          "allowedActions": {
+            "example": [
+              "edit",
+              "start",
+              "manageMembers",
+              "createDocument"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "blockedActions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BlockedActionDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "code",
+          "name",
+          "nameEn",
+          "description",
+          "client",
+          "site",
+          "type",
+          "status",
+          "contractNo",
+          "contractValue",
+          "currency",
+          "plannedStartDate",
+          "plannedEndDate",
+          "actualStartDate",
+          "actualEndDate",
+          "projectManager",
+          "revisionScheme",
+          "requireSeparationOfDuties",
+          "closedAt",
+          "myRole",
+          "memberCount",
+          "createdAt",
+          "updatedAt",
+          "version",
+          "allowedActions",
+          "blockedActions"
+        ]
+      },
+      "CreateProjectDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 300
+          },
+          "nameEn": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "siteId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ProjectType"
+              }
+            ]
+          },
+          "contractNo": {
+            "type": "string",
+            "nullable": true
+          },
+          "contractValue": {
+            "type": "string",
+            "nullable": true,
+            "example": "12500000.00",
+            "description": "Decimal(14,2) as string"
+          },
+          "plannedStartDate": {
+            "type": "string",
+            "nullable": true,
+            "format": "date"
+          },
+          "plannedEndDate": {
+            "type": "string",
+            "nullable": true,
+            "format": "date"
+          },
+          "actualStartDate": {
+            "type": "string",
+            "nullable": true,
+            "format": "date"
+          },
+          "actualEndDate": {
+            "type": "string",
+            "nullable": true,
+            "format": "date"
+          },
+          "projectManagerId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "BR-PRJ-002: added/kept as a PROJECT_MANAGER member"
+          },
+          "revisionScheme": {
+            "description": "BR-PRJ-004",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RevisionScheme"
+              }
+            ]
+          },
+          "requireSeparationOfDuties": {
+            "type": "boolean",
+            "description": "BR-DOC-042"
+          },
+          "clientId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "name",
+          "type",
+          "clientId"
+        ]
+      },
+      "UpdateProjectDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 300
+          },
+          "nameEn": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "siteId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ProjectType"
+              }
+            ]
+          },
+          "contractNo": {
+            "type": "string",
+            "nullable": true
+          },
+          "contractValue": {
+            "type": "string",
+            "nullable": true,
+            "example": "12500000.00",
+            "description": "Decimal(14,2) as string"
+          },
+          "plannedStartDate": {
+            "type": "string",
+            "nullable": true,
+            "format": "date"
+          },
+          "plannedEndDate": {
+            "type": "string",
+            "nullable": true,
+            "format": "date"
+          },
+          "actualStartDate": {
+            "type": "string",
+            "nullable": true,
+            "format": "date"
+          },
+          "actualEndDate": {
+            "type": "string",
+            "nullable": true,
+            "format": "date"
+          },
+          "projectManagerId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "BR-PRJ-002: added/kept as a PROJECT_MANAGER member"
+          },
+          "revisionScheme": {
+            "description": "BR-PRJ-004",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RevisionScheme"
+              }
+            ]
+          },
+          "requireSeparationOfDuties": {
+            "type": "boolean",
+            "description": "BR-DOC-042"
+          },
+          "version": {
+            "type": "number",
+            "minimum": 1
+          },
+          "code": {
+            "type": "string",
+            "description": "BR-PRJ-001: project.manage only, before the project has documents"
+          }
+        },
+        "required": [
+          "version"
+        ]
+      },
+      "ProjectActionDto": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "number",
+            "minimum": 1
+          },
+          "reason": {
+            "type": "string",
+            "maxLength": 1000,
+            "description": "Required for reopen and cancel"
+          }
+        },
+        "required": [
+          "version"
+        ]
+      },
+      "MemberDto": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "displayNameEn": {
+            "type": "string",
+            "nullable": true
+          },
+          "position": {
+            "type": "string",
+            "nullable": true
+          },
+          "role": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ProjectRole"
+              }
+            ]
+          },
+          "addedAt": {
+            "type": "string"
+          },
+          "isProjectManager": {
+            "type": "boolean"
+          },
+          "isActiveUser": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "userId",
+          "displayName",
+          "displayNameEn",
+          "position",
+          "role",
+          "addedAt",
+          "isProjectManager",
+          "isActiveUser"
+        ]
+      },
+      "AddMemberDto": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "role": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ProjectRole"
+              }
+            ]
+          }
+        },
+        "required": [
+          "userId",
+          "role"
+        ]
+      },
+      "UpdateMemberDto": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ProjectRole"
+              }
+            ]
+          }
+        },
+        "required": [
+          "role"
+        ]
+      },
+      "StatusCountDto": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "count": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "status",
+          "count"
+        ]
+      },
+      "TransmittalSummaryDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "number": {
+            "type": "string"
+          },
+          "subject": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "sentAt": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "number",
+          "subject",
+          "status",
+          "sentAt"
+        ]
+      },
+      "ProjectOverviewDto": {
+        "type": "object",
+        "properties": {
+          "documentCount": {
+            "type": "number"
+          },
+          "documentsByRevisionStatus": {
+            "description": "Active documents by status of their current revision (NO_REVISION when none)",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StatusCountDto"
+            }
+          },
+          "documentsByStatus": {
+            "description": "Documents by DocumentStatus",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StatusCountDto"
+            }
+          },
+          "activeReviewSteps": {
+            "type": "number"
+          },
+          "overdueReviewSteps": {
+            "type": "number"
+          },
+          "draftTransmittals": {
+            "type": "number"
+          },
+          "recentTransmittals": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TransmittalSummaryDto"
+            }
+          }
+        },
+        "required": [
+          "documentCount",
+          "documentsByRevisionStatus",
+          "documentsByStatus",
+          "activeReviewSteps",
+          "overdueReviewSteps",
+          "draftTransmittals",
+          "recentTransmittals"
+        ]
+      },
+      "ProjectNumberingDto": {
+        "type": "object",
+        "properties": {
+          "pattern": {
+            "type": "string"
+          },
+          "resetPolicy": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SequenceReset"
+              }
+            ]
+          },
+          "isOverride": {
+            "type": "boolean",
+            "description": "true when the project overrides the global DOCUMENT pattern"
+          },
+          "globalPattern": {
+            "type": "string"
+          },
+          "example": {
+            "type": "string",
+            "example": "P26-001-PR-DWG-001"
+          }
+        },
+        "required": [
+          "pattern",
+          "resetPolicy",
+          "isOverride",
+          "globalPattern",
+          "example"
+        ]
+      },
+      "PutProjectNumberingDto": {
+        "type": "object",
+        "properties": {
+          "pattern": {
+            "type": "string",
+            "nullable": true,
+            "description": "null = use the global pattern"
+          }
+        }
       }
     }
   }

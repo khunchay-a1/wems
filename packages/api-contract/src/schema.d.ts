@@ -897,6 +897,393 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/clients": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Clients (filter q, clientType, isActive, province) */
+        get: operations["Clients_listClients"];
+        put?: never;
+        /** Create a client (BR-CRM-001/002) */
+        post: operations["Clients_createClient"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/clients/code-suggestion": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Proposed unused client code (BR-CRM-001) */
+        get: operations["Clients_suggestClientCode"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/clients/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Client detail */
+        get: operations["Clients_getClient"];
+        put?: never;
+        post?: never;
+        /** Delete an unused client (BR-CRM-003) */
+        delete: operations["Clients_deleteClient"];
+        options?: never;
+        head?: never;
+        /** Update or (de)activate a client (code is fixed after creation) */
+        patch: operations["Clients_updateClient"];
+        trace?: never;
+    };
+    "/api/v1/clients/{id}/summary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Counts of related projects, sites, contacts and jobs */
+        get: operations["Clients_getClientSummary"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/clients/{id}/contacts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Contacts of a client */
+        get: operations["Clients_listContacts"];
+        put?: never;
+        /** Add a contact (BR-CRM-004) */
+        post: operations["Clients_createContact"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/clients/{id}/contacts/{contactId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete a contact */
+        delete: operations["Clients_deleteContact"];
+        options?: never;
+        head?: never;
+        /** Update a contact (BR-CRM-004) */
+        patch: operations["Clients_updateContact"];
+        trace?: never;
+    };
+    "/api/v1/contacts/{id}/anonymize": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Remove personal data of a contact (BR-CRM-007, PDPA) */
+        post: operations["Clients_anonymizeContact"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/clients/{id}/sites": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Sites of a client */
+        get: operations["Clients_listSites"];
+        put?: never;
+        /** Add a site (BR-CRM-005/006) */
+        post: operations["Clients_createSite"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/clients/{id}/sites/{siteId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Site detail */
+        get: operations["Clients_getSite"];
+        put?: never;
+        post?: never;
+        /** Delete an unused site */
+        delete: operations["Clients_deleteSite"];
+        options?: never;
+        head?: never;
+        /** Update a site (BR-CRM-005/006) */
+        patch: operations["Clients_updateSite"];
+        trace?: never;
+    };
+    "/api/v1/projects": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Projects I can see (filter q, status, type, clientId, mine) */
+        get: operations["Projects_listProjects"];
+        put?: never;
+        /** Create a project (code from numbering — BR-PRJ-001/002) */
+        post: operations["Projects_createProject"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/projects/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Project detail with allowed actions */
+        get: operations["Projects_getProject"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update project fields and settings (BR-PRJ-001/004/010) */
+        patch: operations["Projects_updateProject"];
+        trace?: never;
+    };
+    "/api/v1/projects/{id}/start": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** PLANNING → ACTIVE */
+        post: operations["Projects_startProject"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/projects/{id}/hold": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** ACTIVE → ON_HOLD */
+        post: operations["Projects_holdProject"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/projects/{id}/resume": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** ON_HOLD → ACTIVE */
+        post: operations["Projects_resumeProject"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/projects/{id}/complete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** ACTIVE → COMPLETED */
+        post: operations["Projects_completeProject"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/projects/{id}/close": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** COMPLETED → CLOSED (BR-PRJ-021) */
+        post: operations["Projects_closeProject"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/projects/{id}/reopen": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** CLOSED → ACTIVE (ADMIN, reason required) */
+        post: operations["Projects_reopenProject"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/projects/{id}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** → CANCELLED (reason required) */
+        post: operations["Projects_cancelProject"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/projects/{id}/members": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Active project members */
+        get: operations["Projects_listMembers"];
+        put?: never;
+        /** Add a member (BR-PRJ-010) */
+        post: operations["Projects_addMember"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/projects/{id}/members/{userId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Remove a member (BR-PRJ-003) */
+        delete: operations["Projects_removeMember"];
+        options?: never;
+        head?: never;
+        /** Change a member role (BR-PRJ-002) */
+        patch: operations["Projects_updateMember"];
+        trace?: never;
+    };
+    "/api/v1/projects/{id}/overview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Document counts, pending reviews and recent transmittals */
+        get: operations["Projects_getProjectOverview"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/projects/{id}/numbering-scheme": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** DOCUMENT numbering pattern used by the project */
+        get: operations["Projects_getProjectNumbering"];
+        /** Override (or reset) the DOCUMENT pattern for this project */
+        put: operations["Projects_putProjectNumbering"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -1482,6 +1869,473 @@ export interface components {
             appVersion?: string;
             deviceModel?: string;
         };
+        /** @enum {string} */
+        ClientType: "COMPANY" | "GOVERNMENT" | "STATE_ENTERPRISE" | "LOCAL_AUTHORITY" | "INDIVIDUAL" | "OTHER";
+        BlockedActionDto: {
+            action: string;
+            code: string;
+        };
+        ClientDto: {
+            /** Format: uuid */
+            id: string;
+            code: string;
+            nameTh: string;
+            nameEn: string | null;
+            clientType: components["schemas"]["ClientType"];
+            taxId: string | null;
+            branchCode: string | null;
+            industry: string | null;
+            addressLine: string | null;
+            subdistrict: string | null;
+            district: string | null;
+            province: string | null;
+            postcode: string | null;
+            phone: string | null;
+            email: string | null;
+            website: string | null;
+            notes: string | null;
+            isActive: boolean;
+            /** @description Projects not CLOSED/CANCELLED/COMPLETED */
+            openProjectCount: number;
+            createdAt: string;
+            updatedAt: string;
+            version: number;
+            /**
+             * @example [
+             *       "edit",
+             *       "deactivate"
+             *     ]
+             */
+            allowedActions: string[];
+            blockedActions: components["schemas"]["BlockedActionDto"][];
+        };
+        ClientCodeSuggestionDto: {
+            /** @example SWS */
+            code: string;
+        };
+        CreateClientDto: {
+            nameTh: string;
+            nameEn?: string | null;
+            clientType?: components["schemas"]["ClientType"];
+            /** @description 13-digit Thai taxpayer id (BR-CRM-002) */
+            taxId?: string | null;
+            /** @description "00000" = head office */
+            branchCode?: string | null;
+            industry?: string | null;
+            addressLine?: string | null;
+            subdistrict?: string | null;
+            district?: string | null;
+            province?: string | null;
+            postcode?: string | null;
+            phone?: string | null;
+            email?: string | null;
+            website?: string | null;
+            notes?: string | null;
+            /**
+             * @description BR-CRM-001 [A-Z0-9-]{2,12}; omitted = proposed from the English name
+             * @example SWS
+             */
+            code?: string;
+        };
+        ClientWarningDto: {
+            /** @example CLIENT_TAX_ID_EXISTS */
+            code: string;
+            /** @description Codes of the clients that already use it */
+            clients: string[];
+        };
+        SaveClientResultDto: {
+            /** Format: uuid */
+            id: string;
+            code: string;
+            nameTh: string;
+            nameEn: string | null;
+            clientType: components["schemas"]["ClientType"];
+            taxId: string | null;
+            branchCode: string | null;
+            industry: string | null;
+            addressLine: string | null;
+            subdistrict: string | null;
+            district: string | null;
+            province: string | null;
+            postcode: string | null;
+            phone: string | null;
+            email: string | null;
+            website: string | null;
+            notes: string | null;
+            isActive: boolean;
+            /** @description Projects not CLOSED/CANCELLED/COMPLETED */
+            openProjectCount: number;
+            createdAt: string;
+            updatedAt: string;
+            version: number;
+            /**
+             * @example [
+             *       "edit",
+             *       "deactivate"
+             *     ]
+             */
+            allowedActions: string[];
+            blockedActions: components["schemas"]["BlockedActionDto"][];
+            warnings: components["schemas"]["ClientWarningDto"][];
+        };
+        UpdateClientDto: {
+            nameTh?: string;
+            nameEn?: string | null;
+            clientType?: components["schemas"]["ClientType"];
+            /** @description 13-digit Thai taxpayer id (BR-CRM-002) */
+            taxId?: string | null;
+            /** @description "00000" = head office */
+            branchCode?: string | null;
+            industry?: string | null;
+            addressLine?: string | null;
+            subdistrict?: string | null;
+            district?: string | null;
+            province?: string | null;
+            postcode?: string | null;
+            phone?: string | null;
+            email?: string | null;
+            website?: string | null;
+            notes?: string | null;
+            version: number;
+            isActive?: boolean;
+        };
+        ClientProjectRefDto: {
+            /** Format: uuid */
+            id: string;
+            code: string;
+            name: string;
+            status: string;
+        };
+        ClientSummaryDto: {
+            projectCount: number;
+            openProjectCount: number;
+            siteCount: number;
+            contactCount: number;
+            labJobCount: number;
+            quotationCount: number;
+            recentProjects: components["schemas"]["ClientProjectRefDto"][];
+        };
+        ContactDto: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            clientId: string;
+            name: string;
+            position: string | null;
+            department: string | null;
+            phone: string | null;
+            email: string | null;
+            isPrimary: boolean;
+            receivesTransmittals: boolean;
+            receivesLabReports: boolean;
+            notes: string | null;
+            isActive: boolean;
+            /** @description Personal data removed (BR-CRM-007) */
+            isAnonymized: boolean;
+            version: number;
+        };
+        CreateContactDto: {
+            name: string;
+            position?: string | null;
+            department?: string | null;
+            phone?: string | null;
+            email?: string | null;
+            /** @description BR-CRM-004 one primary contact per client */
+            isPrimary?: boolean;
+            receivesTransmittals?: boolean;
+            receivesLabReports?: boolean;
+            notes?: string | null;
+        };
+        UpdateContactDto: {
+            name?: string;
+            position?: string | null;
+            department?: string | null;
+            phone?: string | null;
+            email?: string | null;
+            /** @description BR-CRM-004 one primary contact per client */
+            isPrimary?: boolean;
+            receivesTransmittals?: boolean;
+            receivesLabReports?: boolean;
+            notes?: string | null;
+            version: number;
+            isActive?: boolean;
+        };
+        /** @enum {string} */
+        SiteType: "FACTORY" | "BUILDING" | "INDUSTRIAL_ESTATE" | "MUNICIPAL" | "WATER_TREATMENT_PLANT" | "WASTEWATER_TREATMENT_PLANT" | "NATURAL_WATER_BODY" | "OTHER";
+        /** @enum {string} */
+        BuildingClass: "A" | "B" | "C" | "D" | "E";
+        StandardRefDto: {
+            /** Format: uuid */
+            id: string;
+            code: string;
+            nameTh: string;
+        };
+        SiteDto: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            clientId: string;
+            code: string;
+            name: string;
+            siteType: components["schemas"]["SiteType"];
+            addressLine: string | null;
+            subdistrict: string | null;
+            district: string | null;
+            province: string | null;
+            postcode: string | null;
+            /** @description Decimal(9,6) as string */
+            latitude: string | null;
+            /** @description Decimal(9,6) as string */
+            longitude: string | null;
+            buildingClass: components["schemas"]["BuildingClass"] | null;
+            factoryRegistrationNo: string | null;
+            factoryTypeCode: string | null;
+            defaultStandard: components["schemas"]["StandardRefDto"] | null;
+            notes: string | null;
+            isActive: boolean;
+            version: number;
+        };
+        CreateSiteDto: {
+            name: string;
+            siteType: components["schemas"]["SiteType"];
+            addressLine?: string | null;
+            subdistrict?: string | null;
+            district?: string | null;
+            province?: string | null;
+            postcode?: string | null;
+            latitude?: number | null;
+            longitude?: number | null;
+            buildingClass?: components["schemas"]["BuildingClass"] | null;
+            factoryRegistrationNo?: string | null;
+            factoryTypeCode?: string | null;
+            /**
+             * Format: uuid
+             * @description Omitted for a BUILDING with a class → proposed BLD-2548-<class> (BR-CRM-006)
+             */
+            defaultStandardId?: string | null;
+            notes?: string | null;
+            /**
+             * @description Unique within the client (BR-CRM-005)
+             * @example PLANT-1
+             */
+            code: string;
+        };
+        UpdateSiteDto: {
+            name?: string;
+            siteType?: components["schemas"]["SiteType"];
+            addressLine?: string | null;
+            subdistrict?: string | null;
+            district?: string | null;
+            province?: string | null;
+            postcode?: string | null;
+            latitude?: number | null;
+            longitude?: number | null;
+            buildingClass?: components["schemas"]["BuildingClass"] | null;
+            factoryRegistrationNo?: string | null;
+            factoryTypeCode?: string | null;
+            /**
+             * Format: uuid
+             * @description Omitted for a BUILDING with a class → proposed BLD-2548-<class> (BR-CRM-006)
+             */
+            defaultStandardId?: string | null;
+            notes?: string | null;
+            version: number;
+            isActive?: boolean;
+        };
+        ClientRefDto: {
+            /** Format: uuid */
+            id: string;
+            code: string;
+            nameTh: string;
+        };
+        SiteRefDto: {
+            /** Format: uuid */
+            id: string;
+            code: string;
+            name: string;
+        };
+        /** @enum {string} */
+        ProjectType: "DESIGN" | "DESIGN_BUILD" | "CONSTRUCTION" | "OPERATION_MAINTENANCE" | "MONITORING" | "CONSULTING" | "OTHER";
+        /** @enum {string} */
+        ProjectStatus: "PLANNING" | "ACTIVE" | "ON_HOLD" | "COMPLETED" | "CLOSED" | "CANCELLED";
+        /** @enum {string} */
+        RevisionScheme: "ALPHA_NUMERIC" | "ISO19650";
+        /**
+         * @description My active role in the project
+         * @enum {string}
+         */
+        ProjectRole: "PROJECT_MANAGER" | "DESIGN_MANAGER" | "ENGINEER" | "DRAFTER" | "DOCUMENT_CONTROLLER" | "SITE_ENGINEER" | "FOREMAN" | "VIEWER";
+        ProjectDto: {
+            /** Format: uuid */
+            id: string;
+            code: string;
+            name: string;
+            nameEn: string | null;
+            description: string | null;
+            client: components["schemas"]["ClientRefDto"];
+            site: components["schemas"]["SiteRefDto"] | null;
+            type: components["schemas"]["ProjectType"];
+            status: components["schemas"]["ProjectStatus"];
+            contractNo: string | null;
+            /** @description Decimal as string */
+            contractValue: string | null;
+            currency: string;
+            /** Format: date */
+            plannedStartDate: string | null;
+            /** Format: date */
+            plannedEndDate: string | null;
+            /** Format: date */
+            actualStartDate: string | null;
+            /** Format: date */
+            actualEndDate: string | null;
+            projectManager: components["schemas"]["UserRefDto"] | null;
+            revisionScheme: components["schemas"]["RevisionScheme"];
+            requireSeparationOfDuties: boolean;
+            closedAt: string | null;
+            /** @description My active role in the project */
+            myRole: components["schemas"]["ProjectRole"] | null;
+            memberCount: number;
+            createdAt: string;
+            updatedAt: string;
+            version: number;
+            /**
+             * @example [
+             *       "edit",
+             *       "start",
+             *       "manageMembers",
+             *       "createDocument"
+             *     ]
+             */
+            allowedActions: string[];
+            blockedActions: components["schemas"]["BlockedActionDto"][];
+        };
+        CreateProjectDto: {
+            name: string;
+            nameEn?: string | null;
+            description?: string | null;
+            /** Format: uuid */
+            siteId?: string | null;
+            type: components["schemas"]["ProjectType"];
+            contractNo?: string | null;
+            /**
+             * @description Decimal(14,2) as string
+             * @example 12500000.00
+             */
+            contractValue?: string | null;
+            /** Format: date */
+            plannedStartDate?: string | null;
+            /** Format: date */
+            plannedEndDate?: string | null;
+            /** Format: date */
+            actualStartDate?: string | null;
+            /** Format: date */
+            actualEndDate?: string | null;
+            /**
+             * Format: uuid
+             * @description BR-PRJ-002: added/kept as a PROJECT_MANAGER member
+             */
+            projectManagerId?: string;
+            /** @description BR-PRJ-004 */
+            revisionScheme?: components["schemas"]["RevisionScheme"];
+            /** @description BR-DOC-042 */
+            requireSeparationOfDuties?: boolean;
+            /** Format: uuid */
+            clientId: string;
+        };
+        UpdateProjectDto: {
+            name?: string;
+            nameEn?: string | null;
+            description?: string | null;
+            /** Format: uuid */
+            siteId?: string | null;
+            type?: components["schemas"]["ProjectType"];
+            contractNo?: string | null;
+            /**
+             * @description Decimal(14,2) as string
+             * @example 12500000.00
+             */
+            contractValue?: string | null;
+            /** Format: date */
+            plannedStartDate?: string | null;
+            /** Format: date */
+            plannedEndDate?: string | null;
+            /** Format: date */
+            actualStartDate?: string | null;
+            /** Format: date */
+            actualEndDate?: string | null;
+            /**
+             * Format: uuid
+             * @description BR-PRJ-002: added/kept as a PROJECT_MANAGER member
+             */
+            projectManagerId?: string;
+            /** @description BR-PRJ-004 */
+            revisionScheme?: components["schemas"]["RevisionScheme"];
+            /** @description BR-DOC-042 */
+            requireSeparationOfDuties?: boolean;
+            version: number;
+            /** @description BR-PRJ-001: project.manage only, before the project has documents */
+            code?: string;
+        };
+        ProjectActionDto: {
+            version: number;
+            /** @description Required for reopen and cancel */
+            reason?: string;
+        };
+        MemberDto: {
+            /** Format: uuid */
+            userId: string;
+            displayName: string;
+            displayNameEn: string | null;
+            position: string | null;
+            role: components["schemas"]["ProjectRole"];
+            addedAt: string;
+            isProjectManager: boolean;
+            isActiveUser: boolean;
+        };
+        AddMemberDto: {
+            /** Format: uuid */
+            userId: string;
+            role: components["schemas"]["ProjectRole"];
+        };
+        UpdateMemberDto: {
+            role: components["schemas"]["ProjectRole"];
+        };
+        StatusCountDto: {
+            status: string;
+            count: number;
+        };
+        TransmittalSummaryDto: {
+            /** Format: uuid */
+            id: string;
+            number: string;
+            subject: string;
+            status: string;
+            sentAt: string | null;
+        };
+        ProjectOverviewDto: {
+            documentCount: number;
+            /** @description Active documents by status of their current revision (NO_REVISION when none) */
+            documentsByRevisionStatus: components["schemas"]["StatusCountDto"][];
+            /** @description Documents by DocumentStatus */
+            documentsByStatus: components["schemas"]["StatusCountDto"][];
+            activeReviewSteps: number;
+            overdueReviewSteps: number;
+            draftTransmittals: number;
+            recentTransmittals: components["schemas"]["TransmittalSummaryDto"][];
+        };
+        ProjectNumberingDto: {
+            pattern: string;
+            resetPolicy: components["schemas"]["SequenceReset"];
+            /** @description true when the project overrides the global DOCUMENT pattern */
+            isOverride: boolean;
+            globalPattern: string;
+            /** @example P26-001-PR-DWG-001 */
+            example: string;
+        };
+        PutProjectNumberingDto: {
+            /** @description null = use the global pattern */
+            pattern?: string | null;
+        };
     };
     responses: never;
     parameters: never;
@@ -1558,6 +2412,43 @@ export type SchemaNotificationPreferenceDto = components['schemas']['Notificatio
 export type SchemaPreferenceInputDto = components['schemas']['PreferenceInputDto'];
 export type SchemaPutPreferencesDto = components['schemas']['PutPreferencesDto'];
 export type SchemaRegisterPushDeviceDto = components['schemas']['RegisterPushDeviceDto'];
+export type SchemaClientType = components['schemas']['ClientType'];
+export type SchemaBlockedActionDto = components['schemas']['BlockedActionDto'];
+export type SchemaClientDto = components['schemas']['ClientDto'];
+export type SchemaClientCodeSuggestionDto = components['schemas']['ClientCodeSuggestionDto'];
+export type SchemaCreateClientDto = components['schemas']['CreateClientDto'];
+export type SchemaClientWarningDto = components['schemas']['ClientWarningDto'];
+export type SchemaSaveClientResultDto = components['schemas']['SaveClientResultDto'];
+export type SchemaUpdateClientDto = components['schemas']['UpdateClientDto'];
+export type SchemaClientProjectRefDto = components['schemas']['ClientProjectRefDto'];
+export type SchemaClientSummaryDto = components['schemas']['ClientSummaryDto'];
+export type SchemaContactDto = components['schemas']['ContactDto'];
+export type SchemaCreateContactDto = components['schemas']['CreateContactDto'];
+export type SchemaUpdateContactDto = components['schemas']['UpdateContactDto'];
+export type SchemaSiteType = components['schemas']['SiteType'];
+export type SchemaBuildingClass = components['schemas']['BuildingClass'];
+export type SchemaStandardRefDto = components['schemas']['StandardRefDto'];
+export type SchemaSiteDto = components['schemas']['SiteDto'];
+export type SchemaCreateSiteDto = components['schemas']['CreateSiteDto'];
+export type SchemaUpdateSiteDto = components['schemas']['UpdateSiteDto'];
+export type SchemaClientRefDto = components['schemas']['ClientRefDto'];
+export type SchemaSiteRefDto = components['schemas']['SiteRefDto'];
+export type SchemaProjectType = components['schemas']['ProjectType'];
+export type SchemaProjectStatus = components['schemas']['ProjectStatus'];
+export type SchemaRevisionScheme = components['schemas']['RevisionScheme'];
+export type SchemaProjectRole = components['schemas']['ProjectRole'];
+export type SchemaProjectDto = components['schemas']['ProjectDto'];
+export type SchemaCreateProjectDto = components['schemas']['CreateProjectDto'];
+export type SchemaUpdateProjectDto = components['schemas']['UpdateProjectDto'];
+export type SchemaProjectActionDto = components['schemas']['ProjectActionDto'];
+export type SchemaMemberDto = components['schemas']['MemberDto'];
+export type SchemaAddMemberDto = components['schemas']['AddMemberDto'];
+export type SchemaUpdateMemberDto = components['schemas']['UpdateMemberDto'];
+export type SchemaStatusCountDto = components['schemas']['StatusCountDto'];
+export type SchemaTransmittalSummaryDto = components['schemas']['TransmittalSummaryDto'];
+export type SchemaProjectOverviewDto = components['schemas']['ProjectOverviewDto'];
+export type SchemaProjectNumberingDto = components['schemas']['ProjectNumberingDto'];
+export type SchemaPutProjectNumberingDto = components['schemas']['PutProjectNumberingDto'];
 export type $defs = Record<string, never>;
 export interface operations {
     Health_getLive: {
@@ -2898,6 +3789,843 @@ export interface operations {
             };
         };
     };
+    Clients_listClients: {
+        parameters: {
+            query?: {
+                page?: number;
+                pageSize?: number;
+                /** @description Comma separated, "-" prefix = descending, e.g. "-updatedAt,number" */
+                sort?: string;
+                /** @description Search text */
+                q?: string;
+                /** @description Comma separated ClientType values */
+                clientType?: string;
+                isActive?: boolean;
+                province?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["ClientDto"][];
+                        meta: components["schemas"]["PageMetaDto"];
+                    };
+                };
+            };
+        };
+    };
+    Clients_createClient: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateClientDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SaveClientResultDto"];
+                };
+            };
+        };
+    };
+    Clients_suggestClientCode: {
+        parameters: {
+            query?: {
+                nameEn?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ClientCodeSuggestionDto"];
+                };
+            };
+        };
+    };
+    Clients_getClient: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ClientDto"];
+                };
+            };
+        };
+    };
+    Clients_deleteClient: {
+        parameters: {
+            query: {
+                version: number;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    Clients_updateClient: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateClientDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SaveClientResultDto"];
+                };
+            };
+        };
+    };
+    Clients_getClientSummary: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ClientSummaryDto"];
+                };
+            };
+        };
+    };
+    Clients_listContacts: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContactDto"][];
+                };
+            };
+        };
+    };
+    Clients_createContact: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateContactDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContactDto"];
+                };
+            };
+        };
+    };
+    Clients_deleteContact: {
+        parameters: {
+            query: {
+                version: number;
+            };
+            header?: never;
+            path: {
+                id: string;
+                contactId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    Clients_updateContact: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                contactId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateContactDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContactDto"];
+                };
+            };
+        };
+    };
+    Clients_anonymizeContact: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContactDto"];
+                };
+            };
+        };
+    };
+    Clients_listSites: {
+        parameters: {
+            query?: {
+                isActive?: boolean;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SiteDto"][];
+                };
+            };
+        };
+    };
+    Clients_createSite: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateSiteDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SiteDto"];
+                };
+            };
+        };
+    };
+    Clients_getSite: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                siteId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SiteDto"];
+                };
+            };
+        };
+    };
+    Clients_deleteSite: {
+        parameters: {
+            query: {
+                version: number;
+            };
+            header?: never;
+            path: {
+                id: string;
+                siteId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    Clients_updateSite: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                siteId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateSiteDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SiteDto"];
+                };
+            };
+        };
+    };
+    Projects_listProjects: {
+        parameters: {
+            query?: {
+                page?: number;
+                pageSize?: number;
+                /** @description Comma separated, "-" prefix = descending, e.g. "-updatedAt,number" */
+                sort?: string;
+                /** @description Search text */
+                q?: string;
+                /** @description Comma separated ProjectStatus values */
+                status?: string;
+                /** @description Comma separated ProjectType values */
+                type?: string;
+                clientId?: string;
+                /** @description Only projects where I am an active member */
+                mine?: boolean;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["ProjectDto"][];
+                        meta: components["schemas"]["PageMetaDto"];
+                    };
+                };
+            };
+        };
+    };
+    Projects_createProject: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateProjectDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProjectDto"];
+                };
+            };
+        };
+    };
+    Projects_getProject: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProjectDto"];
+                };
+            };
+        };
+    };
+    Projects_updateProject: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateProjectDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProjectDto"];
+                };
+            };
+        };
+    };
+    Projects_startProject: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProjectActionDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProjectDto"];
+                };
+            };
+        };
+    };
+    Projects_holdProject: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProjectActionDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProjectDto"];
+                };
+            };
+        };
+    };
+    Projects_resumeProject: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProjectActionDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProjectDto"];
+                };
+            };
+        };
+    };
+    Projects_completeProject: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProjectActionDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProjectDto"];
+                };
+            };
+        };
+    };
+    Projects_closeProject: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProjectActionDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProjectDto"];
+                };
+            };
+        };
+    };
+    Projects_reopenProject: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProjectActionDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProjectDto"];
+                };
+            };
+        };
+    };
+    Projects_cancelProject: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProjectActionDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProjectDto"];
+                };
+            };
+        };
+    };
+    Projects_listMembers: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MemberDto"][];
+                };
+            };
+        };
+    };
+    Projects_addMember: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AddMemberDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MemberDto"][];
+                };
+            };
+        };
+    };
+    Projects_removeMember: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    Projects_updateMember: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateMemberDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MemberDto"][];
+                };
+            };
+        };
+    };
+    Projects_getProjectOverview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProjectOverviewDto"];
+                };
+            };
+        };
+    };
+    Projects_getProjectNumbering: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProjectNumberingDto"];
+                };
+            };
+        };
+    };
+    Projects_putProjectNumbering: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PutProjectNumberingDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProjectNumberingDto"];
+                };
+            };
+        };
+    };
 }
 type FlattenedDeepRequired<T> = {
     [K in keyof T]-?: FlattenedDeepRequired<T[K] extends unknown[] | undefined | null ? Extract<T[K], unknown[]>[number] : T[K]>;
@@ -2925,3 +4653,10 @@ export const uploadUrlDtoMethodValues: ReadonlyArray<FlattenedDeepRequired<compo
 export const fileStatusValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["FileStatus"]> = ["PENDING_UPLOAD", "PROCESSING", "AVAILABLE", "REJECTED", "DELETED"];
 export const attachmentOwnerTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["AttachmentOwnerType"]> = ["PROJECT", "CLIENT", "SITE", "TRANSMITTAL", "DESIGN_BASIS", "COMMENT", "DAILY_REPORT", "ISSUE", "INSPECTION", "INSPECTION_RESULT", "SITE_QUERY", "LAB_JOB", "SAMPLE", "SAMPLING_STOP", "INSTRUMENT_EVENT", "QUOTATION"];
 export const notificationChannelValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["NotificationChannel"]> = ["IN_APP", "EMAIL", "PUSH", "LINE"];
+export const clientTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["ClientType"]> = ["COMPANY", "GOVERNMENT", "STATE_ENTERPRISE", "LOCAL_AUTHORITY", "INDIVIDUAL", "OTHER"];
+export const siteTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["SiteType"]> = ["FACTORY", "BUILDING", "INDUSTRIAL_ESTATE", "MUNICIPAL", "WATER_TREATMENT_PLANT", "WASTEWATER_TREATMENT_PLANT", "NATURAL_WATER_BODY", "OTHER"];
+export const buildingClassValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["BuildingClass"]> = ["A", "B", "C", "D", "E"];
+export const projectTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["ProjectType"]> = ["DESIGN", "DESIGN_BUILD", "CONSTRUCTION", "OPERATION_MAINTENANCE", "MONITORING", "CONSULTING", "OTHER"];
+export const projectStatusValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["ProjectStatus"]> = ["PLANNING", "ACTIVE", "ON_HOLD", "COMPLETED", "CLOSED", "CANCELLED"];
+export const revisionSchemeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["RevisionScheme"]> = ["ALPHA_NUMERIC", "ISO19650"];
+export const projectRoleValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["ProjectRole"]> = ["PROJECT_MANAGER", "DESIGN_MANAGER", "ENGINEER", "DRAFTER", "DOCUMENT_CONTROLLER", "SITE_ENGINEER", "FOREMAN", "VIEWER"];

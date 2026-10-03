@@ -147,6 +147,10 @@
     "title": "Client inactive",
     "detail": "Inactive clients cannot be selected."
   },
+  "SITE_IN_USE": {
+    "title": "Site is in use",
+    "detail": "Projects or jobs refer to this site so it cannot be deleted. Deactivate it instead."
+  },
   "MEMBER_HAS_PENDING_REVIEWS": {
     "title": "Member has pending reviews",
     "detail": "Reassign the member's pending review steps before removing them."

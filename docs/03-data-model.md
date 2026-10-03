@@ -135,7 +135,7 @@ if (res.count === 0) throw new ConflictProblem('CONFLICT_STALE_VERSION');
 
 | Entity | scopeKey |
 |---|---|
-| Project, ProjectMember, Document, DocumentRevision, DocumentFile, DailyReport*, Issue, Inspection*, SiteQuery | `project:<projectId>` |
+| Project, ProjectMember (`entityId` = userId ของสมาชิก), Document, DocumentRevision, DocumentFile, DailyReport*, Issue, Inspection*, SiteQuery | `project:<projectId>` |
 | ReviewStep ที่มอบหมายให้ผู้ใช้, Notification | `user:<userId>` |
 | Discipline, DocumentType, Parameter, RegulatoryStandard, StandardLimit, AnalyticalMethod, TestPackage, InspectionTemplate | `global` |
 | SamplingTrip, SamplingStop, Sample (จากภาคสนาม), FieldMeasurement | `trip:<tripId>` |

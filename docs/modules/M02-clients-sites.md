@@ -17,18 +17,19 @@
 - **BR-CRM-004** ผู้ติดต่อหลัก (`isPrimary`) มีได้ 1 คนต่อลูกค้า
 - **BR-CRM-005** `Site.code` ไม่ซ้ำภายในลูกค้าเดียวกัน; `buildingClass` กรอกได้เมื่อ `siteType = BUILDING`; `factoryRegistrationNo` กรอกได้เมื่อ `siteType = FACTORY`
 - **BR-CRM-006** มาตรฐานตั้งต้นของจุดเก็บตัวอย่าง: `SamplingPoint.defaultStandardId` → ถ้าว่างใช้ `Site.defaultStandardId`; ระบบเสนอมาตรฐานอาคารตาม `buildingClass` อัตโนมัติ
-- **BR-CRM-007** ผู้ติดต่อที่ขอให้ลบข้อมูลส่วนบุคคล → ทำให้ไม่ระบุตัวตน (`06-security.md` §8)
+- **BR-CRM-007** ผู้ติดต่อที่ขอให้ลบข้อมูลส่วนบุคคล → ทำให้ไม่ระบุตัวตน (`06-security.md` §8): ชื่อเป็นค่าว่าง (`isAnonymized = true`), ตำแหน่ง/แผนก/โทร/อีเมล/หมายเหตุเป็น null, ปิดใช้งาน; audit ไม่เก็บค่าเดิม
 
 ## 3. API
 
 | Method | Path | สิทธิ์ |
 |---|---|---|
 | GET | `/clients` (กรอง `q`, `clientType`, `isActive`, `province`) | `client.read` |
-| POST / PATCH / DELETE | `/clients[/{id}]` | `client.manage` |
+| GET | `/clients/code-suggestion?nameEn=` | `client.manage` — รหัสที่เสนอและยังว่าง (BR-CRM-001) |
+| POST / PATCH / DELETE | `/clients[/{id}]` | `client.manage` — POST ไม่ส่ง `code` = ใช้รหัสที่ระบบเสนอ; ผลลัพธ์มี `warnings` (เช่น `CLIENT_TAX_ID_EXISTS` ตาม BR-CRM-002) |
 | GET | `/clients/{id}/summary` | `client.read` — จำนวนโครงการ งานแล็บ ใบเสนอราคา ล่าสุด |
 | GET / POST / PATCH / DELETE | `/clients/{id}/contacts[/{contactId}]` | `client.read` / `client.manage` |
 | POST | `/contacts/{id}/anonymize` | `user.manage` |
-| GET / POST / PATCH / DELETE | `/clients/{id}/sites[/{siteId}]` | `client.read` / `client.manage` |
+| GET / POST / PATCH / DELETE | `/clients/{id}/sites[/{siteId}]` | `client.read` / `client.manage` — ลบสถานที่ที่มีโครงการ/งานแล็บอ้างถึง → 409 `SITE_IN_USE` |
 | GET / POST / PATCH / DELETE | `/sites/{id}/sampling-points[/{pointId}]` | `client.read` / `client.manage` หรือ `lab.masterdata.manage` (เฟส 3) |
 
 ## 4. หน้าจอ

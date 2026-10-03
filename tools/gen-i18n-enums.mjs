@@ -3,6 +3,7 @@
 //   apps/web/messages/enums.th.json, enums.en.json   → next-intl namespace "enums": enums.<Enum>.<VALUE>
 //   apps/mobile/lib/l10n/enums_th.arb, enums_en.arb  → ARB keys enum<Enum><Value> (camelCase)
 //   apps/web/messages/errors.th.json, errors.en.json → copy of the API error catalog (namespace "errors")
+//   apps/api/src/common/i18n/enum-labels.json         → labels for server-rendered text (enumLabel())
 // Usage: node tools/gen-i18n-enums.mjs [--check]   (--check fails if the generated files are stale)
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -40,6 +41,17 @@ for (const locale of locales) {
     `${JSON.stringify(arb, null, 2)}\n`;
 }
 
+// Enum labels for server-rendered text (emails, PDFs, Excel exports) — apps/api/src/common/i18n/enum-labels.ts
+const apiLabels = {};
+for (const name of Object.keys(enums).sort()) {
+  apiLabels[name] = {};
+  for (const [value, labels] of Object.entries(enums[name])) {
+    apiLabels[name][value] = { th: labels.th ?? value, en: labels.en ?? labels.th ?? value };
+  }
+}
+outputs[join(root, 'apps/api/src/common/i18n/enum-labels.json')] =
+  `${JSON.stringify(apiLabels, null, 2)}\n`;
+
 // API error catalog → web (translate blockedActions codes client-side — docs/04-api-conventions.md §7)
 for (const locale of locales) {
   const catalog = JSON.parse(
@@ -67,5 +79,5 @@ if (check && stale) {
   process.exit(1);
 }
 console.log(
-  `enum labels: ${Object.keys(enums).length} enums → web + mobile${check ? ' (up to date)' : ''}`,
+  `enum labels: ${Object.keys(enums).length} enums → web + mobile + api${check ? ' (up to date)' : ''}`,
 );

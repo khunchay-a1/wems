@@ -25,6 +25,8 @@ import { AuthModule } from './modules/platform/auth/auth.module';
 import { FilesModule } from './modules/platform/files/files.module';
 import { NotificationsModule } from './modules/platform/notifications/notifications.module';
 import { UsersModule } from './modules/platform/users/users.module';
+import { ClientsModule } from './modules/clients/clients.module';
+import { ProjectsModule } from './modules/projects/projects.module';
 
 @Module({
   imports: [
@@ -49,6 +51,8 @@ import { UsersModule } from './modules/platform/users/users.module';
     AdminModule,
     FilesModule,
     NotificationsModule,
+    ClientsModule,
+    ProjectsModule,
   ],
   providers: [
     { provide: APP_FILTER, useClass: ProblemFilter },

@@ -43,6 +43,7 @@ export const ERROR_STATUS = {
   // ── M02 clients ──
   CLIENT_IN_USE: 409,
   CLIENT_INACTIVE: 422,
+  SITE_IN_USE: 409,
   // ── M03 projects ──
   MEMBER_HAS_PENDING_REVIEWS: 409,
   PROJECT_HAS_OPEN_ITEMS: 409,
