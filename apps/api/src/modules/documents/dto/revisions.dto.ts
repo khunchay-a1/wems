@@ -282,6 +282,12 @@ export class RevisionDto {
 export class SignedUrlResultDto {
   @ApiProperty() url!: string;
   @ApiProperty() expiresAt!: string;
+  @ApiPropertyOptional({
+    nullable: true,
+    type: String,
+    description: 'sha256 (hex) of the bytes served at url — offline pins verify it',
+  })
+  sha256?: string | null;
 }
 
 export class LicenseBadgeDto {

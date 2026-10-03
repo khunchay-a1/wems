@@ -60,6 +60,14 @@ export class RevisionStampService {
 
   /** Storage key of the stamped copy of a PDF rendition, or null when the status has no stamp. */
   async stampedKey(rev: DocumentRevision, file: FileObject): Promise<string | null> {
+    return (await this.stamped(rev, file))?.key ?? null;
+  }
+
+  /** Stamped copy with the sha256 of its bytes (offline pins verify it — docs/08-mobile.md §6). */
+  async stamped(
+    rev: DocumentRevision,
+    file: FileObject,
+  ): Promise<{ key: string; sha256: string } | null> {
     const approval = rev.approvedById
       ? await this.prisma.reviewStep.findFirst({
           where: {
@@ -79,11 +87,12 @@ export class RevisionStampService {
     if (!spec) return null;
     const stampHash = sha256Hex(JSON.stringify(spec)).slice(0, 16);
     const key = `stamps/${file.id}/${stampHash}.pdf`;
-    if (!(await this.storage.head(key))) {
-      const original = await this.storage.getBuffer(file.storageKey);
-      const stamped = await this.stamps.stamp(original, spec);
-      await this.storage.put(key, stamped, 'application/pdf', stamped.length);
-    }
-    return key;
+    const cached = await this.storage.head(key);
+    if (cached?.metadata.sha256) return { key, sha256: cached.metadata.sha256 };
+    const original = await this.storage.getBuffer(file.storageKey);
+    const stamped = await this.stamps.stamp(original, spec);
+    const sha256 = sha256Hex(stamped);
+    await this.storage.put(key, stamped, 'application/pdf', stamped.length, { sha256 });
+    return { key, sha256 };
   }
 }

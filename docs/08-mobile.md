@@ -92,7 +92,17 @@ GET /api/v1/sync/pull?scope=project:<uuid>&cursor=<opaque>&limit=500
 - cursor เก่ากว่าที่เก็บ (90 วัน) → 410 `SYNC_CURSOR_EXPIRED` → ลบข้อมูลของ scope แล้ว snapshot ใหม่
 - ไม่มีสิทธิ์ scope แล้ว → 403 `SYNC_SCOPE_FORBIDDEN` → ลบข้อมูลของ scope
 
-Entity ที่ sync ในเฟส 1: `Project`, `ProjectMember`, `Document`, `DocumentRevision`, `DocumentFile` (เฉพาะ metadata ของไฟล์ current), `ReviewStep` (ของฉัน, scope user), `Notification` (30 วันล่าสุด), `Discipline`, `DocumentType`
+Entity ที่ sync ในเฟส 1 (payload = `*SyncDto` ใน OpenAPI):
+
+| scope | entityType (ลำดับใน snapshot) | หมายเหตุ |
+|---|---|---|
+| `global` | `Discipline`, `DocumentType` (`MasterItemSyncDto`) | รวมรายการที่ปิดใช้ (`isActive=false`) |
+| `user:<me>` | `ReviewStep` (`MyReviewStepDto`) | เฉพาะขั้นที่ `ACTIVE` ในรอบ `IN_PROGRESS`; ตัดสินแล้ว/ถูกมอบให้คนอื่น/ยกเลิกรอบ → `DELETE` |
+| `project:<id>` | `Project`, `ProjectMember` (`id` = userId), `Document`, `DocumentRevision` | `DocumentFile` ไม่แยกเป็น entity — ฝังเป็น `files[]` (เฉพาะไฟล์ current) ใน `DocumentRevisionSyncDto`; ไม่มี `document.read` = ไม่ส่งเอกสาร |
+
+- `Notification` ไม่ sync ผ่าน change log — แอปอ่าน `GET /notifications` ตอนออนไลน์และ cache หน้าแรกไว้ใน drift (เปลี่ยนจากร่างเดิม: แจ้งเตือนสร้างโดย worker นอก transaction ของข้อมูล จึงไม่มี change log ที่เชื่อถือได้)
+- cursor มีเวลาออกฝังอยู่: ไม่ได้ pull นานกว่า 90 วัน (ระยะเก็บ change log ของงาน cleanup) → 410; cursor ที่ไม่ได้ออกโดย server → 400 `VALIDATION_FAILED`
+- `limit` ค่าเริ่มต้น 500 สูงสุด 1000; snapshot เสร็จแล้ว `hasMore` = มี change log ใหม่หลังจุดเริ่ม snapshot หรือไม่
 
 ### 5.2 Push (เครื่อง → server) — outbox
 
@@ -129,7 +139,7 @@ Trigger sync: เปิดแอป, กลับมาออนไลน์, �
 
 ## 6. เอกสารออฟไลน์ (เฟส 1)
 
-- ปุ่ม "ปักหมุดไว้ใช้ออฟไลน์" ที่เอกสาร → ดาวน์โหลด PDF ฉบับใช้งาน (`latestApprovedRevisionId`, ประทับตราจาก server) → ตรวจ sha256 → เก็บพร้อม metadata
+- ปุ่ม "ปักหมุดไว้ใช้ออฟไลน์" ที่เอกสาร → ดาวน์โหลด PDF ฉบับใช้งาน (`latestApprovedRevisionId`, ประทับตราจาก server) → ตรวจ sha256 กับค่า `sha256` ใน `GET /revisions/{id}/download` (hash ของไฟล์ที่ประทับตราแล้วที่ URL นั้นให้มา) → เก็บพร้อม metadata
 - sync พบ `latestApprovedRevisionId` เปลี่ยน → ไฟล์เดิมถูกทำเครื่องหมาย "ฉบับเก่า" (แถบแดงบนหน้าจอ PDF ทุกหน้า) + push `revision.superseded` → ดาวน์โหลดฉบับใหม่อัตโนมัติเมื่อใช้ Wi-Fi (ตั้งค่าได้) แล้วลบฉบับเก่า
 - เปิด PDF ที่ไม่ได้ปักหมุดขณะออนไลน์ = cache ชั่วคราว (LRU, รวมไม่เกินที่ตั้งไว้ ค่าเริ่มต้น 2 GB)
 - หน้า "พื้นที่เก็บข้อมูล" แสดงเอกสารที่ปักหมุด ขนาด และปุ่มลบ

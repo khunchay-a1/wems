@@ -2338,6 +2338,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/sync/pull": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Mobile pull sync: snapshot then change log per scope (410 SYNC_CURSOR_EXPIRED, 403 SYNC_SCOPE_FORBIDDEN) */
+        get: operations["Sync_pullChanges"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -3920,6 +3937,8 @@ export interface components {
         SignedUrlResultDto: {
             url: string;
             expiresAt: string;
+            /** @description sha256 (hex) of the bytes served at url — offline pins verify it */
+            sha256?: string | null;
         };
         LicenseBadgeDto: {
             /** Format: uuid */
@@ -4652,6 +4671,117 @@ export interface components {
             /** @description Planned vs actual deliveries per month */
             monthly: components["schemas"]["MonthlyPlanDto"][];
         };
+        ProjectSyncDto: {
+            /** Format: uuid */
+            id: string;
+            code: string;
+            name: string;
+            nameEn: string | null;
+            type: components["schemas"]["ProjectType"];
+            status: components["schemas"]["ProjectStatus"];
+            clientName: string;
+            siteName: string | null;
+            /** Format: uuid */
+            projectManagerId: string | null;
+            /** Format: date */
+            plannedEndDate: string | null;
+            updatedAt: string;
+            version: number;
+        };
+        ProjectMemberSyncDto: {
+            /** Format: uuid */
+            projectId: string;
+            /** Format: uuid */
+            userId: string;
+            role: components["schemas"]["ProjectRole"];
+            displayName: string;
+        };
+        DocumentSyncDto: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            projectId: string;
+            number: string;
+            title: string;
+            titleEn: string | null;
+            /** Format: uuid */
+            disciplineId: string;
+            /** Format: uuid */
+            documentTypeId: string;
+            status: components["schemas"]["DocumentStatus"];
+            confidentiality: components["schemas"]["Confidentiality"];
+            ownerName: string | null;
+            /** Format: uuid */
+            currentRevisionId: string | null;
+            /** Format: uuid */
+            latestApprovedRevisionId: string | null;
+            /** Format: uuid */
+            supersededByDocumentId: string | null;
+            tags: string[];
+            updatedAt: string;
+            version: number;
+        };
+        DocumentFileSyncDto: {
+            /** Format: uuid */
+            id: string;
+            role: components["schemas"]["DocumentFileRole"];
+            /** Format: uuid */
+            fileId: string;
+            originalName: string;
+            mimeType: string;
+            sizeBytes: number;
+            pageCount: number | null;
+        };
+        DocumentRevisionSyncDto: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            documentId: string;
+            revLabel: string;
+            revIndex: number;
+            purposeCode: components["schemas"]["PurposeCode"];
+            status: components["schemas"]["RevisionStatus"];
+            description: string | null;
+            preparedByName: string;
+            approvedByName: string | null;
+            approvedAt: string | null;
+            issuedAt: string | null;
+            lastCycleOutcome: components["schemas"]["ReviewCycleStatus"] | null;
+            clientReturnCode: components["schemas"]["ClientReturnCode"] | null;
+            /** @description Current files only */
+            files: components["schemas"]["DocumentFileSyncDto"][];
+            updatedAt: string;
+            version: number;
+        };
+        MasterItemSyncDto: {
+            /** Format: uuid */
+            id: string;
+            code: string;
+            nameTh: string;
+            nameEn: string;
+            sortOrder: number;
+            isActive: boolean;
+        };
+        /** @enum {string} */
+        ChangeOp: "UPSERT" | "DELETE";
+        SyncChangeDto: {
+            /** @description Project · ProjectMember · Document · DocumentRevision · ReviewStep · Discipline · DocumentType */
+            entityType: string;
+            op: components["schemas"]["ChangeOp"];
+            /** @description Entity id (ProjectMember: the member user id) */
+            id: string;
+            /** @description The matching *SyncDto when op = UPSERT */
+            data?: {
+                [key: string]: unknown;
+            };
+        };
+        SyncPullDto: {
+            scope: string;
+            changes: components["schemas"]["SyncChangeDto"][];
+            nextCursor: string;
+            hasMore: boolean;
+            serverTime: string;
+        };
     };
     responses: never;
     parameters: never;
@@ -4875,6 +5005,15 @@ export type SchemaSearchClientDto = components['schemas']['SearchClientDto'];
 export type SchemaSearchResultDto = components['schemas']['SearchResultDto'];
 export type SchemaMonthlyPlanDto = components['schemas']['MonthlyPlanDto'];
 export type SchemaDocumentStatsDto = components['schemas']['DocumentStatsDto'];
+export type SchemaProjectSyncDto = components['schemas']['ProjectSyncDto'];
+export type SchemaProjectMemberSyncDto = components['schemas']['ProjectMemberSyncDto'];
+export type SchemaDocumentSyncDto = components['schemas']['DocumentSyncDto'];
+export type SchemaDocumentFileSyncDto = components['schemas']['DocumentFileSyncDto'];
+export type SchemaDocumentRevisionSyncDto = components['schemas']['DocumentRevisionSyncDto'];
+export type SchemaMasterItemSyncDto = components['schemas']['MasterItemSyncDto'];
+export type SchemaChangeOp = components['schemas']['ChangeOp'];
+export type SchemaSyncChangeDto = components['schemas']['SyncChangeDto'];
+export type SchemaSyncPullDto = components['schemas']['SyncPullDto'];
 export type $defs = Record<string, never>;
 export interface operations {
     Health_getLive: {
@@ -8930,6 +9069,31 @@ export interface operations {
             };
         };
     };
+    Sync_pullChanges: {
+        parameters: {
+            query: {
+                /** @description `global` · `user:<my id>` · `project:<id>` */
+                scope: string;
+                /** @description Opaque; omit for a snapshot */
+                cursor?: string;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SyncPullDto"];
+                };
+            };
+        };
+    };
 }
 type FlattenedDeepRequired<T> = {
     [K in keyof T]-?: FlattenedDeepRequired<T[K] extends unknown[] | undefined | null ? Extract<T[K], unknown[]>[number] : T[K]>;
@@ -8988,3 +9152,4 @@ export const transmittalFormatValues: ReadonlyArray<FlattenedDeepRequired<compon
 export const designBasisStatusValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["DesignBasisStatus"]> = ["DRAFT", "APPROVED", "SUPERSEDED"];
 export const designValueSourceValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["DesignValueSource"]> = ["ASSUMED", "MEASURED", "CLIENT_PROVIDED", "STANDARD", "CALCULATED"];
 export const limitComparatorValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["LimitComparator"]> = ["MAX", "MIN", "RANGE", "NOT_DETECTED", "MAX_INCREASE_OVER_BASELINE", "INFO"];
+export const changeOpValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["ChangeOp"]> = ["UPSERT", "DELETE"];

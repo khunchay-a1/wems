@@ -694,13 +694,20 @@ export class RevisionsService {
         }),
       );
     }
-    if (df.role !== 'PDF_RENDITION' || !stamp) return this.files.signedDownload(df.file);
-    const key = await this.revStamps.stampedKey(ctx.rev, df.file);
-    if (!key) return this.files.signedDownload(df.file);
-    return this.files.signedDownload(
-      { ...df.file, storageKey: key, mimeType: 'application/pdf' },
-      `${baseName}.pdf`,
-    );
+    const original = async () => ({
+      ...(await this.files.signedDownload(df.file)),
+      sha256: df.file.sha256,
+    });
+    if (df.role !== 'PDF_RENDITION' || !stamp) return original();
+    const stamped = await this.revStamps.stamped(ctx.rev, df.file);
+    if (!stamped) return original();
+    return {
+      ...(await this.files.signedDownload(
+        { ...df.file, storageKey: stamped.key, mimeType: 'application/pdf' },
+        `${baseName}.pdf`,
+      )),
+      sha256: stamped.sha256,
+    };
   }
 }
 

@@ -6783,6 +6783,59 @@
           "Workspace"
         ]
       }
+    },
+    "/api/v1/sync/pull": {
+      "get": {
+        "operationId": "Sync_pullChanges",
+        "parameters": [
+          {
+            "name": "scope",
+            "required": true,
+            "in": "query",
+            "description": "`global` · `user:<my id>` · `project:<id>`",
+            "schema": {
+              "example": "global",
+              "type": "string"
+            }
+          },
+          {
+            "name": "cursor",
+            "required": false,
+            "in": "query",
+            "description": "Opaque; omit for a snapshot",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 500,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SyncPullDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Mobile pull sync: snapshot then change log per scope (410 SYNC_CURSOR_EXPIRED, 403 SYNC_SCOPE_FORBIDDEN)",
+        "tags": [
+          "Sync"
+        ]
+      }
     }
   },
   "info": {
@@ -12625,6 +12678,11 @@
           },
           "expiresAt": {
             "type": "string"
+          },
+          "sha256": {
+            "type": "string",
+            "nullable": true,
+            "description": "sha256 (hex) of the bytes served at url — offline pins verify it"
           }
         },
         "required": [
@@ -15491,6 +15549,439 @@
           "openComments",
           "needsNewRevision",
           "monthly"
+        ]
+      },
+      "ProjectSyncDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "code": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "nameEn": {
+            "type": "string",
+            "nullable": true
+          },
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ProjectType"
+              }
+            ]
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ProjectStatus"
+              }
+            ]
+          },
+          "clientName": {
+            "type": "string"
+          },
+          "siteName": {
+            "type": "string",
+            "nullable": true
+          },
+          "projectManagerId": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid"
+          },
+          "plannedEndDate": {
+            "type": "string",
+            "nullable": true,
+            "format": "date"
+          },
+          "updatedAt": {
+            "type": "string"
+          },
+          "version": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "code",
+          "name",
+          "nameEn",
+          "type",
+          "status",
+          "clientName",
+          "siteName",
+          "projectManagerId",
+          "plannedEndDate",
+          "updatedAt",
+          "version"
+        ]
+      },
+      "ProjectMemberSyncDto": {
+        "type": "object",
+        "properties": {
+          "projectId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "role": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ProjectRole"
+              }
+            ]
+          },
+          "displayName": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "projectId",
+          "userId",
+          "role",
+          "displayName"
+        ]
+      },
+      "DocumentSyncDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "number": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "titleEn": {
+            "type": "string",
+            "nullable": true
+          },
+          "disciplineId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "documentTypeId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DocumentStatus"
+              }
+            ]
+          },
+          "confidentiality": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Confidentiality"
+              }
+            ]
+          },
+          "ownerName": {
+            "type": "string",
+            "nullable": true
+          },
+          "currentRevisionId": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid"
+          },
+          "latestApprovedRevisionId": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid"
+          },
+          "supersededByDocumentId": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "updatedAt": {
+            "type": "string"
+          },
+          "version": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "projectId",
+          "number",
+          "title",
+          "titleEn",
+          "disciplineId",
+          "documentTypeId",
+          "status",
+          "confidentiality",
+          "ownerName",
+          "currentRevisionId",
+          "latestApprovedRevisionId",
+          "supersededByDocumentId",
+          "tags",
+          "updatedAt",
+          "version"
+        ]
+      },
+      "DocumentFileSyncDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "role": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DocumentFileRole"
+              }
+            ]
+          },
+          "fileId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "originalName": {
+            "type": "string"
+          },
+          "mimeType": {
+            "type": "string"
+          },
+          "sizeBytes": {
+            "type": "number"
+          },
+          "pageCount": {
+            "type": "number",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "role",
+          "fileId",
+          "originalName",
+          "mimeType",
+          "sizeBytes",
+          "pageCount"
+        ]
+      },
+      "DocumentRevisionSyncDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "documentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "revLabel": {
+            "type": "string"
+          },
+          "revIndex": {
+            "type": "number"
+          },
+          "purposeCode": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PurposeCode"
+              }
+            ]
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RevisionStatus"
+              }
+            ]
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "preparedByName": {
+            "type": "string"
+          },
+          "approvedByName": {
+            "type": "string",
+            "nullable": true
+          },
+          "approvedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "issuedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastCycleOutcome": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ReviewCycleStatus"
+              }
+            ]
+          },
+          "clientReturnCode": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ClientReturnCode"
+              }
+            ]
+          },
+          "files": {
+            "description": "Current files only",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DocumentFileSyncDto"
+            }
+          },
+          "updatedAt": {
+            "type": "string"
+          },
+          "version": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "documentId",
+          "revLabel",
+          "revIndex",
+          "purposeCode",
+          "status",
+          "description",
+          "preparedByName",
+          "approvedByName",
+          "approvedAt",
+          "issuedAt",
+          "lastCycleOutcome",
+          "clientReturnCode",
+          "files",
+          "updatedAt",
+          "version"
+        ]
+      },
+      "MasterItemSyncDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "code": {
+            "type": "string"
+          },
+          "nameTh": {
+            "type": "string"
+          },
+          "nameEn": {
+            "type": "string"
+          },
+          "sortOrder": {
+            "type": "number"
+          },
+          "isActive": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "code",
+          "nameTh",
+          "nameEn",
+          "sortOrder",
+          "isActive"
+        ]
+      },
+      "ChangeOp": {
+        "type": "string",
+        "enum": [
+          "UPSERT",
+          "DELETE"
+        ]
+      },
+      "SyncChangeDto": {
+        "type": "object",
+        "properties": {
+          "entityType": {
+            "type": "string",
+            "description": "Project · ProjectMember · Document · DocumentRevision · ReviewStep · Discipline · DocumentType"
+          },
+          "op": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ChangeOp"
+              }
+            ]
+          },
+          "id": {
+            "type": "string",
+            "description": "Entity id (ProjectMember: the member user id)"
+          },
+          "data": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "The matching *SyncDto when op = UPSERT"
+          }
+        },
+        "required": [
+          "entityType",
+          "op",
+          "id"
+        ]
+      },
+      "SyncPullDto": {
+        "type": "object",
+        "properties": {
+          "scope": {
+            "type": "string"
+          },
+          "changes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SyncChangeDto"
+            }
+          },
+          "nextCursor": {
+            "type": "string"
+          },
+          "hasMore": {
+            "type": "boolean"
+          },
+          "serverTime": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "scope",
+          "changes",
+          "nextCursor",
+          "hasMore",
+          "serverTime"
         ]
       }
     }

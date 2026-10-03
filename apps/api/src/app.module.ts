@@ -28,6 +28,7 @@ import { UsersModule } from './modules/platform/users/users.module';
 import { ClientsModule } from './modules/clients/clients.module';
 import { ProjectsModule } from './modules/projects/projects.module';
 import { DocumentsModule } from './modules/documents/documents.module';
+import { SyncModule } from './modules/sync/sync.module';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { DocumentsModule } from './modules/documents/documents.module';
     ClientsModule,
     ProjectsModule,
     DocumentsModule,
+    SyncModule,
   ],
   providers: [
     { provide: APP_FILTER, useClass: ProblemFilter },

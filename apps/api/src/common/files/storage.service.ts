@@ -105,10 +105,16 @@ export class StorageService implements OnModuleInit {
     );
   }
 
-  async head(key: string): Promise<{ size: number; contentType?: string } | null> {
+  async head(
+    key: string,
+  ): Promise<{ size: number; contentType?: string; metadata: Record<string, string> } | null> {
     try {
       const res = await this.client.send(new HeadObjectCommand({ Bucket: this.bucket, Key: key }));
-      return { size: Number(res.ContentLength ?? 0), contentType: res.ContentType };
+      return {
+        size: Number(res.ContentLength ?? 0),
+        contentType: res.ContentType,
+        metadata: res.Metadata ?? {},
+      };
     } catch {
       return null;
     }
@@ -131,6 +137,7 @@ export class StorageService implements OnModuleInit {
     body: Buffer | Readable,
     contentType: string,
     contentLength?: number,
+    metadata?: Record<string, string>,
   ): Promise<void> {
     await this.client.send(
       new PutObjectCommand({
@@ -139,6 +146,7 @@ export class StorageService implements OnModuleInit {
         Body: body,
         ContentType: contentType,
         ContentLength: contentLength,
+        Metadata: metadata,
       }),
     );
   }
