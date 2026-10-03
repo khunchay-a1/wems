@@ -25,10 +25,10 @@ echo === exit %ERRORLEVEL% >> %LOG%
 echo === flutter test >> %LOG%
 call flutter test >> %LOG% 2>&1
 echo === exit %ERRORLEVEL% >> %LOG%
-if /i "%1"=="apk" (
-  echo === flutter build apk >> %LOG%
-  call flutter build apk --debug --flavor dev -t lib/main_dev.dart --dart-define-from-file=env/dev.json >> %LOG% 2>&1
-  echo === exit %ERRORLEVEL% >> %LOG%
-)
+if /i not "%1"=="apk" goto done
+echo === flutter build apk >> %LOG%
+call flutter build apk --debug --flavor dev -t lib/main_dev.dart --dart-define-from-file=env/dev.json >> %LOG% 2>&1
+echo === exit %ERRORLEVEL% >> %LOG%
+:done
 echo === DONE >> %LOG%
 endlocal

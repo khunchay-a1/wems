@@ -1,6 +1,5 @@
 plugins {
     id("com.android.application")
-    id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
 }
@@ -15,10 +14,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
-    }
-
     defaultConfig {
         applicationId = "th.co.wems.mobile"
         // Android 8+: adaptive launcher icon only, biometric prompt, background work
@@ -26,6 +21,11 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+    }
+
+    // AGP 9 turns resValue() off by default; flavors use it for the app name
+    buildFeatures {
+        resValues = true
     }
 
     // docs/08-mobile.md §10: dev / staging / prod with different application ids and names;
@@ -58,6 +58,12 @@ android {
             // Release signing is configured on the build machine (key.properties is not in the repo).
             signingConfig = signingConfigs.getByName("debug")
         }
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
     }
 }
 

@@ -34,7 +34,8 @@ flutter run --flavor dev -t lib/main_dev.dart --dart-define-from-file=env/dev.js
 
 On Windows `tool\check.bat` runs the same steps as CI and writes `build\check.log`
 (`tool\check.bat apk` also builds the debug APK). Verified 2026-10-04 with Flutter 3.47.6 /
-Dart 3.13.5: analyze clean, 31 tests pass.
+Dart 3.13.5: analyze clean, 31 tests pass, `app-dev-debug.apk` builds (AGP 9.1, Gradle 9.3.1,
+Kotlin 2.4, JDK 17).
 
 ## Push notifications
 
@@ -55,6 +56,8 @@ both are git-ignored). To enable on Android add the `com.google.gms.google-servi
 
 ## Status
 
-Written without a Flutter SDK in the authoring environment: the first CI run of the `mobile` job
-(`flutter analyze`, `flutter test`, debug APK) is the first compile. Fix whatever it reports
-before the pilot.
+Compiles and passes analyze/tests on Flutter 3.47.6; the debug APK (`dev` flavor) builds. Not yet
+exercised on a device against a running API — do that in UAT (`docs/runbooks/uat-pilot.md`).
+`firebase_core` and `workmanager_android` still apply the Kotlin Gradle plugin themselves
+(`android.builtInKotlin=false` in `gradle.properties`); drop that flag once both migrate to
+Built-in Kotlin.
