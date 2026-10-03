@@ -1,0 +1,7 @@
+targets:
+  $default:
+    builders:
+      drift_dev:
+        options:
+          # ISO-8601 text keeps milliseconds and sorts correctly
+          store_date_time_values_as_text: true

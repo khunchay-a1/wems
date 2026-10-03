@@ -1,5 +1,244 @@
 {
   "@@locale": "th",
+  "appTitle": "WEMS",
+  "navHome": "หน้าแรก",
+  "navProjects": "โครงการ",
+  "navReviews": "งานตรวจ",
+  "navNotifications": "แจ้งเตือน",
+  "navSettings": "ตั้งค่า",
+  "commonRetry": "ลองใหม่",
+  "commonCancel": "ยกเลิก",
+  "commonClose": "ปิด",
+  "commonSave": "บันทึก",
+  "commonAll": "ทั้งหมด",
+  "commonUnexpected": "เกิดข้อผิดพลาด กรุณาลองใหม่",
+  "commonOffline": "ออฟไลน์ — แสดงข้อมูลในเครื่อง",
+  "commonNeedsOnline": "ต้องเชื่อมต่ออินเทอร์เน็ต",
+  "commonOpen": "เปิด",
+  "loginTitle": "เข้าสู่ระบบ",
+  "loginEmail": "อีเมล",
+  "loginPassword": "รหัสผ่าน",
+  "loginSubmit": "เข้าสู่ระบบ",
+  "loginMfaTitle": "ยืนยันตัวตนสองขั้นตอน",
+  "loginMfaHint": "ใส่รหัส 6 หลักจากแอปยืนยันตัวตน",
+  "loginMfaCode": "รหัสยืนยัน",
+  "loginMfaSubmit": "ยืนยัน",
+  "loginBack": "กลับ",
+  "loginRevoked": "เซสชันถูกยกเลิกหรือหมดอายุ กรุณาเข้าสู่ระบบใหม่",
+  "loginCompleteOnWeb": "บัญชีนี้ต้องเปลี่ยนรหัสผ่านหรือตั้งค่ายืนยันตัวตนบนเว็บก่อน แล้วจึงเข้าสู่ระบบบนมือถือ",
+  "homeGreeting": "สวัสดี {name}",
+  "@homeGreeting": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "homePendingReviews": "งานตรวจที่รอคุณ",
+  "homeNoReviews": "ไม่มีงานตรวจค้าง",
+  "homeSeeAll": "ดูทั้งหมด",
+  "homePinned": "เอกสารที่ปักหมุด",
+  "homeNoPinned": "ยังไม่มีเอกสารที่ปักหมุด — เปิดเอกสารแล้วกด \"ปักหมุดไว้ใช้ออฟไลน์\"",
+  "homeLatestNotifications": "แจ้งเตือนล่าสุด",
+  "homeSync": "สถานะการซิงก์",
+  "homeLastSynced": "ซิงก์ล่าสุด {time}",
+  "@homeLastSynced": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "homeNeverSynced": "ยังไม่เคยซิงก์",
+  "homeSyncing": "กำลังซิงก์…",
+  "homeOutboxPending": "รอส่ง {count} รายการ",
+  "@homeOutboxPending": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "homeOutboxAttention": "ส่งไม่สำเร็จ {count} รายการ",
+  "@homeOutboxAttention": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "homeSyncNow": "ซิงก์ตอนนี้",
+  "homeClockSkew": "เวลาในเครื่องต่างจากเซิร์ฟเวอร์เกิน 10 นาที กรุณาตั้งเวลาอัตโนมัติ",
+  "projectsTitle": "โครงการ",
+  "projectsFollowHint": "เปิดสวิตช์เพื่อซิงก์ทะเบียนเอกสารของโครงการลงเครื่อง",
+  "projectsEmpty": "คุณยังไม่ได้เป็นสมาชิกโครงการใด",
+  "projectsOpenRegister": "ทะเบียนเอกสาร",
+  "projectsNotSynced": "ยังไม่ซิงก์",
+  "registerTitle": "ทะเบียนเอกสาร",
+  "registerSearch": "ค้นหาเลขที่หรือชื่อเอกสาร",
+  "registerDiscipline": "สาขา",
+  "registerType": "ประเภท",
+  "registerStatus": "สถานะ",
+  "registerEmpty": "ไม่พบเอกสาร",
+  "registerNotSynced": "ยังไม่มีข้อมูลในเครื่อง — ติดตามโครงการแล้วดึงลงเพื่อซิงก์",
+  "docWorkingRevision": "ฉบับใช้งาน",
+  "docRevisions": "Revision ทั้งหมด",
+  "docNoWorking": "ยังไม่มีฉบับที่อนุมัติ",
+  "docOpenPdf": "เปิด PDF",
+  "docPin": "ปักหมุดไว้ใช้ออฟไลน์",
+  "docUnpin": "เลิกปักหมุด",
+  "docPinned": "ปักหมุดแล้ว — เปิดได้แม้ออฟไลน์",
+  "docPinVerifyFailed": "ไฟล์ที่ดาวน์โหลดไม่ตรงกับค่าตรวจสอบ (sha256) กรุณาลองใหม่",
+  "docNoPdf": "Revision นี้ไม่มีไฟล์ PDF",
+  "docPreparedBy": "จัดทำโดย {name}",
+  "@docPreparedBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "docApprovedOn": "อนุมัติ {date}",
+  "@docApprovedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "docNotFound": "ไม่พบเอกสารในเครื่อง",
+  "bannerWorking": "ฉบับใช้งาน Rev.{rev}",
+  "@bannerWorking": {
+    "placeholders": {
+      "rev": {
+        "type": "String"
+      }
+    }
+  },
+  "bannerNotApproved": "Rev.{rev} ยังไม่อนุมัติ — ห้ามใช้ก่อสร้าง",
+  "@bannerNotApproved": {
+    "placeholders": {
+      "rev": {
+        "type": "String"
+      }
+    }
+  },
+  "bannerOld": "ฉบับเก่า Rev.{rev} — ห้ามใช้ มีฉบับใหม่แล้ว",
+  "@bannerOld": {
+    "placeholders": {
+      "rev": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfPage": "หน้า {page}",
+  "@pdfPage": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      }
+    }
+  },
+  "pdfOpenFailed": "เปิดไฟล์ไม่ได้ — ไฟล์ที่ไม่ได้ปักหมุดต้องเปิดขณะออนไลน์",
+  "reviewsTitle": "งานตรวจของฉัน",
+  "reviewsEmpty": "ไม่มีงานตรวจที่รอคุณ",
+  "reviewsDue": "ครบกำหนด {date}",
+  "@reviewsDue": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewsOverdue": "เลยกำหนด",
+  "reviewsSubmittedBy": "ส่งโดย {name}",
+  "@reviewsSubmittedBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewNeedsOnline": "การตรวจและตัดสินต้องออนไลน์",
+  "reviewNotFound": "งานตรวจนี้ปิดไปแล้วหรือถูกมอบให้ผู้อื่น",
+  "reviewComments": "ความเห็น",
+  "reviewNoComments": "ยังไม่มีความเห็น",
+  "reviewAddHint": "แตะค้างบน PDF เพื่อปักหมุดความเห็น",
+  "reviewCommentBody": "ความเห็น",
+  "reviewAddComment": "เพิ่มความเห็น",
+  "reviewCommentOnPage": "หน้า {page}",
+  "@reviewCommentOnPage": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewDecide": "ตัดสินผลการตรวจ",
+  "reviewDecisionTitle": "ผลการตรวจ",
+  "reviewNote": "หมายเหตุ",
+  "reviewSubmit": "ส่งผลการตรวจ",
+  "reviewDecided": "บันทึกผลการตรวจแล้ว",
+  "reviewNotAllowed": "ขั้นนี้ตัดสินไม่ได้แล้ว",
+  "reviewConflict": "ข้อมูลถูกแก้โดยผู้อื่น โหลดใหม่แล้ว กรุณาตรวจอีกครั้ง",
+  "signatureTitle": "ลงนามอิเล็กทรอนิกส์",
+  "signatureIntro": "ขั้นนี้ต้องลงนาม ยืนยันตัวตนเพื่อบันทึกลายมือชื่ออิเล็กทรอนิกส์พร้อมค่า hash ของไฟล์",
+  "signaturePin": "PIN ลงนาม",
+  "signaturePassword": "รหัสผ่าน",
+  "signatureConfirm": "ลงนามและส่ง",
+  "notificationsTitle": "การแจ้งเตือน",
+  "notificationsEmpty": "ไม่มีการแจ้งเตือน",
+  "settingsTitle": "ตั้งค่า",
+  "settingsLanguage": "ภาษา",
+  "settingsLanguageTh": "ไทย",
+  "settingsLanguageEn": "English",
+  "settingsCalendar": "ปฏิทิน",
+  "settingsBuddhist": "พุทธศักราช (พ.ศ.)",
+  "settingsGregorian": "คริสต์ศักราช (ค.ศ.)",
+  "settingsWifiOnly": "ดาวน์โหลดฉบับใหม่ของเอกสารที่ปักหมุดเฉพาะ Wi-Fi",
+  "settingsCacheSize": "ขนาด cache PDF",
+  "settingsAppLock": "ล็อกแอปด้วยไบโอเมตริกซ์เมื่อกลับมาหลัง 5 นาที",
+  "settingsSigningPin": "PIN ลงนาม",
+  "settingsPinSet": "ตั้งแล้ว",
+  "settingsPinNotSet": "ยังไม่ตั้ง — ตั้งได้ที่หน้าโปรไฟล์บนเว็บ",
+  "settingsStorage": "พื้นที่เก็บข้อมูล",
+  "settingsVersion": "เวอร์ชันแอป",
+  "settingsLogout": "ออกจากระบบ",
+  "logoutPendingTitle": "มีข้อมูลยังไม่ส่ง",
+  "logoutPendingBody": "มีข้อมูลยังไม่ส่ง {count} รายการ ถ้าออกจากระบบตอนนี้ข้อมูลเหล่านี้จะหายไป",
+  "@logoutPendingBody": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "logoutSyncFirst": "ซิงก์ก่อน",
+  "logoutAnyway": "ออกจากระบบเลย",
+  "storageTitle": "พื้นที่เก็บข้อมูล",
+  "storageEmpty": "ยังไม่มีเอกสารที่ปักหมุด",
+  "storageCache": "cache ชั่วคราว {size}",
+  "@storageCache": {
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "storageClearCache": "ล้าง cache",
+  "storageOld": "ฉบับเก่า",
+  "updateTitle": "ต้องอัปเดตแอป",
+  "updateBody": "แอปเวอร์ชันนี้เลิกรองรับแล้ว กรุณาอัปเดตเป็นเวอร์ชัน {version} ขึ้นไป",
+  "@updateBody": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "lockTitle": "แอปถูกล็อก",
+  "lockReason": "ยืนยันตัวตนเพื่อเปิด WEMS",
+  "lockUnlock": "ปลดล็อก",
   "enumActorTypeUser": "ผู้ใช้",
   "enumActorTypeSystem": "ระบบ",
   "enumActorTypePublicLink": "ลิงก์สาธารณะ",

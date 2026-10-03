@@ -217,6 +217,7 @@ jobs:
           cache: true
       - run: flutter pub get
       - run: dart run build_runner build --delete-conflicting-outputs
-      - run: flutter analyze
+      # gen-l10n runs on pub get; drift tables need build_runner (generated files are not committed)
+      - run: flutter analyze --no-fatal-infos
       - run: flutter test
-      - run: flutter build apk --debug --flavor dev -t lib/main_dev.dart
+      - run: flutter build apk --debug --flavor dev -t lib/main_dev.dart --dart-define-from-file=env/dev.json

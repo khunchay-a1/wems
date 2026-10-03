@@ -1,0 +1,17 @@
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    - "**/*.g.dart"
+    - lib/l10n/gen/**
+    - lib/core/api/generated/**
+
+linter:
+  rules:
+    prefer_single_quotes: true
+    avoid_print: true
+    always_declare_return_types: true
+    # CI runs `flutter analyze` with fatal infos; const-ness is style, not correctness
+    prefer_const_constructors: false
+    prefer_const_literals_to_create_immutables: false
+    prefer_const_declarations: false

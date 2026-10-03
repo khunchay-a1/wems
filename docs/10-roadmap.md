@@ -41,8 +41,9 @@
 - [x] **P0-12 OpenAPI pipeline** — `pnpm api:contract` สร้าง `openapi.json` + TS types, ตรวจรูปแบบ `operationId`, CI ตรวจว่าถูก commit · ADR-0002
 - [x] **P0-13 Web skeleton** — Next.js + Tailwind + shadcn/ui + next-intl (+ ป้าย enum) + TanStack Query + openapi-fetch (CSRF) + `proxy.ts`; layout; login/MFA; โปรไฟล์ (รหัสผ่าน, PIN, MFA); แจ้งเตือน + กระดิ่ง SSE; หน้าผู้ดูแลระบบของ M01; component กลางใน `07-web-ui.md` §3 (`PdfViewer`/`SignatureDialog` มาพร้อมหน้าตรวจเอกสารใน P1-08)
   - รับงาน: Playwright: login → admin สร้างผู้ใช้ → ผู้ใช้ใหม่ login และเปลี่ยนรหัสผ่าน
-- [ ] **P0-14 Mobile skeleton** — flavors, router, theme, l10n (+ ป้าย enum), API client ที่ generate, auth (secure storage, refresh single-flight), drift + migrations, sync engine (pull scope `global`/`user`, outbox processor), FCM, ตรวจเวอร์ชัน, หน้าตั้งค่า · `08-mobile.md`
+- [x] **P0-14 Mobile skeleton** — flavors, router, theme, l10n (+ ป้าย enum), API client ที่ generate, auth (secure storage, refresh single-flight), drift + migrations, sync engine (pull scope `global`/`user`, outbox processor), FCM, ตรวจเวอร์ชัน, หน้าตั้งค่า · `08-mobile.md`
   - รับงาน: unit test outbox/pull ครบตาม `08-mobile.md` §11; login กับ API dev ได้
+  - หมายเหตุ: เขียนโดยไม่มี Flutter SDK ในสภาพแวดล้อมที่พัฒนา — การ compile/test ครั้งแรกคือ CI job `mobile`; API client เฟส 1 เขียนมือ (`apps/mobile/README.md`); API เพิ่ม `GET /sync/pull`
 - [x] **P0-15 CI** — GitHub Actions ตาม `02-architecture.md` §9 พร้อม cache
 - [x] **P0-16 Tools** — `tools/check-enum-labels.mjs` (มีแล้ว — ต่อเข้า CI), `tools/gen-i18n-enums.mjs` สร้างไฟล์แปลของ web และ ARB ของมือถือ
 
@@ -60,7 +61,7 @@
 - [x] **P1-10 ใบนำส่ง** — API ครบ (ร่าง รายการ ส่ง ใบนำส่ง PDF อีเมลแนบ/ลิงก์ ZIP ลิงก์สาธารณะ รับเอกสาร ผลตอบกลับ เพิกถอน/ขยาย/ส่งซ้ำ), หน้า `/t/[token]`, หน้าจอเว็บ · M04 §3.5, §7 — รับงาน: AT-DOC-10..12
 - [x] **P1-11 Design basis** — API + หน้าจอ + อนุมัติลงนาม · M04 §3.7, `07-web-ui.md` §6.7
 - [x] **P1-12 งานของฉัน ค้นหา และรายงาน** — `/` งานของฉัน, `/reviews`, `/search`, ภาพรวมโครงการ, รายงาน MDL · M04 §9, `07-web-ui.md` §6.1
-- [ ] **P1-13 มือถือ MVP** — ติดตามโครงการ, ทะเบียน/รายละเอียด (sync scope project), PDF (pdfrx), ปักหมุดออฟไลน์ + ตรวจ sha256 + แถบฉบับเก่า, กล่องงานตรวจ + ตัดสิน/ลงนาม, แจ้งเตือน + deep link · `08-mobile.md` §5–8 — รับงาน: สถานการณ์ integration ใน `08-mobile.md` §11
+- [x] **P1-13 มือถือ MVP** — ติดตามโครงการ, ทะเบียน/รายละเอียด (sync scope project), PDF (pdfrx), ปักหมุดออฟไลน์ + ตรวจ sha256 + แถบฉบับเก่า, กล่องงานตรวจ + ตัดสิน/ลงนาม, แจ้งเตือน + deep link · `08-mobile.md` §5–8 — รับงาน: สถานการณ์ integration ใน `08-mobile.md` §11 (ยังไม่ได้รัน — รอ CI และเครื่องทดสอบจริง)
 - [x] **P1-14 ข้อมูลตัวอย่างสำหรับ UAT** — `apps/api/src/demo-seed.ts` (`pnpm --filter api build && DEMO_PASSWORD=… pnpm --filter api seed:demo`; ผ่าน service จริงจึงต้องใช้ Nest DI ที่ compile แล้ว): ผู้ใช้ทุกบทบาท (รหัสผ่านจาก env), ลูกค้า 2, สถานที่ 3, โครงการ 2, เอกสาร 30 รายการหลายสถานะ, ใบอนุญาตทั้งที่ใช้ได้และหมดอายุ
 - [ ] **P1-15 Hardening และ pilot** — ตรวจ audit ครบ, ทดสอบโหลด (k6: ทะเบียน 5,000 รายการ p95 < 500 ms), checklist ความปลอดภัย `06-security.md`, runbook backup/restore บน staging, UAT กับผู้ใช้จริง, pilot 1–2 โครงการ
 

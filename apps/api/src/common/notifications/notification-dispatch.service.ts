@@ -137,6 +137,8 @@ export class NotificationDispatchService {
             entityId: content.entityId ?? '',
             projectId: content.projectId ?? '',
             notificationId: n.id,
+            // web path of the related page; the app maps it to its own route (08-mobile §8)
+            link: content.link ?? '',
           },
         });
       }

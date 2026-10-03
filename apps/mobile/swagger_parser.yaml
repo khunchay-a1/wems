@@ -1,0 +1,10 @@
+# Generated API client (docs/08-mobile.md §2). Not wired in phase 1 — the app uses the
+# hand-written lib/core/api/wems_api.dart. To switch: add swagger_parser, retrofit, freezed and
+# json_serializable to pubspec.yaml, then `dart run swagger_parser && dart run build_runner build`.
+swagger_parser:
+  schema_path: ../../packages/api-contract/openapi.json
+  output_directory: lib/core/api/generated
+  json_serializer: freezed
+  root_client: true
+  root_client_name: WemsClient
+  put_clients_in_folder: true

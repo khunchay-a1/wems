@@ -15,7 +15,7 @@
 | Framework | Flutter stable + Dart 3 | Material/Cupertino แยกเป็นแพ็กเกจ `material_ui`/`cupertino_ui` แล้ว — ใช้ตาม template ของ `flutter create` เวอร์ชันที่ใช้ และห้าม import `package:flutter/material.dart` ปนกับ `package:material_ui/...` |
 | State / DI | `flutter_riverpod` + `riverpod_generator` | |
 | Routing | `go_router` | deep link จาก push |
-| API client | `dio` + `retrofit` สร้างด้วย `swagger_parser` (json_serializer: `freezed`) จาก `packages/api-contract/openapi.json` | ห้ามแก้โค้ดที่ generate |
+| API client | `dio` + `retrofit` สร้างด้วย `swagger_parser` (json_serializer: `freezed`) จาก `packages/api-contract/openapi.json` | ห้ามแก้โค้ดที่ generate · **เฟส 1** ใช้ `lib/core/api/wems_api.dart` เขียนมือ (ชื่อเมธอดตาม operationId) เพราะใช้ไม่กี่ endpoint; `swagger_parser.yaml` เตรียมไว้แล้ว |
 | Local DB | `drift` (SQLite) | แนะนำเปิดการเข้ารหัสด้วย SQLCipher ตั้งแต่เฟส 2 (ตามคู่มือ drift) |
 | Secure storage | `flutter_secure_storage` | refresh token, DB key |
 | PDF | `pdfrx` (MIT) | render + overlay หมุดความเห็นเอง; pdfrx 2.5+ ใช้ `material_ui` ต้องตั้ง localizations ตามเอกสารของแพ็กเกจ |
@@ -35,7 +35,7 @@ apps/mobile/
 ├── lib/
 │   ├── main.dart                       # อ่าน flavor จาก --dart-define-from-file
 │   ├── app/                            # app.dart, router.dart, theme.dart
-│   ├── l10n/                           # app_th.arb, app_en.arb, enums_*.arb (generate จาก enum-labels.json)
+│   ├── l10n/                           # app_th.arb, app_en.arb (คีย์ enum* และ enum_labels.dart generate จาก enum-labels.json ด้วย tools/gen-i18n-enums.mjs — gen-l10n รับ ARB ได้ไฟล์เดียวต่อภาษา)
 │   ├── core/
 │   │   ├── api/                        # dio + interceptors (auth, csrf-free bearer, idempotency, request-id, locale)
 │   │   │   └── generated/              # swagger_parser output (ห้ามแก้)
@@ -162,7 +162,7 @@ Trigger sync: เปิดแอป, กลับมาออนไลน์, �
 ## 8. Push และ deep link
 
 - ลงทะเบียน FCM token หลัง login (`POST /push-devices`) และเมื่อ token เปลี่ยน; ลบเมื่อ logout
-- data payload `{ type, entityType, entityId, projectId }` → map เป็น route:
+- data payload `{ type, entityType, entityId, projectId, notificationId, link }` (`link` = path ของหน้าเว็บที่เกี่ยวข้อง ใช้หา documentId) → map เป็น route (`lib/core/push/deep_links.dart`):
 
 | type | route |
 |---|---|
@@ -185,7 +185,7 @@ Trigger sync: เปิดแอป, กลับมาออนไลน์, �
 - เวอร์ชัน `major.minor.patch+build`; เช็ก `/app/config` ตอนเปิดแอป ต่ำกว่า `minSupportedVersion` → บังคับอัปเดต
 - ทดสอบภายใน: Firebase App Distribution (Android), TestFlight (iOS)
 - ใช้งานจริง (แอปภายในองค์กร): Android — Managed Google Play (private app) หรือ MDM; iOS — Apple Business Manager (custom app) หรือ TestFlight ระยะสั้น — **เลือกใน open-questions**
-- CI: `flutter analyze`, `flutter test`, `dart run build_runner build --delete-conflicting-outputs` ต้องไม่ทำให้ไฟล์ที่ commit เปลี่ยน, build APK debug
+- CI: `flutter pub get` (gen-l10n), `dart run build_runner build --delete-conflicting-outputs` (drift — ไฟล์ `*.g.dart` และ `lib/l10n/gen/` ไม่ commit), `flutter analyze --no-fatal-infos`, `flutter test`, build APK debug flavor dev
 
 ## 11. การทดสอบมือถือ
 
