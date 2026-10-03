@@ -1,3 +1,4 @@
+import type { SchemaObject } from '@nestjs/swagger';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import {
@@ -60,13 +61,25 @@ export class PreviewNumberDto {
   @ApiProperty() number!: string;
 }
 
+/** OpenAPI schema for an arbitrary JSON value (setting values differ per key). */
+const ANY_JSON: { oneOf: SchemaObject[] } = {
+  oneOf: [
+    { type: 'object', additionalProperties: true },
+    { type: 'array', items: {} },
+    { type: 'string' },
+    { type: 'number' },
+    { type: 'boolean' },
+  ],
+};
+
 export class SettingDto {
   @ApiProperty() key!: string;
-  @ApiProperty({ description: 'JSON value (shape depends on the key — M01 §7)' }) value!: unknown;
+  @ApiProperty({ description: 'JSON value (shape depends on the key — M01 §7)', ...ANY_JSON })
+  value!: unknown;
 }
 
 export class PutSettingDto {
-  @ApiProperty({ description: 'JSON value' }) @IsDefined() value!: unknown;
+  @ApiProperty({ description: 'JSON value', ...ANY_JSON }) @IsDefined() value!: unknown;
 }
 
 const toDate = ({ value }: { value: unknown }) => value;

@@ -933,6 +933,8 @@ export interface components {
         MeDto: {
             /** Format: uuid */
             id: string;
+            /** @description User row version (for PATCH /users/me) */
+            version: number;
             email: string;
             displayNameTh: string;
             displayNameEn: string | null;
@@ -1310,11 +1312,15 @@ export interface components {
         SettingDto: {
             key: string;
             /** @description JSON value (shape depends on the key — M01 §7) */
-            value: Record<string, never>;
+            value: {
+                [key: string]: unknown;
+            } | unknown[] | string | number | boolean;
         };
         PutSettingDto: {
             /** @description JSON value */
-            value: Record<string, never>;
+            value: {
+                [key: string]: unknown;
+            } | unknown[] | string | number | boolean;
         };
         /** @enum {string} */
         ActorType: "USER" | "SYSTEM" | "PUBLIC_LINK";

@@ -40,7 +40,7 @@
 
 - Log JSON (pino) มี `requestId`, `userId`, `route`, `durationMs`; เก็บ 90 วัน
 - Sentry: API, worker, web, mobile (release = git sha / app version)
-- Health: `/health/live`, `/health/ready` (DB, Redis, S3, Gotenberg)
+- Health: `/health/live`, `/health/ready` (DB, Redis, S3 ต้อง up; Gotenberg แสดงสถานะแต่ไม่ทำให้ ready ล้ม เพราะสร้าง PDF ใน worker)
 - ตัวชี้วัดที่ต้องดู: latency p95, error rate 5xx, ความยาวคิว BullMQ, outbox ค้าง > 5 นาที, พื้นที่ดิสก์/บัคเก็ต, การ login ล้มเหลวผิดปกติ
 - แจ้งเตือนผู้ดูแล (อีเมล/LINE ภายหลัง) เมื่อ: ready check ล้ม 3 ครั้งติด, outbox ค้าง > 10 นาที, backup ล้ม
 

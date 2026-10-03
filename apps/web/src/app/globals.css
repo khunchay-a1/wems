@@ -1,0 +1,49 @@
+@import 'tailwindcss';
+
+/* Design tokens (docs/07-web-ui.md §3) */
+@theme {
+  --font-sans: var(--font-noto-thai), 'Noto Sans Thai', ui-sans-serif, system-ui, sans-serif;
+  --color-background: #f6f8fa;
+  --color-surface: #ffffff;
+  --color-border: #dde3ea;
+  --color-foreground: #1f2933;
+  --color-muted: #616e7c;
+  --color-subtle: #eef2f5;
+  --color-primary: #0b5c7a;
+  --color-primary-hover: #094b64;
+  --color-primary-foreground: #ffffff;
+  --color-ring: #3b9ccc;
+  --color-neutral-badge: #e4e8ec;
+  --color-neutral-badge-fg: #3e4c59;
+  --color-info: #e0f0fb;
+  --color-info-fg: #0b5c8a;
+  --color-success: #e3f6e8;
+  --color-success-fg: #17673a;
+  --color-warning: #fff3d6;
+  --color-warning-fg: #8a5a00;
+  --color-danger: #fde4e4;
+  --color-danger-fg: #a12020;
+  --radius-md: 0.5rem;
+}
+
+html,
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.tabular-nums,
+table td {
+  font-variant-numeric: tabular-nums;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-ring);
+  outline-offset: 2px;
+}

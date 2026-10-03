@@ -53,8 +53,9 @@ describe('P0-03 API skeleton', () => {
   });
 
   it('GET /api/v1/health/ready checks the database', async () => {
-    const res = await request(t.app.getHttpServer()).get('/api/v1/health/ready').expect(200);
-    expect(res.body.checks.database).toBe('up');
+    const res = await request(t.app.getHttpServer()).get('/api/v1/health/ready');
+    expect(res.status).toBe(200);
+    expect(res.body.checks).toMatchObject({ database: 'up', redis: 'up', storage: 'up' });
   });
 
   it('echoes the client X-Request-Id', async () => {

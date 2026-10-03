@@ -36,3 +36,9 @@ CLAUDE.local.md
 .idea/
 .vscode/*
 !.vscode/extensions.json
+
+# Playwright
+playwright-report/
+test-results/
+# local redis dump
+dump.rdb

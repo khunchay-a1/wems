@@ -31,6 +31,8 @@ export class GotenbergClient implements OnModuleInit {
     this.health.register(
       new (class extends HealthIndicator {
         readonly name = 'pdf';
+        // PDFs are rendered by the worker; the API keeps serving when Gotenberg is down
+        override readonly critical = false;
         async check(): Promise<boolean> {
           return (await fetch(`${url}/health`, { signal: AbortSignal.timeout(2000) })).ok;
         }

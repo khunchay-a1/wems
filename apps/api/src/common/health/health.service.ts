@@ -7,6 +7,8 @@ import type { HealthDto } from './health.dto';
 export abstract class HealthIndicator {
   abstract readonly name: string;
   abstract check(): Promise<boolean>;
+  /** Non-critical dependencies are reported but do not fail readiness (the API still serves requests). */
+  readonly critical: boolean = true;
 }
 
 export const HEALTH_INDICATORS = Symbol('HEALTH_INDICATORS');
@@ -41,10 +43,12 @@ export class HealthService {
     checks.database = (await withTimeout(this.prisma.$queryRaw`SELECT 1`.then(() => true)))
       ? 'up'
       : 'down';
+    let ok = checks.database === 'up';
     for (const ind of this.indicators) {
-      checks[ind.name] = (await withTimeout(ind.check())) ? 'up' : 'down';
+      const up = await withTimeout(ind.check());
+      checks[ind.name] = up ? 'up' : 'down';
+      if (!up && ind.critical) ok = false;
     }
-    const ok = Object.values(checks).every((c) => c !== 'down');
     if (!ok) {
       throw new Problem('SERVICE_UNAVAILABLE', { extra: { checks } });
     }

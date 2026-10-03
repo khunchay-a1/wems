@@ -39,7 +39,7 @@
 - [x] **P0-11 PDF** — Gotenberg client, layout HTML ฐาน + ฟอนต์ Sarabun, header/footer เลขหน้า, บริการประทับตราด้วย pdf-lib · `02-architecture.md` §8
   - รับงาน: PDF ทดสอบย่อหน้าไทยยาวตัดคำถูก (ข้อความที่ extract ได้ตรงกับต้นฉบับ); แนบภาพตัวอย่างใน PR
 - [x] **P0-12 OpenAPI pipeline** — `pnpm api:contract` สร้าง `openapi.json` + TS types, ตรวจรูปแบบ `operationId`, CI ตรวจว่าถูก commit · ADR-0002
-- [ ] **P0-13 Web skeleton** — Next.js + Tailwind + shadcn/ui + next-intl (+ ป้าย enum) + TanStack Query + openapi-fetch (CSRF) + `proxy.ts`; layout; login/MFA; โปรไฟล์ (รหัสผ่าน, PIN, MFA); แจ้งเตือน + กระดิ่ง SSE; หน้าผู้ดูแลระบบของ M01; component กลางใน `07-web-ui.md` §3
+- [x] **P0-13 Web skeleton** — Next.js + Tailwind + shadcn/ui + next-intl (+ ป้าย enum) + TanStack Query + openapi-fetch (CSRF) + `proxy.ts`; layout; login/MFA; โปรไฟล์ (รหัสผ่าน, PIN, MFA); แจ้งเตือน + กระดิ่ง SSE; หน้าผู้ดูแลระบบของ M01; component กลางใน `07-web-ui.md` §3 (`PdfViewer`/`SignatureDialog` มาพร้อมหน้าตรวจเอกสารใน P1-08)
   - รับงาน: Playwright: login → admin สร้างผู้ใช้ → ผู้ใช้ใหม่ login และเปลี่ยนรหัสผ่าน
 - [ ] **P0-14 Mobile skeleton** — flavors, router, theme, l10n (+ ป้าย enum), API client ที่ generate, auth (secure storage, refresh single-flight), drift + migrations, sync engine (pull scope `global`/`user`, outbox processor), FCM, ตรวจเวอร์ชัน, หน้าตั้งค่า · `08-mobile.md`
   - รับงาน: unit test outbox/pull ครบตาม `08-mobile.md` §11; login กับ API dev ได้

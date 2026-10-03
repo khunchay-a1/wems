@@ -426,6 +426,7 @@ export class AuthService {
     const requireMfa = await this.settings.get('security.requireMfaRoles');
     return {
       id: user.id,
+      version: user.version,
       email: user.email,
       displayNameTh: user.displayNameTh,
       displayNameEn: user.displayNameEn,

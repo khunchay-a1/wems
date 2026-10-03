@@ -1,0 +1,16 @@
+{
+  "extends": "@wems/config/tsconfig/nextjs.json",
+  "compilerOptions": {
+    "paths": { "@/*": ["./src/*"] },
+    "types": ["node"]
+  },
+  "include": [
+    "next-env.d.ts",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    ".next/types/**/*.ts",
+    "e2e/**/*.ts",
+    "*.ts"
+  ],
+  "exclude": ["node_modules", ".next"]
+}

@@ -126,6 +126,9 @@ export class MeDto {
   @ApiProperty({ format: 'uuid' })
   id!: string;
 
+  @ApiProperty({ description: 'User row version (for PATCH /users/me)' })
+  version!: number;
+
   @ApiProperty()
   email!: string;
 

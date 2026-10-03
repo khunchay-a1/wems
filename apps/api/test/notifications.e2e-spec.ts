@@ -39,7 +39,7 @@ describe('P0-10 notifications', () => {
     expect(await worker.relay()).toBeGreaterThan(0);
     const mail = await waitFor(() => sink.mails.find((m) => m.to.includes(u.email)));
     expect(mail.subject).toBe('บัญชีของคุณถูกล็อกชั่วคราว');
-    expect(mail.html).toContain('<html lang="th">');
+    expect(mail.html).toMatch(/<html lang=["']th["']>/);
     expect(mail.text).toContain('WEMS');
   });
 

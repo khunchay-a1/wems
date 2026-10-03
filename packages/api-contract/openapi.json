@@ -2203,6 +2203,10 @@
             "type": "string",
             "format": "uuid"
           },
+          "version": {
+            "type": "number",
+            "description": "User row version (for PATCH /users/me)"
+          },
           "email": {
             "type": "string"
           },
@@ -2271,6 +2275,7 @@
         },
         "required": [
           "id",
+          "version",
           "email",
           "displayNameTh",
           "displayNameEn",
@@ -3549,8 +3554,26 @@
             "type": "string"
           },
           "value": {
-            "type": "object",
-            "description": "JSON value (shape depends on the key — M01 §7)"
+            "description": "JSON value (shape depends on the key — M01 §7)",
+            "oneOf": [
+              {
+                "type": "object",
+                "additionalProperties": true
+              },
+              {
+                "type": "array",
+                "items": {}
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              }
+            ]
           }
         },
         "required": [
@@ -3562,8 +3585,26 @@
         "type": "object",
         "properties": {
           "value": {
-            "type": "object",
-            "description": "JSON value"
+            "description": "JSON value",
+            "oneOf": [
+              {
+                "type": "object",
+                "additionalProperties": true
+              },
+              {
+                "type": "array",
+                "items": {}
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              }
+            ]
           }
         },
         "required": [
