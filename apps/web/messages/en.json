@@ -219,7 +219,12 @@
     "after": "After",
     "from": "From",
     "to": "To",
-    "exportCsv": "Export CSV"
+    "exportCsv": "Export CSV",
+    "mobileApp": "Mobile app",
+    "minVersionAndroid": "Minimum Android version",
+    "minVersionIos": "Minimum iOS version",
+    "maintenanceMessage": "Maintenance notice",
+    "maintenanceHelp": "Shown in the mobile app when it starts. Leave empty for none."
   },
   "home": {
     "greeting": "Hello {name}",

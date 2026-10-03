@@ -267,6 +267,7 @@ export class AuthService {
     const newToken = randomToken();
     const expiresAt = new Date(now.getTime() + this.refreshTtlMs(session.platform));
     const rotated = await this.prisma.$transaction(async (tx) => {
+      // audit: routine rotation is not audited (06-security §9); reuse detection is
       // Atomic claim: only one concurrent refresh can rotate a given token
       const claimed = await tx.session.updateMany({
         where: { id: session.id, revokedAt: null },

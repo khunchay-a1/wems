@@ -109,6 +109,7 @@ Worker (`files` queue) ทำ: คำนวณ sha256, ตรวจ magic bytes,
 | `lab.receiptMaxTempC` | number | `6` | เฟส 3 (BR-LAB-010) |
 | `lab.reportFooterNote` | string | ข้อความท้ายใบรายงานผล | เฟส 3 |
 | `mobile.minSupportedVersion` | object | `{ "android": "1.0.0", "ios": "1.0.0" }` | `/app/config` |
+| `mobile.maintenanceMessage` | string ≤ 500 | `""` (ไม่มี) | `/app/config.maintenanceMessage` — ประกาศช่วงบำรุงรักษา (`09-nfr.md` §3) |
 
 ## 8. API
 

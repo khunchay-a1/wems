@@ -81,6 +81,13 @@ class _WemsAppState extends ConsumerState<WemsApp> with WidgetsBindingObserver {
       if (min is String && isVersionBelow(info.version, min)) {
         setState(() => _updateTo = min);
       }
+      // planned maintenance notice from the admin settings (09-nfr §3)
+      final notice = cfg['maintenanceMessage'];
+      if (notice is String && notice.isNotEmpty) {
+        _messenger.currentState?.showSnackBar(
+          SnackBar(content: Text(notice), duration: const Duration(seconds: 10)),
+        );
+      }
     } on ApiProblem {
       // offline: checked again on the next start
     }

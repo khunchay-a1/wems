@@ -214,7 +214,7 @@ Implementation:
 
 ## 5. ลิงก์ดาวน์โหลดสาธารณะของใบนำส่ง
 
-- token สุ่ม 32 ไบต์ (base64url) ใน URL `/t/<token>`; DB เก็บเฉพาะ SHA-256
+- token 32 ไบต์ (base64url) ใน URL `/t/<token>` = HMAC-SHA256 ด้วย `APP_ENCRYPTION_KEY` ของ id ใบนำส่ง + เวลาส่ง (เดาไม่ได้หากไม่มีกุญแจ และสร้างลิงก์เดิมให้เจ้าหน้าที่ได้ — M04 §7); DB เก็บเฉพาะ SHA-256 ของ token
 - อายุเริ่มต้น 30 วัน (`transmittal.linkExpiryDays`), ขยาย/เพิกถอนได้
 - หน้า public แสดงเฉพาะเลขใบนำส่ง ชื่อบริษัท รายการเอกสาร และปุ่มดาวน์โหลด (ZIP หรือทีละไฟล์) — ไม่แสดงข้อมูลอื่นของโครงการ
 - ดาวน์โหลดผ่าน presigned URL อายุ 5 นาที; บันทึก `TransmittalDownload` ทุกครั้ง
@@ -236,7 +236,7 @@ Implementation:
 
 ## 7. Security header และการตั้งค่าอื่น
 
-- `helmet`: HSTS (1 ปี), `X-Content-Type-Options: nosniff`, `frame-ancestors 'none'`, CSP ของเว็บอนุญาตเฉพาะ origin ตัวเอง + blob: (pdf.js worker)
+- `helmet`: HSTS (1 ปี), `X-Content-Type-Options: nosniff`, `frame-ancestors 'none'`, CSP ของเว็บอนุญาตเฉพาะ origin ตัวเอง + blob: (pdf.js worker) + origin ของ object storage (presigned upload/download — `S3_PUBLIC_ENDPOINT`) ตั้งใน `apps/web/src/proxy.ts` ตอน runtime
 - ไม่เปิด CORS (โดเมนเดียว); Swagger UI เปิดเฉพาะ dev/staging หรือหลัง ADMIN login
 - Log: ห้ามบันทึกรหัสผ่าน token secret หรือเนื้อไฟล์; mask อีเมล/เบอร์โทรใน log ระดับ debug
 - Secret อยู่ใน environment/secret manager เท่านั้น ห้าม commit (`.env` อยู่ใน `.gitignore`, มี `.env.example`)

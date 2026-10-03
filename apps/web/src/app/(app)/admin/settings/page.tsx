@@ -80,6 +80,7 @@ export default function SettingsPage() {
           title={t('transmittal')}
           label={t('linkExpiryDays')}
         />
+        <MobileCard />
       </div>
     </>
   );
@@ -209,6 +210,61 @@ function NumberSettingCard({
         <Button disabled={pending || v === String(value)} onClick={() => save(Number(v))}>
           {t('save')}
         </Button>
+      </CardContent>
+    </Card>
+  );
+}
+
+/** Forced update and maintenance notice for the mobile app (/app/config, 09-nfr §3). */
+function MobileCard() {
+  const t = useTranslations();
+  const [versions, saveVersions, savingVersions] = useSetting<{ android: string; ios: string }>(
+    'mobile.minSupportedVersion',
+  );
+  const [message, saveMessage, savingMessage] = useSetting<string>('mobile.maintenanceMessage');
+  const [v, setV] = useDraft(versions, (x) => x);
+  const [msg, setMsg] = useDraft(message, (x) => x);
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>{t('admin.mobileApp')}</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-3">
+        {v ? (
+          <div className="flex flex-wrap items-end gap-2">
+            <FormField label={t('admin.minVersionAndroid')}>
+              <Input
+                className="w-28"
+                value={v.android}
+                onChange={(e) => setV({ ...v, android: e.target.value })}
+              />
+            </FormField>
+            <FormField label={t('admin.minVersionIos')}>
+              <Input
+                className="w-28"
+                value={v.ios}
+                onChange={(e) => setV({ ...v, ios: e.target.value })}
+              />
+            </FormField>
+            <Button disabled={savingVersions} onClick={() => saveVersions(v)}>
+              {t('common.save')}
+            </Button>
+          </div>
+        ) : null}
+        <FormField label={t('admin.maintenanceMessage')}>
+          <Textarea
+            value={msg ?? ''}
+            maxLength={500}
+            onChange={(e) => setMsg(e.target.value)}
+            data-testid="maintenance-message"
+          />
+        </FormField>
+        <p className="text-sm text-muted">{t('admin.maintenanceHelp')}</p>
+        <div className="flex justify-end">
+          <Button disabled={savingMessage} onClick={() => saveMessage(msg ?? '')}>
+            {t('common.save')}
+          </Button>
+        </div>
       </CardContent>
     </Card>
   );

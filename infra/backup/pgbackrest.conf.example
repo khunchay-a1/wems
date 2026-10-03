@@ -1,0 +1,29 @@
+# pgBackRest for RPO ≤ 15 min (docs/09-nfr.md §3, docs/runbooks/backup-restore.md §1).
+# /etc/pgbackrest/pgbackrest.conf on the database host. Secrets come from the environment
+# (PGBACKREST_REPO1_S3_KEY, PGBACKREST_REPO1_S3_KEY_SECRET, PGBACKREST_REPO1_CIPHER_PASS).
+[global]
+repo1-type=s3
+repo1-s3-bucket=wems-pgbackrest
+repo1-s3-endpoint=s3.ap-southeast-1.amazonaws.com
+repo1-s3-region=ap-southeast-1
+repo1-path=/wems
+repo1-cipher-type=aes-256-cbc
+repo1-retention-full=5
+repo1-retention-diff=14
+compress-type=zst
+process-max=2
+start-fast=y
+log-level-console=info
+
+[wems]
+pg1-path=/var/lib/postgresql/16/main
+
+# postgresql.conf
+#   archive_mode = on
+#   archive_command = 'pgbackrest --stanza=wems archive-push %p'
+#   archive_timeout = 300          # a WAL segment at least every 5 minutes
+#   wal_level = replica
+#
+# cron (postgres user)
+#   15 1 * * 0    pgbackrest --stanza=wems --type=full backup
+#   15 1 * * 1-6  pgbackrest --stanza=wems --type=diff backup

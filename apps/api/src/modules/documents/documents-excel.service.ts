@@ -353,6 +353,7 @@ export class DocumentsExcelService {
       };
     }
     const created = await this.prisma.$transaction(
+      // audit: DocumentsService.createInTx records document.create for every row
       async (tx) => {
         const out: { row: number; number: string | null; title: string }[] = [];
         const client = await tx.client.findUniqueOrThrow({

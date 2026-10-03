@@ -360,9 +360,7 @@ async function main(): Promise<void> {
       for (const [userId, role] of team)
         await as(c, u.pm!, (x) => c.projects.addMember(p.id, { userId, role }, x));
       const fresh = await c.prisma.project.findUniqueOrThrow({ where: { id: p.id } });
-      await as(c, u.pm!, (x) =>
-        c.projects.act(p.id, 'start', { version: fresh.version }, x),
-      );
+      await as(c, u.pm!, (x) => c.projects.act(p.id, 'start', { version: fresh.version }, x));
     }
     console.log(`projects: ${p1.code}, ${p2.code}`);
 

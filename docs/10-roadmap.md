@@ -64,6 +64,12 @@
 - [x] **P1-13 มือถือ MVP** — ติดตามโครงการ, ทะเบียน/รายละเอียด (sync scope project), PDF (pdfrx), ปักหมุดออฟไลน์ + ตรวจ sha256 + แถบฉบับเก่า, กล่องงานตรวจ + ตัดสิน/ลงนาม, แจ้งเตือน + deep link · `08-mobile.md` §5–8 — รับงาน: สถานการณ์ integration ใน `08-mobile.md` §11 (ยังไม่ได้รัน — รอ CI และเครื่องทดสอบจริง)
 - [x] **P1-14 ข้อมูลตัวอย่างสำหรับ UAT** — `apps/api/src/demo-seed.ts` (`pnpm --filter api build && DEMO_PASSWORD=… pnpm --filter api seed:demo`; ผ่าน service จริงจึงต้องใช้ Nest DI ที่ compile แล้ว): ผู้ใช้ทุกบทบาท (รหัสผ่านจาก env), ลูกค้า 2, สถานที่ 3, โครงการ 2, เอกสาร 30 รายการหลายสถานะ, ใบอนุญาตทั้งที่ใช้ได้และหมดอายุ
 - [ ] **P1-15 Hardening และ pilot** — ตรวจ audit ครบ, ทดสอบโหลด (k6: ทะเบียน 5,000 รายการ p95 < 500 ms), checklist ความปลอดภัย `06-security.md`, runbook backup/restore บน staging, UAT กับผู้ใช้จริง, pilot 1–2 โครงการ
+  - [x] ตรวจ audit ครบ — `tools/check-audit.mjs` ใน `pnpm check:spec` (แก้ 3 จุดของรายการในใบนำส่ง)
+  - [x] ทดสอบโหลด — `infra/load/` · p95 77 ms บน sandbox (`docs/runbooks/load-test.md`); ต้องรันซ้ำบน staging
+  - [x] checklist ความปลอดภัย — `docs/runbooks/security-checklist.md` (แก้: CSP เว็บ, rate limit ลิงก์สาธารณะ, `pnpm audit` + Dependabot, บทบาท DB production)
+  - [x] runbook + สคริปต์ backup/restore — `docs/runbooks/backup-restore.md`, `infra/backup/` (ทดสอบกู้คืนบน dev แล้ว) — [ ] ทดสอบบน staging
+  - [ ] UAT กับผู้ใช้จริง — แผนและสถานการณ์ U-01..U-20 ใน `docs/runbooks/uat-pilot.md` (รอ staging + ผู้ทดสอบของบริษัท)
+  - [ ] pilot 1–2 โครงการ — `docs/runbooks/uat-pilot.md` §5
 
 ## เฟส 2 — บริหารโครงการและหน้างาน (epic)
 

@@ -219,7 +219,12 @@
     "after": "หลัง",
     "from": "ตั้งแต่",
     "to": "ถึง",
-    "exportCsv": "ส่งออก CSV"
+    "exportCsv": "ส่งออก CSV",
+    "mobileApp": "แอปมือถือ",
+    "minVersionAndroid": "เวอร์ชันต่ำสุด Android",
+    "minVersionIos": "เวอร์ชันต่ำสุด iOS",
+    "maintenanceMessage": "ข้อความแจ้งปิดปรับปรุง",
+    "maintenanceHelp": "แสดงบนแอปมือถือเมื่อเปิดแอป เว้นว่าง = ไม่มีประกาศ"
   },
   "home": {
     "greeting": "สวัสดี {name}",

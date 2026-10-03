@@ -538,6 +538,20 @@ export class TransmittalsService {
       const next = t.items.reduce((m, i) => Math.max(m, i.sortOrder + 1), 0);
       await this.insertItem(tx, id, t.projectId, dto, next);
       await tx.transmittal.update({ where: { id }, data: bumpVersion });
+      await this.audit.record(tx, {
+        action: 'transmittal.item_add',
+        entityType: 'Transmittal',
+        entityId: id,
+        projectId: t.projectId,
+        changes: {
+          before: {},
+          after: {
+            revisionId: dto.revisionId,
+            copies: dto.copies ?? null,
+            format: dto.format ?? null,
+          },
+        },
+      });
       await this.touch(tx, t.projectId, id);
     });
     return this.get(user, id);
@@ -559,6 +573,17 @@ export class TransmittalsService {
         data: { copies: dto.copies, format: dto.format, remark: dto.remark },
       });
       await tx.transmittal.update({ where: { id }, data: bumpVersion });
+      const before = t.items.find((i) => i.id === itemId)!;
+      await this.audit.record(tx, {
+        action: 'transmittal.item_update',
+        entityType: 'Transmittal',
+        entityId: id,
+        projectId: t.projectId,
+        changes: {
+          before: { itemId, copies: before.copies, format: before.format, remark: before.remark },
+          after: { itemId, copies: dto.copies, format: dto.format, remark: dto.remark },
+        },
+      });
       await this.touch(tx, t.projectId, id);
     });
     return this.get(user, id);
@@ -572,6 +597,14 @@ export class TransmittalsService {
       if (!t.items.some((i) => i.id === itemId)) throw new Problem('NOT_FOUND');
       await tx.transmittalItem.delete({ where: { id: itemId } });
       await tx.transmittal.update({ where: { id }, data: bumpVersion });
+      const removed = t.items.find((i) => i.id === itemId)!;
+      await this.audit.record(tx, {
+        action: 'transmittal.item_remove',
+        entityType: 'Transmittal',
+        entityId: id,
+        projectId: t.projectId,
+        changes: { before: { itemId, revisionId: removed.revisionId }, after: {} },
+      });
       await this.touch(tx, t.projectId, id);
     });
     return this.get(user, id);

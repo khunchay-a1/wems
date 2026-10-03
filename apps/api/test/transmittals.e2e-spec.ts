@@ -127,6 +127,28 @@ describe('P1-10 transmittals (M04 §3.5, §7; docs/05-workflows.md §4)', () => 
       .send({ revisionId: a.revisionId })
       .expect(422);
     expect(dup.body.code).toBe('TRN_DUPLICATE_ITEM');
+    // item edits on a draft are audited (06-security §9, P1-15)
+    await p.dc.c.delete(`/api/v1/transmittals/${tr.id}/items/${tr.items[0].id}`).expect(200);
+    const readded = await p.dc.c
+      .post(`/api/v1/transmittals/${tr.id}/items`)
+      .send({ revisionId: a.revisionId })
+      .expect(201);
+    const edited = await p.dc.c
+      .patch(`/api/v1/transmittals/${tr.id}/items/${readded.body.items[0].id}`)
+      .send({ copies: 2 })
+      .expect(200);
+    tr.version = edited.body.version;
+    const actions = await t.prisma.auditLog.findMany({
+      where: { entityId: tr.id },
+      select: { action: true },
+    });
+    expect(actions.map((x) => x.action)).toEqual(
+      expect.arrayContaining([
+        'transmittal.item_remove',
+        'transmittal.item_add',
+        'transmittal.item_update',
+      ]),
+    );
     // engineers cannot send transmittals
     await p.author.c
       .post(`/api/v1/transmittals/${tr.id}/send`)
@@ -243,6 +265,13 @@ describe('P1-10 transmittals (M04 §3.5, §7; docs/05-workflows.md §4)', () => 
     t.clock.advance(8 * 86_400_000);
     await anon.get(`/api/v1/public/transmittals/${token}`).expect(410);
     t.clock.advance(-8 * 86_400_000);
+
+    // 06-security §5: public link endpoints allow 30 requests/min per IP
+    const statuses: number[] = [];
+    for (let i = 0; i < 30; i += 1) {
+      statuses.push((await anon.get(`/api/v1/public/transmittals/${token}`)).status);
+    }
+    expect(statuses).toContain(429);
   });
 
   it('AT-DOC-12 BR-DOC-064 CODE_3 notifies the owner and the PM and flags the register', async () => {

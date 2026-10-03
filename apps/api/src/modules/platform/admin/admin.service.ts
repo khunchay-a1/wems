@@ -125,13 +125,16 @@ export class AdminService {
   }
 
   async appConfig(): Promise<AppConfigDto> {
-    const [min, company] = await Promise.all([
+    const [min, company, maintenance] = await Promise.all([
       this.settings.get('mobile.minSupportedVersion'),
       this.settings.get('company.profile'),
+      // optional: databases seeded before the key existed have no row
+      this.settings.get('mobile.maintenanceMessage').catch(() => ''),
     ]);
     return {
       minSupportedVersion: min,
       latestVersion: min.android,
+      ...(maintenance ? { maintenanceMessage: maintenance } : {}),
       companyNameTh: company.nameTh,
       companyNameEn: company.nameEn,
     };

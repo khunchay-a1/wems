@@ -37,6 +37,8 @@ export const SETTING_SCHEMAS = {
   'lab.receiptMaxTempC': z.number(),
   'lab.reportFooterNote': z.string(),
   'mobile.minSupportedVersion': z.object({ android: z.string(), ios: z.string() }),
+  /** Shown by the apps during planned maintenance (09-nfr §3); empty = none */
+  'mobile.maintenanceMessage': z.string().max(500),
 } as const;
 
 export type SettingKey = keyof typeof SETTING_SCHEMAS;

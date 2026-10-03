@@ -47,6 +47,8 @@ DEMO_PASSWORD='ตั้งรหัสผ่านอย่างน้อย 1
 pnpm dev                                        # เว็บ http://localhost:3000 · API http://localhost:4000/api/v1 · Swagger /api/docs
 ```
 
+แอปมือถือ (Flutter): ดู `apps/mobile/README.md` — `flutter run --flavor dev -t lib/main_dev.dart --dart-define-from-file=env/dev.json`
+
 ผู้ใช้ตัวอย่าง: `pm@demo.wems.local`, `eng1@demo.wems.local` (ผู้ออกแบบ), `eng2@demo.wems.local` (ผู้ตรวจ), `dm@demo.wems.local` (ผู้อนุมัติ มีใบอนุญาต), `dc@demo.wems.local` (ผู้ควบคุมเอกสาร) ฯลฯ — รหัสผ่านตาม `DEMO_PASSWORD`, PIN ลงนาม `135790`
 
 ## เนื้อหา
@@ -63,8 +65,12 @@ docs/adr/                         เหตุผลของการตัด�
 docs/data/enum-labels.json        ป้ายไทย/อังกฤษของทุก enum
 docs/data/seed/                   บทบาท/สิทธิ์ เลขเอกสาร ค่าตั้ง สาขา ประเภทเอกสาร workflow พารามิเตอร์ มาตรฐานน้ำทิ้ง สูตรคำนวณ
 docs/open-questions.md            เรื่องที่บริษัทต้องยืนยัน
+docs/runbooks/                    สำรอง/กู้คืน, checklist ความปลอดภัย, ทดสอบโหลด, แผน UAT/pilot
+infra/backup/ · infra/load/       สคริปต์สำรองข้อมูล (pg_dump + age) และทดสอบโหลด (k6)
+apps/mobile/                      แอป Flutter (ทะเบียน/PDF ออฟไลน์, งานตรวจ, push)
 tools/check-enum-labels.mjs       ตรวจป้าย enum ครบ
 tools/check-spec-refs.mjs         ตรวจการอ้างอิงในสเปก และ test ของกติกา
+tools/check-audit.mjs             ตรวจว่าทุก transaction ที่เปลี่ยนข้อมูลบันทึก audit
 ```
 
 ## แผนพัฒนา

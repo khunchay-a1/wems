@@ -11,6 +11,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { ApiCreatedResponse, ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { Throttle } from '@nestjs/throttler';
 import type { AuthUser } from '../../common/auth/auth-user';
 import { CurrentUser } from '../../common/auth/decorators';
 import { Public } from '../../common/auth/public.decorator';
@@ -238,10 +239,11 @@ export class TransmittalsController {
   }
 }
 
-/** No login: clients open `/t/<token>` (BR-DOC-065). */
+/** No login: clients open `/t/<token>` (BR-DOC-065); 30 requests/min per IP (06-security §5). */
 @ApiTags('Public')
 @Controller('public/transmittals')
 @Public()
+@Throttle({ default: { limit: 30, ttl: 60_000 } })
 export class PublicTransmittalsController {
   constructor(private readonly pub: PublicTransmittalsService) {}
 

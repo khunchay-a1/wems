@@ -120,5 +120,17 @@ describe('P0-08 numbering, settings, audit admin', () => {
       .get('/api/v1/app/config')
       .expect(200);
     expect(res.body.minSupportedVersion).toEqual({ android: '1.0.0', ios: '1.0.0' });
+    expect(res.body.maintenanceMessage).toBeUndefined();
+  });
+
+  it('a maintenance notice set by the admin reaches /app/config (09-nfr §3)', async () => {
+    const admin = await bearerLogin(t.app, (await makeUser(t.prisma, { roles: ['ADMIN'] })).email);
+    await admin
+      .put('/api/v1/settings/mobile.maintenanceMessage')
+      .send({ value: 'ปิดปรับปรุง 22:00–23:00' })
+      .expect(200);
+    const res = await admin.get('/api/v1/app/config').expect(200);
+    expect(res.body.maintenanceMessage).toBe('ปิดปรับปรุง 22:00–23:00');
+    await admin.put('/api/v1/settings/mobile.maintenanceMessage').send({ value: '' }).expect(200);
   });
 });
