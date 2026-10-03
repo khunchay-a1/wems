@@ -109,7 +109,7 @@
 - **BR-DOC-080** โครงการมี design basis ที่ APPROVED ได้ครั้งละ 1 ฉบับ; อนุมัติฉบับใหม่ → ฉบับเดิม SUPERSEDED
 - **BR-DOC-081** แก้ได้เฉพาะ DRAFT; สร้างฉบับใหม่ (revNo + 1) ได้เมื่อไม่มี DRAFT ค้าง โดยคัดลอกรายการจากฉบับล่าสุด
 - **BR-DOC-082** รายการที่ `source = MEASURED` ต้องมี `sampleTestIds` (เฟส 3) หรือ `sourceNote` อธิบายที่มา
-- **BR-DOC-083** อนุมัติต้องมี `designbasis.approve` + ลงนาม (BR-DOC-043) และผู้อนุมัติต้องไม่ใช่ผู้สร้างฉบับนั้น
+- **BR-DOC-083** อนุมัติต้องมี `designbasis.approve` + ลงนาม (BR-DOC-043) และผู้อนุมัติต้องไม่ใช่ผู้สร้างฉบับนั้น — `SignatureEvent.fileSha256` เก็บ SHA-256 ของ canonical JSON ของเนื้อหาที่อนุมัติ (ค่าหัว + รายการ)
 
 ## 4. อัลกอริทึม revision label (test vectors)
 
@@ -252,6 +252,7 @@ Template ดาวน์โหลดได้จากหน้าทะเบ�
 | POST | `/projects/{projectId}/design-bases` | `designbasis.edit` | ฉบับใหม่ BR-DOC-081 |
 | GET / PATCH | `/design-bases/{id}` | `document.read` / `designbasis.edit` | PATCH แทนที่ `items` ทั้งชุด |
 | POST | `/design-bases/{id}/approve` | `designbasis.approve` | `{ version, signature }` BR-DOC-080, 083 |
+| GET | `/parameters`, `/regulatory-standards` | ผู้ใช้ทุกคน | master data (active) สำหรับตัวเลือกพารามิเตอร์/มาตรฐานเป้าหมาย; `GET /design-bases/{id}` แนบเกณฑ์ของมาตรฐานเป้าหมายต่อรายการ (`standardLimit`) |
 | GET | `/projects/{projectId}/reports/mdl?format=` | `report.export` | §9 |
 | GET | `/projects/{projectId}/documents/stats` | `document.read` | ตัวเลขสำหรับ dashboard |
 | GET | `/search?q=` | ผู้ใช้ทุกคน | เอกสาร/โครงการ/ลูกค้าที่เข้าถึงได้ อย่างละ ≤ 10 |

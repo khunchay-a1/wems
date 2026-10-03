@@ -3,6 +3,8 @@ import { AuthModule } from '../platform/auth/auth.module';
 import { ProjectsModule } from '../projects/projects.module';
 import { CommentsController } from './comments.controller';
 import { CommentsService } from './comments.service';
+import { DesignBasisController } from './design-basis.controller';
+import { DesignBasisService } from './design-basis.service';
 import { DocumentAccessService } from './document-access.service';
 import { DocumentsController } from './documents.controller';
 import { DocumentsExcelController } from './documents-excel.controller';
@@ -27,6 +29,7 @@ import { TransmittalsService } from './transmittals.service';
     CommentsController,
     TransmittalsController,
     PublicTransmittalsController,
+    DesignBasisController,
   ],
   providers: [
     MasterDataService,
@@ -39,6 +42,7 @@ import { TransmittalsService } from './transmittals.service';
     RevisionStampService,
     TransmittalsService,
     PublicTransmittalsService,
+    DesignBasisService,
   ],
   exports: [MasterDataService, DocumentAccessService, DocumentsService, RevisionsService],
 })

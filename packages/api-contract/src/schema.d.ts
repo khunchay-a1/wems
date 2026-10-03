@@ -2183,6 +2183,93 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/projects/{projectId}/design-bases": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Design basis revisions of a project */
+        get: operations["DesignBasis_listDesignBases"];
+        put?: never;
+        /** New revNo copied from the latest (BR-DOC-081) */
+        post: operations["DesignBasis_createDesignBasis"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/design-bases/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Design basis with items and target-standard limits */
+        get: operations["DesignBasis_getDesignBasis"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Edit a DRAFT; items replace the whole set (BR-DOC-081/082) */
+        patch: operations["DesignBasis_updateDesignBasis"];
+        trace?: never;
+    };
+    "/api/v1/design-bases/{id}/approve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Approve with a signature (BR-DOC-080, 083) */
+        post: operations["DesignBasis_approveDesignBasis"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/parameters": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Active parameters (water quality) for pickers */
+        get: operations["DesignBasis_listParameters"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/regulatory-standards": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Active regulatory standards */
+        get: operations["DesignBasis_listStandards"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -2968,6 +3055,8 @@ export interface components {
             id: string;
             code: string;
             nameTh: string;
+            category: string;
+            subtype: string | null;
         };
         SiteDto: {
             /** Format: uuid */
@@ -4261,6 +4350,149 @@ export interface components {
             url: string;
             expiresAt: string;
         };
+        /** @enum {string} */
+        DesignBasisStatus: "DRAFT" | "APPROVED" | "SUPERSEDED";
+        DesignBasisSummaryDto: {
+            /** Format: uuid */
+            id: string;
+            revNo: number;
+            title: string;
+            status: components["schemas"]["DesignBasisStatus"];
+            approvedAt: string | null;
+            approvedBy: components["schemas"]["UserRefDto"] | null;
+            itemCount: number;
+            updatedAt: string;
+        };
+        CreateDesignBasisDto: {
+            /** @description Default: copied from the latest revision */
+            title?: string;
+        };
+        /** @enum {string} */
+        DesignValueSource: "ASSUMED" | "MEASURED" | "CLIENT_PROVIDED" | "STANDARD" | "CALCULATED";
+        /** @enum {string} */
+        LimitComparator: "MAX" | "MIN" | "RANGE" | "NOT_DETECTED" | "MAX_INCREASE_OVER_BASELINE" | "INFO";
+        StandardLimitDto: {
+            /** Format: uuid */
+            parameterId: string;
+            comparator: components["schemas"]["LimitComparator"];
+            minValue: string | null;
+            maxValue: string | null;
+            unit: string;
+            note: string | null;
+        };
+        DesignBasisItemDto: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            parameterId: string | null;
+            parameterCode: string | null;
+            name: string;
+            unit: string;
+            influentValue: string | null;
+            influentMin: string | null;
+            influentMax: string | null;
+            targetEffluentValue: string | null;
+            source: components["schemas"]["DesignValueSource"];
+            sourceNote: string | null;
+            sampleTestIds: string[];
+            /** @description Limit of the target standard */
+            standardLimit: components["schemas"]["StandardLimitDto"] | null;
+            sortOrder: number;
+        };
+        DesignBasisDto: {
+            /** Format: uuid */
+            id: string;
+            revNo: number;
+            title: string;
+            status: components["schemas"]["DesignBasisStatus"];
+            approvedAt: string | null;
+            approvedBy: components["schemas"]["UserRefDto"] | null;
+            itemCount: number;
+            updatedAt: string;
+            /** Format: uuid */
+            projectId: string;
+            averageFlowM3PerDay: string | null;
+            peakFactor: string | null;
+            designHorizonYear: number | null;
+            populationEquivalent: number | null;
+            /** Format: uuid */
+            targetStandardId: string | null;
+            targetStandardName: string | null;
+            notes: string | null;
+            createdBy: components["schemas"]["UserRefDto"] | null;
+            /** Format: uuid */
+            signatureEventId: string | null;
+            items: components["schemas"]["DesignBasisItemDto"][];
+            createdAt: string;
+            version: number;
+            allowedActions: string[];
+            blockedActions: components["schemas"]["BlockedActionDto"][];
+        };
+        DesignBasisItemInputDto: {
+            /** Format: uuid */
+            parameterId?: string | null;
+            name: string;
+            unit: string;
+            /**
+             * @description Influent design value
+             * @example 250.5
+             */
+            influentValue?: string | null;
+            /**
+             * @description Influent minimum
+             * @example 250.5
+             */
+            influentMin?: string | null;
+            /**
+             * @description Influent maximum
+             * @example 250.5
+             */
+            influentMax?: string | null;
+            /**
+             * @description Target effluent value
+             * @example 250.5
+             */
+            targetEffluentValue?: string | null;
+            source: components["schemas"]["DesignValueSource"];
+            sourceNote?: string | null;
+            /** @description Lab tests (phase 3, BR-DOC-082) */
+            sampleTestIds?: string[];
+        };
+        UpdateDesignBasisDto: {
+            version: number;
+            title?: string;
+            /**
+             * @description Average flow (m³/day)
+             * @example 250.5
+             */
+            averageFlowM3PerDay?: string | null;
+            /**
+             * @description Peak factor
+             * @example 250.5
+             */
+            peakFactor?: string | null;
+            designHorizonYear?: number | null;
+            populationEquivalent?: number | null;
+            /** Format: uuid */
+            targetStandardId?: string | null;
+            notes?: string | null;
+            /** @description Replaces the whole set */
+            items?: components["schemas"]["DesignBasisItemInputDto"][];
+        };
+        ApproveDesignBasisDto: {
+            version: number;
+            /** @description Required (DOC_SIGNATURE_REQUIRED) */
+            signature?: components["schemas"]["SignatureInputDto"];
+        };
+        ParameterRefDto: {
+            /** Format: uuid */
+            id: string;
+            code: string;
+            nameTh: string;
+            nameEn: string;
+            defaultUnit: string;
+            category: string;
+        };
     };
     responses: never;
     parameters: never;
@@ -4463,6 +4695,18 @@ export type SchemaClientResponseDto = components['schemas']['ClientResponseDto']
 export type SchemaPublicTransmittalItemDto = components['schemas']['PublicTransmittalItemDto'];
 export type SchemaPublicTransmittalDto = components['schemas']['PublicTransmittalDto'];
 export type SchemaPublicDownloadDto = components['schemas']['PublicDownloadDto'];
+export type SchemaDesignBasisStatus = components['schemas']['DesignBasisStatus'];
+export type SchemaDesignBasisSummaryDto = components['schemas']['DesignBasisSummaryDto'];
+export type SchemaCreateDesignBasisDto = components['schemas']['CreateDesignBasisDto'];
+export type SchemaDesignValueSource = components['schemas']['DesignValueSource'];
+export type SchemaLimitComparator = components['schemas']['LimitComparator'];
+export type SchemaStandardLimitDto = components['schemas']['StandardLimitDto'];
+export type SchemaDesignBasisItemDto = components['schemas']['DesignBasisItemDto'];
+export type SchemaDesignBasisDto = components['schemas']['DesignBasisDto'];
+export type SchemaDesignBasisItemInputDto = components['schemas']['DesignBasisItemInputDto'];
+export type SchemaUpdateDesignBasisDto = components['schemas']['UpdateDesignBasisDto'];
+export type SchemaApproveDesignBasisDto = components['schemas']['ApproveDesignBasisDto'];
+export type SchemaParameterRefDto = components['schemas']['ParameterRefDto'];
 export type $defs = Record<string, never>;
 export interface operations {
     Health_getLive: {
@@ -8278,6 +8522,161 @@ export interface operations {
             };
         };
     };
+    DesignBasis_listDesignBases: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                projectId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DesignBasisSummaryDto"][];
+                };
+            };
+        };
+    };
+    DesignBasis_createDesignBasis: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                projectId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateDesignBasisDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DesignBasisDto"];
+                };
+            };
+        };
+    };
+    DesignBasis_getDesignBasis: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DesignBasisDto"];
+                };
+            };
+        };
+    };
+    DesignBasis_updateDesignBasis: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateDesignBasisDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DesignBasisDto"];
+                };
+            };
+        };
+    };
+    DesignBasis_approveDesignBasis: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ApproveDesignBasisDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DesignBasisDto"];
+                };
+            };
+        };
+    };
+    DesignBasis_listParameters: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ParameterRefDto"][];
+                };
+            };
+        };
+    };
+    DesignBasis_listStandards: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StandardRefDto"][];
+                };
+            };
+        };
+    };
 }
 type FlattenedDeepRequired<T> = {
     [K in keyof T]-?: FlattenedDeepRequired<T[K] extends unknown[] | undefined | null ? Extract<T[K], unknown[]>[number] : T[K]>;
@@ -8332,3 +8731,6 @@ export const commentStatusValues: ReadonlyArray<FlattenedDeepRequired<components
 export const transmittalStatusValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["TransmittalStatus"]> = ["DRAFT", "SENT", "ACKNOWLEDGED", "CANCELLED"];
 export const deliveryMethodValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["DeliveryMethod"]> = ["EMAIL_ATTACHMENT", "EMAIL_LINK", "HARD_COPY", "OTHER"];
 export const transmittalFormatValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["TransmittalFormat"]> = ["PDF", "NATIVE", "PDF_AND_NATIVE", "HARD_COPY"];
+export const designBasisStatusValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["DesignBasisStatus"]> = ["DRAFT", "APPROVED", "SUPERSEDED"];
+export const designValueSourceValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["DesignValueSource"]> = ["ASSUMED", "MEASURED", "CLIENT_PROVIDED", "STANDARD", "CALCULATED"];
+export const limitComparatorValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["LimitComparator"]> = ["MAX", "MIN", "RANGE", "NOT_DETECTED", "MAX_INCREASE_OVER_BASELINE", "INFO"];

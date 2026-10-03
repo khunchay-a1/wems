@@ -6412,6 +6412,240 @@
           "Public"
         ]
       }
+    },
+    "/api/v1/projects/{projectId}/design-bases": {
+      "get": {
+        "operationId": "DesignBasis_listDesignBases",
+        "parameters": [
+          {
+            "name": "projectId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DesignBasisSummaryDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Design basis revisions of a project",
+        "tags": [
+          "DesignBasis"
+        ]
+      },
+      "post": {
+        "operationId": "DesignBasis_createDesignBasis",
+        "parameters": [
+          {
+            "name": "projectId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDesignBasisDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DesignBasisDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "New revNo copied from the latest (BR-DOC-081)",
+        "tags": [
+          "DesignBasis"
+        ]
+      }
+    },
+    "/api/v1/design-bases/{id}": {
+      "get": {
+        "operationId": "DesignBasis_getDesignBasis",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DesignBasisDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Design basis with items and target-standard limits",
+        "tags": [
+          "DesignBasis"
+        ]
+      },
+      "patch": {
+        "operationId": "DesignBasis_updateDesignBasis",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateDesignBasisDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DesignBasisDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Edit a DRAFT; items replace the whole set (BR-DOC-081/082)",
+        "tags": [
+          "DesignBasis"
+        ]
+      }
+    },
+    "/api/v1/design-bases/{id}/approve": {
+      "post": {
+        "operationId": "DesignBasis_approveDesignBasis",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApproveDesignBasisDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DesignBasisDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Approve with a signature (BR-DOC-080, 083)",
+        "tags": [
+          "DesignBasis"
+        ]
+      }
+    },
+    "/api/v1/parameters": {
+      "get": {
+        "operationId": "DesignBasis_listParameters",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ParameterRefDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Active parameters (water quality) for pickers",
+        "tags": [
+          "DesignBasis"
+        ]
+      }
+    },
+    "/api/v1/regulatory-standards": {
+      "get": {
+        "operationId": "DesignBasis_listStandards",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/StandardRefDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Active regulatory standards",
+        "tags": [
+          "DesignBasis"
+        ]
+      }
     }
   },
   "info": {
@@ -9289,12 +9523,21 @@
           },
           "nameTh": {
             "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "subtype": {
+            "type": "string",
+            "nullable": true
           }
         },
         "required": [
           "id",
           "code",
-          "nameTh"
+          "nameTh",
+          "category",
+          "subtype"
         ]
       },
       "SiteDto": {
@@ -14244,6 +14487,531 @@
         "required": [
           "url",
           "expiresAt"
+        ]
+      },
+      "DesignBasisStatus": {
+        "type": "string",
+        "enum": [
+          "DRAFT",
+          "APPROVED",
+          "SUPERSEDED"
+        ]
+      },
+      "DesignBasisSummaryDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "revNo": {
+            "type": "number"
+          },
+          "title": {
+            "type": "string"
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DesignBasisStatus"
+              }
+            ]
+          },
+          "approvedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "approvedBy": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UserRefDto"
+              }
+            ]
+          },
+          "itemCount": {
+            "type": "number"
+          },
+          "updatedAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "revNo",
+          "title",
+          "status",
+          "approvedAt",
+          "approvedBy",
+          "itemCount",
+          "updatedAt"
+        ]
+      },
+      "CreateDesignBasisDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "maxLength": 200,
+            "description": "Default: copied from the latest revision"
+          }
+        }
+      },
+      "DesignValueSource": {
+        "type": "string",
+        "enum": [
+          "ASSUMED",
+          "MEASURED",
+          "CLIENT_PROVIDED",
+          "STANDARD",
+          "CALCULATED"
+        ]
+      },
+      "LimitComparator": {
+        "type": "string",
+        "enum": [
+          "MAX",
+          "MIN",
+          "RANGE",
+          "NOT_DETECTED",
+          "MAX_INCREASE_OVER_BASELINE",
+          "INFO"
+        ]
+      },
+      "StandardLimitDto": {
+        "type": "object",
+        "properties": {
+          "parameterId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "comparator": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LimitComparator"
+              }
+            ]
+          },
+          "minValue": {
+            "type": "string",
+            "nullable": true
+          },
+          "maxValue": {
+            "type": "string",
+            "nullable": true
+          },
+          "unit": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "parameterId",
+          "comparator",
+          "minValue",
+          "maxValue",
+          "unit",
+          "note"
+        ]
+      },
+      "DesignBasisItemDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "parameterId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "parameterCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "unit": {
+            "type": "string"
+          },
+          "influentValue": {
+            "type": "string",
+            "nullable": true
+          },
+          "influentMin": {
+            "type": "string",
+            "nullable": true
+          },
+          "influentMax": {
+            "type": "string",
+            "nullable": true
+          },
+          "targetEffluentValue": {
+            "type": "string",
+            "nullable": true
+          },
+          "source": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DesignValueSource"
+              }
+            ]
+          },
+          "sourceNote": {
+            "type": "string",
+            "nullable": true
+          },
+          "sampleTestIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "standardLimit": {
+            "nullable": true,
+            "description": "Limit of the target standard",
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/StandardLimitDto"
+              }
+            ]
+          },
+          "sortOrder": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "parameterId",
+          "parameterCode",
+          "name",
+          "unit",
+          "influentValue",
+          "influentMin",
+          "influentMax",
+          "targetEffluentValue",
+          "source",
+          "sourceNote",
+          "sampleTestIds",
+          "standardLimit",
+          "sortOrder"
+        ]
+      },
+      "DesignBasisDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "revNo": {
+            "type": "number"
+          },
+          "title": {
+            "type": "string"
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DesignBasisStatus"
+              }
+            ]
+          },
+          "approvedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "approvedBy": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UserRefDto"
+              }
+            ]
+          },
+          "itemCount": {
+            "type": "number"
+          },
+          "updatedAt": {
+            "type": "string"
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "averageFlowM3PerDay": {
+            "type": "string",
+            "nullable": true
+          },
+          "peakFactor": {
+            "type": "string",
+            "nullable": true
+          },
+          "designHorizonYear": {
+            "type": "number",
+            "nullable": true
+          },
+          "populationEquivalent": {
+            "type": "number",
+            "nullable": true
+          },
+          "targetStandardId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "targetStandardName": {
+            "type": "string",
+            "nullable": true
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdBy": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UserRefDto"
+              }
+            ]
+          },
+          "signatureEventId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DesignBasisItemDto"
+            }
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "version": {
+            "type": "number"
+          },
+          "allowedActions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "blockedActions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BlockedActionDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "revNo",
+          "title",
+          "status",
+          "approvedAt",
+          "approvedBy",
+          "itemCount",
+          "updatedAt",
+          "projectId",
+          "averageFlowM3PerDay",
+          "peakFactor",
+          "designHorizonYear",
+          "populationEquivalent",
+          "targetStandardId",
+          "targetStandardName",
+          "notes",
+          "createdBy",
+          "signatureEventId",
+          "items",
+          "createdAt",
+          "version",
+          "allowedActions",
+          "blockedActions"
+        ]
+      },
+      "DesignBasisItemInputDto": {
+        "type": "object",
+        "properties": {
+          "parameterId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "unit": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "influentValue": {
+            "type": "string",
+            "nullable": true,
+            "example": "250.5",
+            "description": "Influent design value"
+          },
+          "influentMin": {
+            "type": "string",
+            "nullable": true,
+            "example": "250.5",
+            "description": "Influent minimum"
+          },
+          "influentMax": {
+            "type": "string",
+            "nullable": true,
+            "example": "250.5",
+            "description": "Influent maximum"
+          },
+          "targetEffluentValue": {
+            "type": "string",
+            "nullable": true,
+            "example": "250.5",
+            "description": "Target effluent value"
+          },
+          "source": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DesignValueSource"
+              }
+            ]
+          },
+          "sourceNote": {
+            "type": "string",
+            "maxLength": 1000,
+            "nullable": true
+          },
+          "sampleTestIds": {
+            "description": "Lab tests (phase 3, BR-DOC-082)",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "unit",
+          "source"
+        ]
+      },
+      "UpdateDesignBasisDto": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "number",
+            "minimum": 1
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "averageFlowM3PerDay": {
+            "type": "string",
+            "nullable": true,
+            "example": "250.5",
+            "description": "Average flow (m³/day)"
+          },
+          "peakFactor": {
+            "type": "string",
+            "nullable": true,
+            "example": "250.5",
+            "description": "Peak factor"
+          },
+          "designHorizonYear": {
+            "type": "number",
+            "nullable": true,
+            "minimum": 2000,
+            "maximum": 2200
+          },
+          "populationEquivalent": {
+            "type": "number",
+            "nullable": true,
+            "minimum": 0
+          },
+          "targetStandardId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          },
+          "items": {
+            "description": "Replaces the whole set",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DesignBasisItemInputDto"
+            }
+          }
+        },
+        "required": [
+          "version"
+        ]
+      },
+      "ApproveDesignBasisDto": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "number",
+            "minimum": 1
+          },
+          "signature": {
+            "description": "Required (DOC_SIGNATURE_REQUIRED)",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SignatureInputDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "version"
+        ]
+      },
+      "ParameterRefDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "code": {
+            "type": "string"
+          },
+          "nameTh": {
+            "type": "string"
+          },
+          "nameEn": {
+            "type": "string"
+          },
+          "defaultUnit": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "code",
+          "nameTh",
+          "nameEn",
+          "defaultUnit",
+          "category"
         ]
       }
     }
