@@ -43,7 +43,7 @@
   - รับงาน: Playwright: login → admin สร้างผู้ใช้ → ผู้ใช้ใหม่ login และเปลี่ยนรหัสผ่าน
 - [ ] **P0-14 Mobile skeleton** — flavors, router, theme, l10n (+ ป้าย enum), API client ที่ generate, auth (secure storage, refresh single-flight), drift + migrations, sync engine (pull scope `global`/`user`, outbox processor), FCM, ตรวจเวอร์ชัน, หน้าตั้งค่า · `08-mobile.md`
   - รับงาน: unit test outbox/pull ครบตาม `08-mobile.md` §11; login กับ API dev ได้
-- [ ] **P0-15 CI** — GitHub Actions ตาม `02-architecture.md` §9 พร้อม cache
+- [x] **P0-15 CI** — GitHub Actions ตาม `02-architecture.md` §9 พร้อม cache
 - [x] **P0-16 Tools** — `tools/check-enum-labels.mjs` (มีแล้ว — ต่อเข้า CI), `tools/gen-i18n-enums.mjs` สร้างไฟล์แปลของ web และ ARB ของมือถือ
 
 ## เฟส 1 — MVP งานออกแบบและเอกสาร
