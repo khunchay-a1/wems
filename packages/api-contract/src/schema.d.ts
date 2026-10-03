@@ -2270,6 +2270,74 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/my-work": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Start page: reviews, comments to answer, returned drawings, client returns */
+        get: operations["Workspace_getMyWork"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Documents, projects and clients the user can see (≤ 10 each) */
+        get: operations["Workspace_search"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/projects/{projectId}/documents/stats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Numbers for the project dashboard (M04 §9) */
+        get: operations["Workspace_getDocumentStats"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/projects/{projectId}/reports/mdl": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Master document list as .xlsx or PDF (report.export) */
+        get: operations["Workspace_exportMdl"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -4493,6 +4561,97 @@ export interface components {
             defaultUnit: string;
             category: string;
         };
+        WorkCommentDto: {
+            /** Format: uuid */
+            commentId: string;
+            /** Format: uuid */
+            revisionId: string;
+            /** Format: uuid */
+            documentId: string;
+            /** Format: uuid */
+            projectId: string;
+            documentNumber: string;
+            revLabel: string;
+            body: string;
+            authorName: string;
+            createdAt: string;
+        };
+        WorkRevisionDto: {
+            /** Format: uuid */
+            revisionId: string;
+            /** Format: uuid */
+            documentId: string;
+            /** Format: uuid */
+            projectId: string;
+            documentNumber: string;
+            documentTitle: string;
+            revLabel: string;
+            purposeCode: components["schemas"]["PurposeCode"];
+            clientReturnCode: components["schemas"]["ClientReturnCode"] | null;
+            /** @description When it was returned */
+            at: string | null;
+        };
+        MyWorkDto: {
+            /** @description Up to 5, by due date */
+            reviews: components["schemas"]["MyReviewStepDto"][];
+            reviewCount: number;
+            overdueReviewCount: number;
+            /** @description OPEN review comments on my revisions */
+            commentsToAnswer: components["schemas"]["WorkCommentDto"][];
+            commentsToAnswerCount: number;
+            /** @description My revisions returned for revision */
+            returned: components["schemas"]["WorkRevisionDto"][];
+            /** @description CODE_3/CODE_4 on documents I own */
+            clientReturns: components["schemas"]["WorkRevisionDto"][];
+        };
+        SearchDocumentDto: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            projectId: string;
+            projectCode: string;
+            number: string;
+            title: string;
+            status: components["schemas"]["DocumentStatus"];
+            currentRevLabel: string | null;
+        };
+        SearchProjectDto: {
+            /** Format: uuid */
+            id: string;
+            code: string;
+            name: string;
+            status: components["schemas"]["ProjectStatus"];
+            clientName: string;
+        };
+        SearchClientDto: {
+            /** Format: uuid */
+            id: string;
+            code: string;
+            nameTh: string;
+            nameEn: string | null;
+        };
+        SearchResultDto: {
+            documents: components["schemas"]["SearchDocumentDto"][];
+            projects: components["schemas"]["SearchProjectDto"][];
+            clients: components["schemas"]["SearchClientDto"][];
+        };
+        MonthlyPlanDto: {
+            /** @example 2026-10 */
+            month: string;
+            planned: number;
+            actual: number;
+        };
+        DocumentStatsDto: {
+            documentCount: number;
+            /** @description RevisionStatus (or NO_REVISION) → count */
+            byRevisionStatus: Record<string, never>;
+            activeReviews: number;
+            overdueReviews: number;
+            openComments: number;
+            needsNewRevision: number;
+            /** @description Planned vs actual deliveries per month */
+            monthly: components["schemas"]["MonthlyPlanDto"][];
+        };
     };
     responses: never;
     parameters: never;
@@ -4707,6 +4866,15 @@ export type SchemaDesignBasisItemInputDto = components['schemas']['DesignBasisIt
 export type SchemaUpdateDesignBasisDto = components['schemas']['UpdateDesignBasisDto'];
 export type SchemaApproveDesignBasisDto = components['schemas']['ApproveDesignBasisDto'];
 export type SchemaParameterRefDto = components['schemas']['ParameterRefDto'];
+export type SchemaWorkCommentDto = components['schemas']['WorkCommentDto'];
+export type SchemaWorkRevisionDto = components['schemas']['WorkRevisionDto'];
+export type SchemaMyWorkDto = components['schemas']['MyWorkDto'];
+export type SchemaSearchDocumentDto = components['schemas']['SearchDocumentDto'];
+export type SchemaSearchProjectDto = components['schemas']['SearchProjectDto'];
+export type SchemaSearchClientDto = components['schemas']['SearchClientDto'];
+export type SchemaSearchResultDto = components['schemas']['SearchResultDto'];
+export type SchemaMonthlyPlanDto = components['schemas']['MonthlyPlanDto'];
+export type SchemaDocumentStatsDto = components['schemas']['DocumentStatsDto'];
 export type $defs = Record<string, never>;
 export interface operations {
     Health_getLive: {
@@ -8677,6 +8845,91 @@ export interface operations {
             };
         };
     };
+    Workspace_getMyWork: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MyWorkDto"];
+                };
+            };
+        };
+    };
+    Workspace_search: {
+        parameters: {
+            query: {
+                q: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SearchResultDto"];
+                };
+            };
+        };
+    };
+    Workspace_getDocumentStats: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                projectId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DocumentStatsDto"];
+                };
+            };
+        };
+    };
+    Workspace_exportMdl: {
+        parameters: {
+            query?: {
+                format?: "xlsx" | "pdf";
+            };
+            header?: never;
+            path: {
+                projectId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": string;
+                    "application/pdf": string;
+                };
+            };
+        };
+    };
 }
 type FlattenedDeepRequired<T> = {
     [K in keyof T]-?: FlattenedDeepRequired<T[K] extends unknown[] | undefined | null ? Extract<T[K], unknown[]>[number] : T[K]>;
@@ -8688,6 +8941,7 @@ type ReadonlyArray<T> = [
 ] ? Readonly<Exclude<T, undefined>> : Readonly<Exclude<T, undefined>[]>;
 export const pathsApiV1RevisionsIdCrsGetParametersQueryFormatValues: ReadonlyArray<FlattenedDeepRequired<paths>["/api/v1/revisions/{id}/crs"]["get"]["parameters"]["query"]["format"]> = ["pdf", "xlsx"];
 export const pathsApiV1PublicTransmittalsTokenItemsItemIdDownloadGetParametersQueryRoleValues: ReadonlyArray<FlattenedDeepRequired<paths>["/api/v1/public/transmittals/{token}/items/{itemId}/download"]["get"]["parameters"]["query"]["role"]> = ["PDF_RENDITION", "NATIVE"];
+export const pathsApiV1ProjectsProjectIdReportsMdlGetParametersQueryFormatValues: ReadonlyArray<FlattenedDeepRequired<paths>["/api/v1/projects/{projectId}/reports/mdl"]["get"]["parameters"]["query"]["format"]> = ["xlsx", "pdf"];
 export const healthDtoStatusValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["HealthDto"]["status"]> = ["ok", "degraded"];
 export const healthDtoChecksValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["HealthDto"]["checks"][string]> = ["up", "down", "skipped"];
 export const clientPlatformValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["ClientPlatform"]> = ["WEB", "ANDROID", "IOS"];

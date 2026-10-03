@@ -1,6 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
+import { DeliveryCard } from '@/features/documents/delivery-card';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
@@ -70,6 +71,7 @@ export default function ProjectOverviewPage() {
             )}
           </CardContent>
         </Card>
+        <DeliveryCard projectId={id} />
         <Card className="col-span-2 lg:col-span-4">
           <CardHeader>
             <CardTitle>{t('projects.recentTransmittals')}</CardTitle>

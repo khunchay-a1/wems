@@ -223,7 +223,15 @@
   },
   "home": {
     "greeting": "Hello {name}",
-    "intro": "Here is what needs your attention"
+    "intro": "Here is what needs your attention",
+    "toReview": "Waiting for my review",
+    "overdue": "{n} overdue",
+    "seeAll": "See all",
+    "toAnswer": "Comments I need to answer",
+    "returned": "My drawings returned for revision",
+    "clientReturns": "Client returns to address",
+    "latestNotifications": "Latest notifications",
+    "nothing": "Nothing waiting"
   },
   "notificationTypes": {
     "auth": {
@@ -654,5 +662,30 @@
     "limitMin": "≥ {v} {unit}",
     "limitRange": "{min}–{max} {unit}",
     "limitNotDetected": "Not detected"
+  },
+  "reviews": {
+    "title": "My reviews",
+    "waiting": "Waiting for me",
+    "decided": "Decided",
+    "upcoming": "Upcoming",
+    "empty": "No reviews",
+    "project": "Project",
+    "step": "Step",
+    "submittedBy": "Submitted by",
+    "due": "Due"
+  },
+  "search": {
+    "title": "Results for “{q}”",
+    "tooShort": "Type at least 2 characters",
+    "none": "Nothing found",
+    "documents": "Documents",
+    "projects": "Projects",
+    "clients": "Clients"
+  },
+  "reports": {
+    "delivery": "Planned vs actual deliveries by month",
+    "openComments": "Open comments",
+    "needsNewRevision": "Need a new revision",
+    "noPlans": "No delivery plans yet"
   }
 }

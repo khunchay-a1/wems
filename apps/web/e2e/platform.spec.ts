@@ -19,6 +19,8 @@ test.describe('M01 platform', () => {
     const temp = (await page.getByTestId('temp-password').innerText()).trim();
     expect(temp.length).toBeGreaterThanOrEqual(12);
     await page.getByTestId('temp-password-close').click();
+    // many users exist after repeated runs: filter the list
+    await page.goto(`/admin/users?q=${encodeURIComponent(email)}`);
     await expect(page.getByTestId(`user-row-${email}`)).toBeVisible();
     await logout(page);
 

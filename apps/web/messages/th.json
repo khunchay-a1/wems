@@ -223,7 +223,15 @@
   },
   "home": {
     "greeting": "สวัสดี {name}",
-    "intro": "ภาพรวมงานที่รอคุณ"
+    "intro": "ภาพรวมงานที่รอคุณ",
+    "toReview": "รอฉันตรวจ",
+    "overdue": "เลยกำหนด {n}",
+    "seeAll": "ดูทั้งหมด",
+    "toAnswer": "ความเห็นที่ฉันต้องตอบ",
+    "returned": "เอกสารของฉันที่ถูกตีกลับ",
+    "clientReturns": "ผลตอบกลับลูกค้าที่ต้องแก้",
+    "latestNotifications": "แจ้งเตือนล่าสุด",
+    "nothing": "ไม่มีงานค้าง"
   },
   "notificationTypes": {
     "auth": {
@@ -654,5 +662,30 @@
     "limitMin": "ไม่น้อยกว่า {v} {unit}",
     "limitRange": "{min}–{max} {unit}",
     "limitNotDetected": "ต้องตรวจไม่พบ"
+  },
+  "reviews": {
+    "title": "งานตรวจของฉัน",
+    "waiting": "รอฉันดำเนินการ",
+    "decided": "ตัดสินแล้ว",
+    "upcoming": "รอถึงคิว",
+    "empty": "ไม่มีงานตรวจ",
+    "project": "โครงการ",
+    "step": "ขั้นตอน",
+    "submittedBy": "ส่งโดย",
+    "due": "ครบกำหนด"
+  },
+  "search": {
+    "title": "ผลการค้นหา “{q}”",
+    "tooShort": "พิมพ์อย่างน้อย 2 ตัวอักษร",
+    "none": "ไม่พบผลลัพธ์",
+    "documents": "เอกสาร",
+    "projects": "โครงการ",
+    "clients": "ลูกค้า"
+  },
+  "reports": {
+    "delivery": "แผนส่งมอบเทียบจริงรายเดือน",
+    "openComments": "ความเห็นค้าง",
+    "needsNewRevision": "ต้องออก revision ใหม่",
+    "noPlans": "ยังไม่มีแผนส่งมอบ"
   }
 }

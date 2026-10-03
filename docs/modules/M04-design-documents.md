@@ -256,6 +256,7 @@ Template ดาวน์โหลดได้จากหน้าทะเบ�
 | GET | `/projects/{projectId}/reports/mdl?format=` | `report.export` | §9 |
 | GET | `/projects/{projectId}/documents/stats` | `document.read` | ตัวเลขสำหรับ dashboard |
 | GET | `/search?q=` | ผู้ใช้ทุกคน | เอกสาร/โครงการ/ลูกค้าที่เข้าถึงได้ อย่างละ ≤ 10 |
+| GET | `/my-work` | ผู้ใช้ทุกคน | หน้า "งานของฉัน" (`07-web-ui.md` §6.1): งานตรวจ ACTIVE (5 รายการแรก + จำนวน/เลยกำหนด), ความเห็น OPEN บน revision ที่ฉันจัดทำ/เป็นเจ้าของ, revision ที่ถูกตีกลับ, เอกสารของฉันที่ลูกค้าตอบ CODE_3/4 |
 
 ## 11. รหัสข้อผิดพลาดของโมดูล
 

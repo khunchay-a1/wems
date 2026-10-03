@@ -18,6 +18,8 @@ import { RevisionStampService } from './revision-stamp.service';
 import { RevisionsService } from './revisions.service';
 import { PublicTransmittalsController, TransmittalsController } from './transmittals.controller';
 import { TransmittalsService } from './transmittals.service';
+import { WorkspaceController } from './workspace.controller';
+import { WorkspaceService } from './workspace.service';
 
 /** M04 design documents (docs/modules/M04-design-documents.md). */
 @Module({
@@ -30,6 +32,7 @@ import { TransmittalsService } from './transmittals.service';
     TransmittalsController,
     PublicTransmittalsController,
     DesignBasisController,
+    WorkspaceController,
   ],
   providers: [
     MasterDataService,
@@ -43,6 +46,7 @@ import { TransmittalsService } from './transmittals.service';
     TransmittalsService,
     PublicTransmittalsService,
     DesignBasisService,
+    WorkspaceService,
   ],
   exports: [MasterDataService, DocumentAccessService, DocumentsService, RevisionsService],
 })

@@ -6646,6 +6646,143 @@
           "DesignBasis"
         ]
       }
+    },
+    "/api/v1/my-work": {
+      "get": {
+        "operationId": "Workspace_getMyWork",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MyWorkDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Start page: reviews, comments to answer, returned drawings, client returns",
+        "tags": [
+          "Workspace"
+        ]
+      }
+    },
+    "/api/v1/search": {
+      "get": {
+        "operationId": "Workspace_search",
+        "parameters": [
+          {
+            "name": "q",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "minLength": 2,
+              "maxLength": 100,
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchResultDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Documents, projects and clients the user can see (≤ 10 each)",
+        "tags": [
+          "Workspace"
+        ]
+      }
+    },
+    "/api/v1/projects/{projectId}/documents/stats": {
+      "get": {
+        "operationId": "Workspace_getDocumentStats",
+        "parameters": [
+          {
+            "name": "projectId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentStatsDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Numbers for the project dashboard (M04 §9)",
+        "tags": [
+          "Workspace"
+        ]
+      }
+    },
+    "/api/v1/projects/{projectId}/reports/mdl": {
+      "get": {
+        "operationId": "Workspace_exportMdl",
+        "parameters": [
+          {
+            "name": "projectId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "format",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": "xlsx",
+              "type": "string",
+              "enum": [
+                "xlsx",
+                "pdf"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "application/pdf": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Master document list as .xlsx or PDF (report.export)",
+        "tags": [
+          "Workspace"
+        ]
+      }
     }
   },
   "info": {
@@ -15012,6 +15149,348 @@
           "nameEn",
           "defaultUnit",
           "category"
+        ]
+      },
+      "WorkCommentDto": {
+        "type": "object",
+        "properties": {
+          "commentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "revisionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "documentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "documentNumber": {
+            "type": "string"
+          },
+          "revLabel": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "authorName": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "commentId",
+          "revisionId",
+          "documentId",
+          "projectId",
+          "documentNumber",
+          "revLabel",
+          "body",
+          "authorName",
+          "createdAt"
+        ]
+      },
+      "WorkRevisionDto": {
+        "type": "object",
+        "properties": {
+          "revisionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "documentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "documentNumber": {
+            "type": "string"
+          },
+          "documentTitle": {
+            "type": "string"
+          },
+          "revLabel": {
+            "type": "string"
+          },
+          "purposeCode": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PurposeCode"
+              }
+            ]
+          },
+          "clientReturnCode": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ClientReturnCode"
+              }
+            ]
+          },
+          "at": {
+            "type": "string",
+            "nullable": true,
+            "description": "When it was returned"
+          }
+        },
+        "required": [
+          "revisionId",
+          "documentId",
+          "projectId",
+          "documentNumber",
+          "documentTitle",
+          "revLabel",
+          "purposeCode",
+          "clientReturnCode",
+          "at"
+        ]
+      },
+      "MyWorkDto": {
+        "type": "object",
+        "properties": {
+          "reviews": {
+            "description": "Up to 5, by due date",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MyReviewStepDto"
+            }
+          },
+          "reviewCount": {
+            "type": "number"
+          },
+          "overdueReviewCount": {
+            "type": "number"
+          },
+          "commentsToAnswer": {
+            "description": "OPEN review comments on my revisions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WorkCommentDto"
+            }
+          },
+          "commentsToAnswerCount": {
+            "type": "number"
+          },
+          "returned": {
+            "description": "My revisions returned for revision",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WorkRevisionDto"
+            }
+          },
+          "clientReturns": {
+            "description": "CODE_3/CODE_4 on documents I own",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WorkRevisionDto"
+            }
+          }
+        },
+        "required": [
+          "reviews",
+          "reviewCount",
+          "overdueReviewCount",
+          "commentsToAnswer",
+          "commentsToAnswerCount",
+          "returned",
+          "clientReturns"
+        ]
+      },
+      "SearchDocumentDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "projectCode": {
+            "type": "string"
+          },
+          "number": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DocumentStatus"
+              }
+            ]
+          },
+          "currentRevLabel": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "projectId",
+          "projectCode",
+          "number",
+          "title",
+          "status",
+          "currentRevLabel"
+        ]
+      },
+      "SearchProjectDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "code": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ProjectStatus"
+              }
+            ]
+          },
+          "clientName": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "code",
+          "name",
+          "status",
+          "clientName"
+        ]
+      },
+      "SearchClientDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "code": {
+            "type": "string"
+          },
+          "nameTh": {
+            "type": "string"
+          },
+          "nameEn": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "code",
+          "nameTh",
+          "nameEn"
+        ]
+      },
+      "SearchResultDto": {
+        "type": "object",
+        "properties": {
+          "documents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SearchDocumentDto"
+            }
+          },
+          "projects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SearchProjectDto"
+            }
+          },
+          "clients": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SearchClientDto"
+            }
+          }
+        },
+        "required": [
+          "documents",
+          "projects",
+          "clients"
+        ]
+      },
+      "MonthlyPlanDto": {
+        "type": "object",
+        "properties": {
+          "month": {
+            "type": "string",
+            "example": "2026-10"
+          },
+          "planned": {
+            "type": "number"
+          },
+          "actual": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "month",
+          "planned",
+          "actual"
+        ]
+      },
+      "DocumentStatsDto": {
+        "type": "object",
+        "properties": {
+          "documentCount": {
+            "type": "number"
+          },
+          "byRevisionStatus": {
+            "type": "object",
+            "description": "RevisionStatus (or NO_REVISION) → count"
+          },
+          "activeReviews": {
+            "type": "number"
+          },
+          "overdueReviews": {
+            "type": "number"
+          },
+          "openComments": {
+            "type": "number"
+          },
+          "needsNewRevision": {
+            "type": "number"
+          },
+          "monthly": {
+            "description": "Planned vs actual deliveries per month",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MonthlyPlanDto"
+            }
+          }
+        },
+        "required": [
+          "documentCount",
+          "byRevisionStatus",
+          "activeReviews",
+          "overdueReviews",
+          "openComments",
+          "needsNewRevision",
+          "monthly"
         ]
       }
     }

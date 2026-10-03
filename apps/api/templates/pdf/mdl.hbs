@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="{{lang}}">
+<head><meta charset="utf-8"><title>{{title}}</title>{{> styles}}
+<style>
+  @page { size: A4 landscape; }
+  table { font-size: 8pt; }
+  th, td { padding: 1mm 1.2mm; }
+  td.c { text-align: center; white-space: nowrap; }
+  td.late { color: #b42318; font-weight: 700; }
+  .sub { color: #52606d; margin-bottom: 3mm; }
+</style>
+</head>
+<body>
+  <h1>{{title}}</h1>
+  <div class="sub">{{project}} · {{asOf}}</div>
+  <table>
+    <thead>
+      <tr>
+        {{#each headers}}<th rowspan="2">{{this}}</th>{{/each}}
+        {{#each purposes}}<th class="c">{{this}}</th>{{/each}}
+        <th rowspan="2">{{delayLabel}}</th>
+      </tr>
+      <tr>{{#each purposes}}<th class="c">{{../planLabel}}</th>{{/each}}</tr>
+    </thead>
+    <tbody>
+      {{#each rows}}
+      <tr>
+        <td class="c">{{number}}</td><td>{{title}}</td><td class="c">{{discipline}}</td><td class="c">{{type}}</td>
+        <td class="c">{{rev}}</td><td>{{revStatus}}</td><td class="c">{{approved}}</td><td>{{client}}</td>
+        {{#each plans}}<td class="c">{{planned}}{{#if actual}}<br>{{actual}}{{/if}}</td>{{/each}}
+        <td class="c{{#if late}} late{{/if}}">{{delay}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</body>
+</html>
