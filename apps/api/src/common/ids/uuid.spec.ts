@@ -24,3 +24,11 @@ describe('UUIDv7 (ADR-0005)', () => {
     expect(isAcceptableClientUuidV7('not-a-uuid', now)).toBe(false);
   });
 });
+
+describe('uuidv7 monotonic counter', () => {
+  it('keeps creation order for ids of the same millisecond', () => {
+    const ms = 1_790_000_000_000;
+    const ids = Array.from({ length: 50 }, () => uuidv7(ms));
+    expect([...ids].sort()).toEqual(ids);
+  });
+});

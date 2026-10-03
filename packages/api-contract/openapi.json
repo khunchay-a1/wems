@@ -5262,6 +5262,354 @@
           "Documents"
         ]
       }
+    },
+    "/api/v1/comments": {
+      "get": {
+        "operationId": "Comments_listComments",
+        "parameters": [
+          {
+            "name": "ownerType",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/CommentOwnerType"
+            }
+          },
+          {
+            "name": "ownerId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CommentDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Comments of an owner with replies, numbering and allowedActions",
+        "tags": [
+          "Comments"
+        ]
+      },
+      "post": {
+        "operationId": "Comments_createComment",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCommentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The top-level comment (with replies)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommentDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Comment, pin or reply (review comments BR-DOC-035)",
+        "tags": [
+          "Comments"
+        ]
+      }
+    },
+    "/api/v1/comments/{id}": {
+      "get": {
+        "operationId": "Comments_getComment",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommentDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "One comment thread",
+        "tags": [
+          "Comments"
+        ]
+      },
+      "patch": {
+        "operationId": "Comments_updateComment",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCommentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommentDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Edit own comment before the step decides",
+        "tags": [
+          "Comments"
+        ]
+      },
+      "delete": {
+        "operationId": "Comments_deleteComment",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "version",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "summary": "Delete own comment before the step decides",
+        "tags": [
+          "Comments"
+        ]
+      }
+    },
+    "/api/v1/comments/{id}/respond": {
+      "post": {
+        "operationId": "Comments_respondComment",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RespondCommentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommentDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Preparer answers an OPEN comment → RESPONDED",
+        "tags": [
+          "Comments"
+        ]
+      }
+    },
+    "/api/v1/comments/{id}/close": {
+      "post": {
+        "operationId": "Comments_closeComment",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommentStateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommentDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Accept/withdraw → CLOSED (author or document.admin)",
+        "tags": [
+          "Comments"
+        ]
+      }
+    },
+    "/api/v1/comments/{id}/reopen": {
+      "post": {
+        "operationId": "Comments_reopenComment",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommentStateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommentDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Answer not accepted → OPEN (author or document.admin)",
+        "tags": [
+          "Comments"
+        ]
+      }
+    },
+    "/api/v1/revisions/{id}/crs": {
+      "get": {
+        "operationId": "Comments_exportCrs",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "format",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": "pdf",
+              "type": "string",
+              "enum": [
+                "pdf",
+                "xlsx"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/pdf": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Comment resolution sheet as PDF or .xlsx (M04 §6)",
+        "tags": [
+          "Comments"
+        ]
+      }
     }
   },
   "info": {
@@ -11688,6 +12036,376 @@
           "version",
           "assigneeId",
           "reason"
+        ]
+      },
+      "CommentOwnerType": {
+        "type": "string",
+        "enum": [
+          "DOCUMENT_REVISION",
+          "TRANSMITTAL",
+          "DESIGN_BASIS",
+          "TASK",
+          "DAILY_REPORT",
+          "ISSUE",
+          "SITE_QUERY",
+          "LAB_JOB",
+          "SAMPLE",
+          "QUOTATION"
+        ]
+      },
+      "PdfAnchorDto": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "number",
+            "minimum": 1
+          },
+          "x": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "y": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "w": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "h": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "PIN",
+              "RECT"
+            ]
+          }
+        },
+        "required": [
+          "page",
+          "x",
+          "y",
+          "kind"
+        ]
+      },
+      "CommentStatus": {
+        "type": "string",
+        "enum": [
+          "NONE",
+          "OPEN",
+          "RESPONDED",
+          "CLOSED"
+        ]
+      },
+      "CommentReplyDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "author": {
+            "$ref": "#/components/schemas/UserRefDto"
+          },
+          "body": {
+            "type": "string"
+          },
+          "mentions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          },
+          "version": {
+            "type": "number"
+          },
+          "allowedActions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "author",
+          "body",
+          "mentions",
+          "createdAt",
+          "updatedAt",
+          "version",
+          "allowedActions"
+        ]
+      },
+      "CommentDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "seq": {
+            "type": "number",
+            "description": "Running number per owner (#1, #2 … by creation time)"
+          },
+          "ownerType": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CommentOwnerType"
+              }
+            ]
+          },
+          "ownerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "author": {
+            "$ref": "#/components/schemas/UserRefDto"
+          },
+          "body": {
+            "type": "string"
+          },
+          "mentions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "anchor": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PdfAnchorDto"
+              }
+            ]
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CommentStatus"
+              }
+            ]
+          },
+          "reviewStepId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "stepName": {
+            "type": "string",
+            "nullable": true,
+            "description": "Step name of a review comment"
+          },
+          "cycleNo": {
+            "type": "number",
+            "nullable": true
+          },
+          "responseNote": {
+            "type": "string",
+            "nullable": true
+          },
+          "resolvedBy": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UserRefDto"
+              }
+            ]
+          },
+          "resolvedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "carriedFromRevLabel": {
+            "type": "string",
+            "nullable": true,
+            "description": "Rev. label it was carried from"
+          },
+          "carriedFromCommentId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "replies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CommentReplyDto"
+            }
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          },
+          "version": {
+            "type": "number"
+          },
+          "allowedActions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "blockedActions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BlockedActionDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "seq",
+          "ownerType",
+          "ownerId",
+          "author",
+          "body",
+          "mentions",
+          "anchor",
+          "status",
+          "reviewStepId",
+          "stepName",
+          "cycleNo",
+          "responseNote",
+          "resolvedBy",
+          "resolvedAt",
+          "carriedFromRevLabel",
+          "carriedFromCommentId",
+          "replies",
+          "createdAt",
+          "updatedAt",
+          "version",
+          "allowedActions",
+          "blockedActions"
+        ]
+      },
+      "CreateCommentDto": {
+        "type": "object",
+        "properties": {
+          "ownerType": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CommentOwnerType"
+              }
+            ]
+          },
+          "ownerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "body": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 5000
+          },
+          "anchor": {
+            "$ref": "#/components/schemas/PdfAnchorDto"
+          },
+          "parentId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Reply to a top-level comment"
+          },
+          "mentions": {
+            "description": "Mentioned user ids",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "reviewStepId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Review comment of this ACTIVE step (BR-DOC-035) — becomes OPEN"
+          }
+        },
+        "required": [
+          "ownerType",
+          "ownerId",
+          "body"
+        ]
+      },
+      "UpdateCommentDto": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "number",
+            "minimum": 1
+          },
+          "body": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 5000
+          },
+          "anchor": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PdfAnchorDto"
+              }
+            ]
+          },
+          "mentions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "version"
+        ]
+      },
+      "RespondCommentDto": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "number",
+            "minimum": 1
+          },
+          "responseNote": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 5000
+          }
+        },
+        "required": [
+          "version",
+          "responseNote"
+        ]
+      },
+      "CommentStateDto": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "number",
+            "minimum": 1
+          },
+          "note": {
+            "type": "string",
+            "maxLength": 2000,
+            "description": "Optional note added as a reply"
+          }
+        },
+        "required": [
+          "version"
         ]
       }
     }

@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { AuthModule } from '../platform/auth/auth.module';
 import { ProjectsModule } from '../projects/projects.module';
+import { CommentsController } from './comments.controller';
+import { CommentsService } from './comments.service';
 import { DocumentAccessService } from './document-access.service';
 import { DocumentsController } from './documents.controller';
 import { DocumentsExcelController } from './documents-excel.controller';
@@ -14,7 +16,12 @@ import { RevisionsService } from './revisions.service';
 /** M04 design documents (docs/modules/M04-design-documents.md). */
 @Module({
   imports: [ProjectsModule, AuthModule],
-  controllers: [MasterDataController, DocumentsExcelController, DocumentsController],
+  controllers: [
+    MasterDataController,
+    DocumentsExcelController,
+    DocumentsController,
+    CommentsController,
+  ],
   providers: [
     MasterDataService,
     DocumentAccessService,
@@ -22,6 +29,7 @@ import { RevisionsService } from './revisions.service';
     RevisionsService,
     ReviewService,
     DocumentsExcelService,
+    CommentsService,
   ],
   exports: [MasterDataService, DocumentAccessService, DocumentsService, RevisionsService],
 })

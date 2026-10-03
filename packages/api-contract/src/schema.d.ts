@@ -1803,6 +1803,111 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/comments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Comments of an owner with replies, numbering and allowedActions */
+        get: operations["Comments_listComments"];
+        put?: never;
+        /** Comment, pin or reply (review comments BR-DOC-035) */
+        post: operations["Comments_createComment"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/comments/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** One comment thread */
+        get: operations["Comments_getComment"];
+        put?: never;
+        post?: never;
+        /** Delete own comment before the step decides */
+        delete: operations["Comments_deleteComment"];
+        options?: never;
+        head?: never;
+        /** Edit own comment before the step decides */
+        patch: operations["Comments_updateComment"];
+        trace?: never;
+    };
+    "/api/v1/comments/{id}/respond": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Preparer answers an OPEN comment → RESPONDED */
+        post: operations["Comments_respondComment"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/comments/{id}/close": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Accept/withdraw → CLOSED (author or document.admin) */
+        post: operations["Comments_closeComment"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/comments/{id}/reopen": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Answer not accepted → OPEN (author or document.admin) */
+        post: operations["Comments_reopenComment"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/revisions/{id}/crs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Comment resolution sheet as PDF or .xlsx (M04 §6) */
+        get: operations["Comments_exportCrs"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -3536,6 +3641,96 @@ export interface components {
             assigneeId: string;
             reason: string;
         };
+        /** @enum {string} */
+        CommentOwnerType: "DOCUMENT_REVISION" | "TRANSMITTAL" | "DESIGN_BASIS" | "TASK" | "DAILY_REPORT" | "ISSUE" | "SITE_QUERY" | "LAB_JOB" | "SAMPLE" | "QUOTATION";
+        PdfAnchorDto: {
+            page: number;
+            x: number;
+            y: number;
+            w?: number;
+            h?: number;
+            /** @enum {string} */
+            kind: "PIN" | "RECT";
+        };
+        /** @enum {string} */
+        CommentStatus: "NONE" | "OPEN" | "RESPONDED" | "CLOSED";
+        CommentReplyDto: {
+            /** Format: uuid */
+            id: string;
+            author: components["schemas"]["UserRefDto"];
+            body: string;
+            mentions: string[];
+            createdAt: string;
+            updatedAt: string;
+            version: number;
+            allowedActions: string[];
+        };
+        CommentDto: {
+            /** Format: uuid */
+            id: string;
+            /** @description Running number per owner (#1, #2 … by creation time) */
+            seq: number;
+            ownerType: components["schemas"]["CommentOwnerType"];
+            /** Format: uuid */
+            ownerId: string;
+            author: components["schemas"]["UserRefDto"];
+            body: string;
+            mentions: string[];
+            anchor: components["schemas"]["PdfAnchorDto"] | null;
+            status: components["schemas"]["CommentStatus"];
+            /** Format: uuid */
+            reviewStepId: string | null;
+            /** @description Step name of a review comment */
+            stepName: string | null;
+            cycleNo: number | null;
+            responseNote: string | null;
+            resolvedBy: components["schemas"]["UserRefDto"] | null;
+            resolvedAt: string | null;
+            /** @description Rev. label it was carried from */
+            carriedFromRevLabel: string | null;
+            /** Format: uuid */
+            carriedFromCommentId: string | null;
+            replies: components["schemas"]["CommentReplyDto"][];
+            createdAt: string;
+            updatedAt: string;
+            version: number;
+            allowedActions: string[];
+            blockedActions: components["schemas"]["BlockedActionDto"][];
+        };
+        CreateCommentDto: {
+            ownerType: components["schemas"]["CommentOwnerType"];
+            /** Format: uuid */
+            ownerId: string;
+            body: string;
+            anchor?: components["schemas"]["PdfAnchorDto"];
+            /**
+             * Format: uuid
+             * @description Reply to a top-level comment
+             */
+            parentId?: string;
+            /** @description Mentioned user ids */
+            mentions?: string[];
+            /**
+             * Format: uuid
+             * @description Review comment of this ACTIVE step (BR-DOC-035) — becomes OPEN
+             */
+            reviewStepId?: string;
+        };
+        UpdateCommentDto: {
+            version: number;
+            body?: string;
+            anchor?: components["schemas"]["PdfAnchorDto"] | null;
+            mentions?: string[];
+        };
+        RespondCommentDto: {
+            version: number;
+            responseNote: string;
+        };
+        CommentStateDto: {
+            version: number;
+            /** @description Optional note added as a reply */
+            note?: string;
+        };
     };
     responses: never;
     parameters: never;
@@ -3708,6 +3903,15 @@ export type SchemaMyReviewStepDto = components['schemas']['MyReviewStepDto'];
 export type SchemaSignatureInputDto = components['schemas']['SignatureInputDto'];
 export type SchemaDecisionDto = components['schemas']['DecisionDto'];
 export type SchemaReassignDto = components['schemas']['ReassignDto'];
+export type SchemaCommentOwnerType = components['schemas']['CommentOwnerType'];
+export type SchemaPdfAnchorDto = components['schemas']['PdfAnchorDto'];
+export type SchemaCommentStatus = components['schemas']['CommentStatus'];
+export type SchemaCommentReplyDto = components['schemas']['CommentReplyDto'];
+export type SchemaCommentDto = components['schemas']['CommentDto'];
+export type SchemaCreateCommentDto = components['schemas']['CreateCommentDto'];
+export type SchemaUpdateCommentDto = components['schemas']['UpdateCommentDto'];
+export type SchemaRespondCommentDto = components['schemas']['RespondCommentDto'];
+export type SchemaCommentStateDto = components['schemas']['CommentStateDto'];
 export type $defs = Record<string, never>;
 export interface operations {
     Health_getLive: {
@@ -6850,6 +7054,218 @@ export interface operations {
             };
         };
     };
+    Comments_listComments: {
+        parameters: {
+            query: {
+                ownerType: components["schemas"]["CommentOwnerType"];
+                ownerId: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommentDto"][];
+                };
+            };
+        };
+    };
+    Comments_createComment: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateCommentDto"];
+            };
+        };
+        responses: {
+            /** @description The top-level comment (with replies) */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommentDto"];
+                };
+            };
+        };
+    };
+    Comments_getComment: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommentDto"];
+                };
+            };
+        };
+    };
+    Comments_deleteComment: {
+        parameters: {
+            query: {
+                version: number;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    Comments_updateComment: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateCommentDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommentDto"];
+                };
+            };
+        };
+    };
+    Comments_respondComment: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RespondCommentDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommentDto"];
+                };
+            };
+        };
+    };
+    Comments_closeComment: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CommentStateDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommentDto"];
+                };
+            };
+        };
+    };
+    Comments_reopenComment: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CommentStateDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommentDto"];
+                };
+            };
+        };
+    };
+    Comments_exportCrs: {
+        parameters: {
+            query?: {
+                format?: "pdf" | "xlsx";
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/pdf": string;
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": string;
+                };
+            };
+        };
+    };
 }
 type FlattenedDeepRequired<T> = {
     [K in keyof T]-?: FlattenedDeepRequired<T[K] extends unknown[] | undefined | null ? Extract<T[K], unknown[]>[number] : T[K]>;
@@ -6859,6 +7275,7 @@ type ReadonlyArray<T> = [
 ] extends [
     unknown[]
 ] ? Readonly<Exclude<T, undefined>> : Readonly<Exclude<T, undefined>[]>;
+export const pathsApiV1RevisionsIdCrsGetParametersQueryFormatValues: ReadonlyArray<FlattenedDeepRequired<paths>["/api/v1/revisions/{id}/crs"]["get"]["parameters"]["query"]["format"]> = ["pdf", "xlsx"];
 export const healthDtoStatusValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["HealthDto"]["status"]> = ["ok", "degraded"];
 export const healthDtoChecksValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["HealthDto"]["checks"][string]> = ["up", "down", "skipped"];
 export const clientPlatformValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["ClientPlatform"]> = ["WEB", "ANDROID", "IOS"];
@@ -6896,3 +7313,6 @@ export const documentFileRoleValues: ReadonlyArray<FlattenedDeepRequired<compone
 export const reviewStepStatusValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["ReviewStepStatus"]> = ["PENDING", "ACTIVE", "APPROVED", "APPROVED_WITH_COMMENTS", "REJECTED", "SKIPPED", "CANCELLED"];
 export const signatureInputDtoMethodValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["SignatureInputDto"]["method"]> = ["PASSWORD", "SIGNING_PIN"];
 export const decisionDtoDecisionValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["DecisionDto"]["decision"]> = ["APPROVED", "APPROVED_WITH_COMMENTS", "REJECTED"];
+export const commentOwnerTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["CommentOwnerType"]> = ["DOCUMENT_REVISION", "TRANSMITTAL", "DESIGN_BASIS", "TASK", "DAILY_REPORT", "ISSUE", "SITE_QUERY", "LAB_JOB", "SAMPLE", "QUOTATION"];
+export const pdfAnchorDtoKindValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["PdfAnchorDto"]["kind"]> = ["PIN", "RECT"];
+export const commentStatusValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["CommentStatus"]> = ["NONE", "OPEN", "RESPONDED", "CLOSED"];

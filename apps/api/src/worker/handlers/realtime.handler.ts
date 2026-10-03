@@ -19,6 +19,8 @@ const REVIEW_EVENTS = [
   'review.step.reassigned',
   'review.cycle.cancelled',
   'comment.changed',
+  'comment.created',
+  'comment.responded',
 ] as const;
 
 /** Server-Sent Events for open web pages (docs/04-api-conventions.md §10). */

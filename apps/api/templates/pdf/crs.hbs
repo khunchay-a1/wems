@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="{{lang}}">
+<head><meta charset="utf-8"><title>{{title}}</title>{{> styles}}
+<style>
+  @page { size: A4 landscape; }
+  .meta { display: grid; grid-template-columns: auto 1fr auto 1fr; gap: 1mm 4mm; margin-bottom: 4mm; font-size: 10pt; }
+  .meta .k { color: #52606d; }
+  td.num, td.page { text-align: center; white-space: nowrap; }
+  td.text { white-space: pre-wrap; }
+  .empty { color: #52606d; text-align: center; padding: 6mm; }
+</style>
+</head>
+<body>
+  <h1>{{title}}</h1>
+  <div class="meta">
+    <span class="k">{{labels.project}}</span><span>{{project}}</span>
+    <span class="k">{{labels.printed}}</span><span>{{printed}}</span>
+    <span class="k">{{labels.document}}</span><span>{{document}}</span>
+    <span class="k">{{labels.cycle}}</span><span>{{cycle}}</span>
+    <span class="k">{{labels.revision}}</span><span>{{revision}}</span>
+  </div>
+  <table>
+    <thead><tr>{{#each headers}}<th>{{this}}</th>{{/each}}</tr></thead>
+    <tbody>
+      {{#each rows}}
+      <tr>
+        <td class="num">{{seq}}</td><td class="page">{{page}}</td><td>{{author}}</td><td>{{step}}</td><td>{{date}}</td>
+        <td class="text">{{body}}</td><td class="text">{{response}}</td><td>{{status}}</td><td>{{closed}}</td><td>{{carried}}</td>
+      </tr>
+      {{else}}
+      <tr><td class="empty" colspan="10">{{labels.empty}}</td></tr>
+      {{/each}}
+    </tbody>
+  </table>
+</body>
+</html>

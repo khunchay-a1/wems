@@ -153,7 +153,7 @@ nextRevisionLabel(scheme, existing: { label: string; state: 'ACTIVE' | 'VOID' }[
 
 - ชนิด anchor ในเฟส 1: `PIN` (จุด) และ `RECT` (กรอบ) พิกัด normalize 0..1 ต่อหน้า (`03-data-model.md` §4) — วาดทับ pdf.js ด้วย layer ของเราเอง
 - ความเห็นมีเลขลำดับต่อ revision (`#1`, `#2`, … คำนวณตามเวลาสร้าง) แสดงบนหมุดและใน CRS
-- **CRS** (`GET /revisions/{id}/crs?format=pdf|xlsx`) คอลัมน์: ลำดับ, หน้า, ผู้ให้ความเห็น, ขั้นตอน, วันที่, ความเห็น, คำตอบของผู้จัดทำ, สถานะ, ผู้ปิด/วันที่ปิด, ยกมาจาก Rev.
+- **CRS** (`GET /revisions/{id}/crs?format=pdf|xlsx`) รวมเฉพาะความเห็นจากการตรวจ (สถานะไม่ใช่ `NONE`; ความเห็นทั่วไปและ reply ไม่อยู่ใน CRS) คอลัมน์: ลำดับ, หน้า, ผู้ให้ความเห็น, ขั้นตอน, วันที่, ความเห็น, คำตอบของผู้จัดทำ, สถานะ, ผู้ปิด/วันที่ปิด, ยกมาจาก Rev.
 - PDF ของ CRS มีหัวกระดาษ: โครงการ เลขเอกสาร ชื่อ revision รอบที่ และวันที่พิมพ์
 
 ## 7. ใบนำส่ง
@@ -229,8 +229,9 @@ Template ดาวน์โหลดได้จากหน้าทะเบ�
 | POST | `/review-steps/{id}/skip` | PM / `document.admin` | `{ version, reason }` |
 | GET | `/comments?ownerType=&ownerId=` | ตามเจ้าของ | รวม reply และสถานะ |
 | POST | `/comments` | ตามเจ้าของ | `{ ownerType, ownerId, body, anchor?, parentId?, mentions?, reviewStepId? }` BR-DOC-035 |
-| PATCH / DELETE | `/comments/{id}` | ผู้เขียน | แก้/ลบได้ก่อนขั้นตรวจตัดสิน |
-| POST | `/comments/{id}/respond` · `/close` · `/reopen` | ดู `05-workflows.md` §3 | |
+| GET | `/comments/{id}` | ตามเจ้าของ | thread เดียว (ความเห็นหลัก + reply) |
+| PATCH / DELETE | `/comments/{id}` | ผู้เขียน | แก้/ลบได้ก่อนขั้นตรวจตัดสิน (ความเห็นตรวจ: ขั้น ACTIVE และสถานะ OPEN); DELETE ส่ง `?version=` |
+| POST | `/comments/{id}/respond` · `/close` · `/reopen` | ดู `05-workflows.md` §3 | respond `{ version, responseNote }` โดยผู้จัดทำ/เจ้าของเอกสาร/`document.edit`; close/reopen `{ version, note? }` โดยผู้เขียนความเห็นหรือ `document.admin` (`note` บันทึกเป็น reply) |
 | GET | `/projects/{projectId}/transmittals` | `document.read` | |
 | POST | `/projects/{projectId}/transmittals` | `transmittal.manage` | สร้าง DRAFT พร้อมรายการ |
 | GET / PATCH | `/transmittals/{id}` | `document.read` / `transmittal.manage` | |
