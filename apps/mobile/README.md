@@ -18,6 +18,7 @@ cd apps/mobile
 flutter pub get                                    # also runs gen-l10n (lib/l10n/gen)
 dart run build_runner build --delete-conflicting-outputs   # drift tables (*.g.dart)
 flutter analyze && flutter test
+cp env/dev.example.json env/dev.json             # per-developer copy (git-ignored)
 flutter run --flavor dev -t lib/main_dev.dart --dart-define-from-file=env/dev.json
 ```
 

@@ -1,4 +1,4 @@
-/// Per-flavor configuration from `--dart-define-from-file=env/<flavor>.json` (docs/08-mobile.md §10).
+/// Per-flavor configuration from `--dart-define-from-file=env/<flavor>.json (copy of env/<flavor>.example.json)` (docs/08-mobile.md §10).
 /// No secrets here: only public endpoints and switches.
 class Env {
   const Env._();

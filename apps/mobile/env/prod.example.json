@@ -1,0 +1,5 @@
+{
+  "FLAVOR": "prod",
+  "API_BASE_URL": "https://wems.example.co.th",
+  "PUSH_ENABLED": "true"
+}

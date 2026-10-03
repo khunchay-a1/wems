@@ -220,4 +220,5 @@ jobs:
       # gen-l10n runs on pub get; drift tables need build_runner (generated files are not committed)
       - run: flutter analyze --no-fatal-infos
       - run: flutter test
+      - run: cp env/dev.example.json env/dev.json
       - run: flutter build apk --debug --flavor dev -t lib/main_dev.dart --dart-define-from-file=env/dev.json
