@@ -1908,6 +1908,281 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/projects/{projectId}/transmittals": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Transmittals of a project */
+        get: operations["Transmittals_listTransmittals"];
+        put?: never;
+        /** Create a DRAFT transmittal with items (number issued now) */
+        post: operations["Transmittals_createTransmittal"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/projects/{projectId}/transmittable-revisions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Approved/issued shareable revisions (BR-DOC-060/061) */
+        get: operations["Transmittals_listTransmittableRevisions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/transmittals/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Transmittal with items, link and downloads */
+        get: operations["Transmittals_getTransmittal"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Edit a DRAFT header (BR-DOC-066) */
+        patch: operations["Transmittals_updateTransmittal"];
+        trace?: never;
+    };
+    "/api/v1/transmittals/{id}/items": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Add a revision (BR-DOC-060) */
+        post: operations["Transmittals_addTransmittalItem"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/transmittals/{id}/items/{itemId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Remove an item from a DRAFT */
+        delete: operations["Transmittals_removeTransmittalItem"];
+        options?: never;
+        head?: never;
+        /** Copies, format or remark of a DRAFT item */
+        patch: operations["Transmittals_updateTransmittalItem"];
+        trace?: never;
+    };
+    "/api/v1/transmittals/{id}/send": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Send (BR-DOC-060..063); PDF and email by the worker */
+        post: operations["Transmittals_sendTransmittal"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/transmittals/{id}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Cancel a DRAFT (BR-DOC-066) */
+        post: operations["Transmittals_cancelTransmittal"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/transmittals/{id}/acknowledge": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Record the client receipt (date ≥ sent date) */
+        post: operations["Transmittals_acknowledgeTransmittal"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/transmittals/{id}/revoke-link": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Revoke the public link (BR-DOC-065) */
+        post: operations["Transmittals_revokeTransmittalLink"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/transmittals/{id}/extend-link": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Extend (and re-enable) the public link */
+        post: operations["Transmittals_extendTransmittalLink"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/transmittals/{id}/resend-email": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Send the email again (worker) */
+        post: operations["Transmittals_resendTransmittalEmail"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/transmittals/{id}/cover-sheet": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Signed URL of the cover sheet PDF */
+        get: operations["Transmittals_getTransmittalCoverSheet"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/transmittal-items/{id}/client-response": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Client return code per item (BR-DOC-064) */
+        post: operations["Transmittals_recordClientResponse"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/transmittals/{token}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Download page data (410 when expired or revoked) */
+        get: operations["Public_getPublicTransmittal"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/transmittals/{token}/items/{itemId}/download": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Signed URL of an item file (recorded) */
+        get: operations["Public_downloadPublicTransmittalItem"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/transmittals/{token}/package": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Signed URL of the ZIP of all files (recorded) */
+        get: operations["Public_downloadPublicTransmittalPackage"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -3731,6 +4006,261 @@ export interface components {
             /** @description Optional note added as a reply */
             note?: string;
         };
+        /** @enum {string} */
+        TransmittalStatus: "DRAFT" | "SENT" | "ACKNOWLEDGED" | "CANCELLED";
+        /** @enum {string} */
+        DeliveryMethod: "EMAIL_ATTACHMENT" | "EMAIL_LINK" | "HARD_COPY" | "OTHER";
+        TransmittalListItemDto: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            projectId: string;
+            number: string;
+            subject: string;
+            recipientName: string;
+            purposeCode: components["schemas"]["PurposeCode"];
+            status: components["schemas"]["TransmittalStatus"];
+            deliveryMethod: components["schemas"]["DeliveryMethod"];
+            sentAt: string | null;
+            itemCount: number;
+            /** @description Items with a client response */
+            respondedCount: number;
+            createdAt: string;
+            version: number;
+        };
+        TransmittableRevisionDto: {
+            /** Format: uuid */
+            revisionId: string;
+            /** Format: uuid */
+            documentId: string;
+            documentNumber: string;
+            documentTitle: string;
+            revLabel: string;
+            purposeCode: components["schemas"]["PurposeCode"];
+            status: components["schemas"]["RevisionStatus"];
+            isLatest: boolean;
+            sizeBytes: number;
+        };
+        /**
+         * @description Default PDF
+         * @enum {string}
+         */
+        TransmittalFormat: "PDF" | "NATIVE" | "PDF_AND_NATIVE" | "HARD_COPY";
+        TransmittalItemInputDto: {
+            /** Format: uuid */
+            revisionId: string;
+            /** @description Default 1 */
+            copies?: number;
+            /** @description Default PDF */
+            format?: components["schemas"]["TransmittalFormat"];
+            remark?: string;
+        };
+        CreateTransmittalDto: {
+            subject: string;
+            purposeCode: components["schemas"]["PurposeCode"];
+            deliveryMethod: components["schemas"]["DeliveryMethod"];
+            /** Format: uuid */
+            recipientClientId?: string | null;
+            recipientName: string;
+            recipientEmails?: string[];
+            ccEmails?: string[];
+            message?: string | null;
+            items?: components["schemas"]["TransmittalItemInputDto"][];
+        };
+        TransmittalItemDto: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            revisionId: string;
+            /** Format: uuid */
+            documentId: string;
+            documentNumber: string;
+            documentTitle: string;
+            revLabel: string;
+            purposeCode: components["schemas"]["PurposeCode"];
+            revisionStatus: components["schemas"]["RevisionStatus"];
+            /** @description BR-DOC-061: false when a newer approved revision exists */
+            isLatest: boolean;
+            copies: number;
+            format: components["schemas"]["TransmittalFormat"];
+            remark: string | null;
+            /** @description Bytes of the files that go out for the format */
+            sizeBytes: number;
+            clientReturnCode: components["schemas"]["ClientReturnCode"] | null;
+            /** Format: date */
+            clientReturnedAt: string | null;
+            clientResponseNote: string | null;
+            /** Format: uuid */
+            clientCommentFileId: string | null;
+            sortOrder: number;
+        };
+        TransmittalDownloadDto: {
+            downloadedAt: string;
+            fileName: string | null;
+            ip: string | null;
+        };
+        TransmittalDto: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            projectId: string;
+            number: string;
+            subject: string;
+            recipientName: string;
+            purposeCode: components["schemas"]["PurposeCode"];
+            status: components["schemas"]["TransmittalStatus"];
+            deliveryMethod: components["schemas"]["DeliveryMethod"];
+            sentAt: string | null;
+            itemCount: number;
+            /** @description Items with a client response */
+            respondedCount: number;
+            createdAt: string;
+            version: number;
+            /** Format: uuid */
+            recipientClientId: string | null;
+            recipientEmails: string[];
+            ccEmails: string[];
+            message: string | null;
+            sentBy: components["schemas"]["UserRefDto"] | null;
+            acknowledgedAt: string | null;
+            acknowledgedNote: string | null;
+            cancelReason: string | null;
+            /** Format: uuid */
+            coverSheetFileId: string | null;
+            /** @description Public download page (EMAIL_LINK) */
+            publicUrl: string | null;
+            linkExpiresAt: string | null;
+            linkRevokedAt: string | null;
+            totalBytes: number;
+            /** @description BR-DOC-062: attachments would exceed the limit → link */
+            willSendLink: boolean;
+            maxAttachmentMb: number;
+            items: components["schemas"]["TransmittalItemDto"][];
+            downloads: components["schemas"]["TransmittalDownloadDto"][];
+            allowedActions: string[];
+            blockedActions: components["schemas"]["BlockedActionDto"][];
+        };
+        UpdateTransmittalDto: {
+            version: number;
+            subject?: string;
+            purposeCode?: components["schemas"]["PurposeCode"];
+            deliveryMethod?: components["schemas"]["DeliveryMethod"];
+            /** Format: uuid */
+            recipientClientId?: string | null;
+            recipientName?: string;
+            recipientEmails?: string[];
+            ccEmails?: string[];
+            message?: string | null;
+        };
+        UpdateTransmittalItemDto: {
+            copies?: number;
+            format?: components["schemas"]["TransmittalFormat"];
+            remark?: string | null;
+        };
+        TransmittalVersionDto: {
+            version: number;
+        };
+        SendResultDto: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            projectId: string;
+            number: string;
+            subject: string;
+            recipientName: string;
+            purposeCode: components["schemas"]["PurposeCode"];
+            status: components["schemas"]["TransmittalStatus"];
+            deliveryMethod: components["schemas"]["DeliveryMethod"];
+            sentAt: string | null;
+            itemCount: number;
+            /** @description Items with a client response */
+            respondedCount: number;
+            createdAt: string;
+            version: number;
+            /** Format: uuid */
+            recipientClientId: string | null;
+            recipientEmails: string[];
+            ccEmails: string[];
+            message: string | null;
+            sentBy: components["schemas"]["UserRefDto"] | null;
+            acknowledgedAt: string | null;
+            acknowledgedNote: string | null;
+            cancelReason: string | null;
+            /** Format: uuid */
+            coverSheetFileId: string | null;
+            /** @description Public download page (EMAIL_LINK) */
+            publicUrl: string | null;
+            linkExpiresAt: string | null;
+            linkRevokedAt: string | null;
+            totalBytes: number;
+            /** @description BR-DOC-062: attachments would exceed the limit → link */
+            willSendLink: boolean;
+            maxAttachmentMb: number;
+            items: components["schemas"]["TransmittalItemDto"][];
+            downloads: components["schemas"]["TransmittalDownloadDto"][];
+            allowedActions: string[];
+            blockedActions: components["schemas"]["BlockedActionDto"][];
+            /** @description e.g. SWITCHED_TO_LINK, NOT_LATEST_REVISION */
+            warnings: string[];
+        };
+        CancelTransmittalDto: {
+            version: number;
+            reason: string;
+        };
+        AcknowledgeDto: {
+            version: number;
+            /**
+             * Format: date
+             * @description Date the client received it (≥ sent date)
+             */
+            acknowledgedAt: string;
+            note?: string;
+            /**
+             * Format: uuid
+             * @description Signed receipt scan
+             */
+            fileId?: string;
+        };
+        ExtendLinkDto: {
+            version: number;
+            /** @description Days from today (default setting) */
+            days?: number;
+        };
+        ClientResponseDto: {
+            code: components["schemas"]["ClientReturnCode"];
+            /** Format: date */
+            returnedAt: string;
+            note?: string;
+            /**
+             * Format: uuid
+             * @description Client comment file (CLIENT_RESPONSE upload)
+             */
+            fileId?: string;
+        };
+        PublicTransmittalItemDto: {
+            /** Format: uuid */
+            id: string;
+            documentNumber: string;
+            documentTitle: string;
+            revLabel: string;
+            files: string[];
+        };
+        PublicTransmittalDto: {
+            companyName: string;
+            number: string;
+            subject: string;
+            projectName: string;
+            sentAt: string;
+            linkExpiresAt: string;
+            senderName: string;
+            senderEmail: string | null;
+            hasPackage: boolean;
+            items: components["schemas"]["PublicTransmittalItemDto"][];
+        };
+        PublicDownloadDto: {
+            url: string;
+            expiresAt: string;
+        };
     };
     responses: never;
     parameters: never;
@@ -3912,6 +4442,27 @@ export type SchemaCreateCommentDto = components['schemas']['CreateCommentDto'];
 export type SchemaUpdateCommentDto = components['schemas']['UpdateCommentDto'];
 export type SchemaRespondCommentDto = components['schemas']['RespondCommentDto'];
 export type SchemaCommentStateDto = components['schemas']['CommentStateDto'];
+export type SchemaTransmittalStatus = components['schemas']['TransmittalStatus'];
+export type SchemaDeliveryMethod = components['schemas']['DeliveryMethod'];
+export type SchemaTransmittalListItemDto = components['schemas']['TransmittalListItemDto'];
+export type SchemaTransmittableRevisionDto = components['schemas']['TransmittableRevisionDto'];
+export type SchemaTransmittalFormat = components['schemas']['TransmittalFormat'];
+export type SchemaTransmittalItemInputDto = components['schemas']['TransmittalItemInputDto'];
+export type SchemaCreateTransmittalDto = components['schemas']['CreateTransmittalDto'];
+export type SchemaTransmittalItemDto = components['schemas']['TransmittalItemDto'];
+export type SchemaTransmittalDownloadDto = components['schemas']['TransmittalDownloadDto'];
+export type SchemaTransmittalDto = components['schemas']['TransmittalDto'];
+export type SchemaUpdateTransmittalDto = components['schemas']['UpdateTransmittalDto'];
+export type SchemaUpdateTransmittalItemDto = components['schemas']['UpdateTransmittalItemDto'];
+export type SchemaTransmittalVersionDto = components['schemas']['TransmittalVersionDto'];
+export type SchemaSendResultDto = components['schemas']['SendResultDto'];
+export type SchemaCancelTransmittalDto = components['schemas']['CancelTransmittalDto'];
+export type SchemaAcknowledgeDto = components['schemas']['AcknowledgeDto'];
+export type SchemaExtendLinkDto = components['schemas']['ExtendLinkDto'];
+export type SchemaClientResponseDto = components['schemas']['ClientResponseDto'];
+export type SchemaPublicTransmittalItemDto = components['schemas']['PublicTransmittalItemDto'];
+export type SchemaPublicTransmittalDto = components['schemas']['PublicTransmittalDto'];
+export type SchemaPublicDownloadDto = components['schemas']['PublicDownloadDto'];
 export type $defs = Record<string, never>;
 export interface operations {
     Health_getLive: {
@@ -7266,6 +7817,467 @@ export interface operations {
             };
         };
     };
+    Transmittals_listTransmittals: {
+        parameters: {
+            query?: {
+                page?: number;
+                pageSize?: number;
+                /** @description Comma separated, "-" prefix = descending, e.g. "-updatedAt,number" */
+                sort?: string;
+                /** @description Search text */
+                q?: string;
+                status?: components["schemas"]["TransmittalStatus"];
+            };
+            header?: never;
+            path: {
+                projectId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["TransmittalListItemDto"][];
+                        meta: components["schemas"]["PageMetaDto"];
+                    };
+                };
+            };
+        };
+    };
+    Transmittals_createTransmittal: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                projectId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateTransmittalDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TransmittalDto"];
+                };
+            };
+        };
+    };
+    Transmittals_listTransmittableRevisions: {
+        parameters: {
+            query?: {
+                q?: string;
+            };
+            header?: never;
+            path: {
+                projectId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TransmittableRevisionDto"][];
+                };
+            };
+        };
+    };
+    Transmittals_getTransmittal: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TransmittalDto"];
+                };
+            };
+        };
+    };
+    Transmittals_updateTransmittal: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateTransmittalDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TransmittalDto"];
+                };
+            };
+        };
+    };
+    Transmittals_addTransmittalItem: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TransmittalItemInputDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TransmittalDto"];
+                };
+            };
+        };
+    };
+    Transmittals_removeTransmittalItem: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                itemId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TransmittalDto"];
+                };
+            };
+        };
+    };
+    Transmittals_updateTransmittalItem: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                itemId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateTransmittalItemDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TransmittalDto"];
+                };
+            };
+        };
+    };
+    Transmittals_sendTransmittal: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TransmittalVersionDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SendResultDto"];
+                };
+            };
+        };
+    };
+    Transmittals_cancelTransmittal: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CancelTransmittalDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TransmittalDto"];
+                };
+            };
+        };
+    };
+    Transmittals_acknowledgeTransmittal: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AcknowledgeDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TransmittalDto"];
+                };
+            };
+        };
+    };
+    Transmittals_revokeTransmittalLink: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TransmittalVersionDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TransmittalDto"];
+                };
+            };
+        };
+    };
+    Transmittals_extendTransmittalLink: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ExtendLinkDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TransmittalDto"];
+                };
+            };
+        };
+    };
+    Transmittals_resendTransmittalEmail: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TransmittalVersionDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TransmittalDto"];
+                };
+            };
+        };
+    };
+    Transmittals_getTransmittalCoverSheet: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SignedUrlResultDto"];
+                };
+            };
+        };
+    };
+    Transmittals_recordClientResponse: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ClientResponseDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TransmittalDto"];
+                };
+            };
+        };
+    };
+    Public_getPublicTransmittal: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicTransmittalDto"];
+                };
+            };
+        };
+    };
+    Public_downloadPublicTransmittalItem: {
+        parameters: {
+            query?: {
+                role?: "PDF_RENDITION" | "NATIVE";
+            };
+            header?: never;
+            path: {
+                token: string;
+                itemId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicDownloadDto"];
+                };
+            };
+        };
+    };
+    Public_downloadPublicTransmittalPackage: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicDownloadDto"];
+                };
+            };
+        };
+    };
 }
 type FlattenedDeepRequired<T> = {
     [K in keyof T]-?: FlattenedDeepRequired<T[K] extends unknown[] | undefined | null ? Extract<T[K], unknown[]>[number] : T[K]>;
@@ -7276,6 +8288,7 @@ type ReadonlyArray<T> = [
     unknown[]
 ] ? Readonly<Exclude<T, undefined>> : Readonly<Exclude<T, undefined>[]>;
 export const pathsApiV1RevisionsIdCrsGetParametersQueryFormatValues: ReadonlyArray<FlattenedDeepRequired<paths>["/api/v1/revisions/{id}/crs"]["get"]["parameters"]["query"]["format"]> = ["pdf", "xlsx"];
+export const pathsApiV1PublicTransmittalsTokenItemsItemIdDownloadGetParametersQueryRoleValues: ReadonlyArray<FlattenedDeepRequired<paths>["/api/v1/public/transmittals/{token}/items/{itemId}/download"]["get"]["parameters"]["query"]["role"]> = ["PDF_RENDITION", "NATIVE"];
 export const healthDtoStatusValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["HealthDto"]["status"]> = ["ok", "degraded"];
 export const healthDtoChecksValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["HealthDto"]["checks"][string]> = ["up", "down", "skipped"];
 export const clientPlatformValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["ClientPlatform"]> = ["WEB", "ANDROID", "IOS"];
@@ -7316,3 +8329,6 @@ export const decisionDtoDecisionValues: ReadonlyArray<FlattenedDeepRequired<comp
 export const commentOwnerTypeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["CommentOwnerType"]> = ["DOCUMENT_REVISION", "TRANSMITTAL", "DESIGN_BASIS", "TASK", "DAILY_REPORT", "ISSUE", "SITE_QUERY", "LAB_JOB", "SAMPLE", "QUOTATION"];
 export const pdfAnchorDtoKindValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["PdfAnchorDto"]["kind"]> = ["PIN", "RECT"];
 export const commentStatusValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["CommentStatus"]> = ["NONE", "OPEN", "RESPONDED", "CLOSED"];
+export const transmittalStatusValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["TransmittalStatus"]> = ["DRAFT", "SENT", "ACKNOWLEDGED", "CANCELLED"];
+export const deliveryMethodValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["DeliveryMethod"]> = ["EMAIL_ATTACHMENT", "EMAIL_LINK", "HARD_COPY", "OTHER"];
+export const transmittalFormatValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["TransmittalFormat"]> = ["PDF", "NATIVE", "PDF_AND_NATIVE", "HARD_COPY"];

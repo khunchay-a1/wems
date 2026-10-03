@@ -5610,6 +5610,808 @@
           "Comments"
         ]
       }
+    },
+    "/api/v1/projects/{projectId}/transmittals": {
+      "get": {
+        "operationId": "Transmittals_listTransmittals",
+        "parameters": [
+          {
+            "name": "projectId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 25,
+              "type": "number"
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "Comma separated, \"-\" prefix = descending, e.g. \"-updatedAt,number\"",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "q",
+            "required": false,
+            "in": "query",
+            "description": "Search text",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/TransmittalStatus"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/TransmittalListItemDto"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/PageMetaDto"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Transmittals of a project",
+        "tags": [
+          "Transmittals"
+        ]
+      },
+      "post": {
+        "operationId": "Transmittals_createTransmittal",
+        "parameters": [
+          {
+            "name": "projectId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTransmittalDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransmittalDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create a DRAFT transmittal with items (number issued now)",
+        "tags": [
+          "Transmittals"
+        ]
+      }
+    },
+    "/api/v1/projects/{projectId}/transmittable-revisions": {
+      "get": {
+        "operationId": "Transmittals_listTransmittableRevisions",
+        "parameters": [
+          {
+            "name": "projectId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "q",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TransmittableRevisionDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Approved/issued shareable revisions (BR-DOC-060/061)",
+        "tags": [
+          "Transmittals"
+        ]
+      }
+    },
+    "/api/v1/transmittals/{id}": {
+      "get": {
+        "operationId": "Transmittals_getTransmittal",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransmittalDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Transmittal with items, link and downloads",
+        "tags": [
+          "Transmittals"
+        ]
+      },
+      "patch": {
+        "operationId": "Transmittals_updateTransmittal",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTransmittalDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransmittalDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Edit a DRAFT header (BR-DOC-066)",
+        "tags": [
+          "Transmittals"
+        ]
+      }
+    },
+    "/api/v1/transmittals/{id}/items": {
+      "post": {
+        "operationId": "Transmittals_addTransmittalItem",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransmittalItemInputDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransmittalDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Add a revision (BR-DOC-060)",
+        "tags": [
+          "Transmittals"
+        ]
+      }
+    },
+    "/api/v1/transmittals/{id}/items/{itemId}": {
+      "patch": {
+        "operationId": "Transmittals_updateTransmittalItem",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "itemId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTransmittalItemDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransmittalDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Copies, format or remark of a DRAFT item",
+        "tags": [
+          "Transmittals"
+        ]
+      },
+      "delete": {
+        "operationId": "Transmittals_removeTransmittalItem",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "itemId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransmittalDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Remove an item from a DRAFT",
+        "tags": [
+          "Transmittals"
+        ]
+      }
+    },
+    "/api/v1/transmittals/{id}/send": {
+      "post": {
+        "operationId": "Transmittals_sendTransmittal",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransmittalVersionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SendResultDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Send (BR-DOC-060..063); PDF and email by the worker",
+        "tags": [
+          "Transmittals"
+        ]
+      }
+    },
+    "/api/v1/transmittals/{id}/cancel": {
+      "post": {
+        "operationId": "Transmittals_cancelTransmittal",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CancelTransmittalDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransmittalDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Cancel a DRAFT (BR-DOC-066)",
+        "tags": [
+          "Transmittals"
+        ]
+      }
+    },
+    "/api/v1/transmittals/{id}/acknowledge": {
+      "post": {
+        "operationId": "Transmittals_acknowledgeTransmittal",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AcknowledgeDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransmittalDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Record the client receipt (date ≥ sent date)",
+        "tags": [
+          "Transmittals"
+        ]
+      }
+    },
+    "/api/v1/transmittals/{id}/revoke-link": {
+      "post": {
+        "operationId": "Transmittals_revokeTransmittalLink",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransmittalVersionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransmittalDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Revoke the public link (BR-DOC-065)",
+        "tags": [
+          "Transmittals"
+        ]
+      }
+    },
+    "/api/v1/transmittals/{id}/extend-link": {
+      "post": {
+        "operationId": "Transmittals_extendTransmittalLink",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExtendLinkDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransmittalDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Extend (and re-enable) the public link",
+        "tags": [
+          "Transmittals"
+        ]
+      }
+    },
+    "/api/v1/transmittals/{id}/resend-email": {
+      "post": {
+        "operationId": "Transmittals_resendTransmittalEmail",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransmittalVersionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransmittalDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Send the email again (worker)",
+        "tags": [
+          "Transmittals"
+        ]
+      }
+    },
+    "/api/v1/transmittals/{id}/cover-sheet": {
+      "get": {
+        "operationId": "Transmittals_getTransmittalCoverSheet",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignedUrlResultDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Signed URL of the cover sheet PDF",
+        "tags": [
+          "Transmittals"
+        ]
+      }
+    },
+    "/api/v1/transmittal-items/{id}/client-response": {
+      "post": {
+        "operationId": "Transmittals_recordClientResponse",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClientResponseDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransmittalDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Client return code per item (BR-DOC-064)",
+        "tags": [
+          "Transmittals"
+        ]
+      }
+    },
+    "/api/v1/public/transmittals/{token}": {
+      "get": {
+        "operationId": "Public_getPublicTransmittal",
+        "parameters": [
+          {
+            "name": "token",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicTransmittalDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Download page data (410 when expired or revoked)",
+        "tags": [
+          "Public"
+        ]
+      }
+    },
+    "/api/v1/public/transmittals/{token}/items/{itemId}/download": {
+      "get": {
+        "operationId": "Public_downloadPublicTransmittalItem",
+        "parameters": [
+          {
+            "name": "token",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "itemId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "role",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "PDF_RENDITION",
+                "NATIVE"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicDownloadDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Signed URL of an item file (recorded)",
+        "tags": [
+          "Public"
+        ]
+      }
+    },
+    "/api/v1/public/transmittals/{token}/package": {
+      "get": {
+        "operationId": "Public_downloadPublicTransmittalPackage",
+        "parameters": [
+          {
+            "name": "token",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicDownloadDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Signed URL of the ZIP of all files (recorded)",
+        "tags": [
+          "Public"
+        ]
+      }
     }
   },
   "info": {
@@ -12406,6 +13208,1042 @@
         },
         "required": [
           "version"
+        ]
+      },
+      "TransmittalStatus": {
+        "type": "string",
+        "enum": [
+          "DRAFT",
+          "SENT",
+          "ACKNOWLEDGED",
+          "CANCELLED"
+        ]
+      },
+      "DeliveryMethod": {
+        "type": "string",
+        "enum": [
+          "EMAIL_ATTACHMENT",
+          "EMAIL_LINK",
+          "HARD_COPY",
+          "OTHER"
+        ]
+      },
+      "TransmittalListItemDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "number": {
+            "type": "string"
+          },
+          "subject": {
+            "type": "string"
+          },
+          "recipientName": {
+            "type": "string"
+          },
+          "purposeCode": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PurposeCode"
+              }
+            ]
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TransmittalStatus"
+              }
+            ]
+          },
+          "deliveryMethod": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DeliveryMethod"
+              }
+            ]
+          },
+          "sentAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "itemCount": {
+            "type": "number"
+          },
+          "respondedCount": {
+            "type": "number",
+            "description": "Items with a client response"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "version": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "projectId",
+          "number",
+          "subject",
+          "recipientName",
+          "purposeCode",
+          "status",
+          "deliveryMethod",
+          "sentAt",
+          "itemCount",
+          "respondedCount",
+          "createdAt",
+          "version"
+        ]
+      },
+      "TransmittableRevisionDto": {
+        "type": "object",
+        "properties": {
+          "revisionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "documentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "documentNumber": {
+            "type": "string"
+          },
+          "documentTitle": {
+            "type": "string"
+          },
+          "revLabel": {
+            "type": "string"
+          },
+          "purposeCode": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PurposeCode"
+              }
+            ]
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RevisionStatus"
+              }
+            ]
+          },
+          "isLatest": {
+            "type": "boolean"
+          },
+          "sizeBytes": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "revisionId",
+          "documentId",
+          "documentNumber",
+          "documentTitle",
+          "revLabel",
+          "purposeCode",
+          "status",
+          "isLatest",
+          "sizeBytes"
+        ]
+      },
+      "TransmittalFormat": {
+        "type": "string",
+        "enum": [
+          "PDF",
+          "NATIVE",
+          "PDF_AND_NATIVE",
+          "HARD_COPY"
+        ],
+        "description": "Default PDF"
+      },
+      "TransmittalItemInputDto": {
+        "type": "object",
+        "properties": {
+          "revisionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "copies": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 99,
+            "description": "Default 1"
+          },
+          "format": {
+            "description": "Default PDF",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TransmittalFormat"
+              }
+            ]
+          },
+          "remark": {
+            "type": "string",
+            "maxLength": 500
+          }
+        },
+        "required": [
+          "revisionId"
+        ]
+      },
+      "CreateTransmittalDto": {
+        "type": "object",
+        "properties": {
+          "subject": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300
+          },
+          "purposeCode": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PurposeCode"
+              }
+            ]
+          },
+          "deliveryMethod": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DeliveryMethod"
+              }
+            ]
+          },
+          "recipientClientId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "recipientName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300
+          },
+          "recipientEmails": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "ccEmails": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "message": {
+            "type": "string",
+            "maxLength": 5000,
+            "nullable": true
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TransmittalItemInputDto"
+            }
+          }
+        },
+        "required": [
+          "subject",
+          "purposeCode",
+          "deliveryMethod",
+          "recipientName"
+        ]
+      },
+      "TransmittalItemDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "revisionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "documentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "documentNumber": {
+            "type": "string"
+          },
+          "documentTitle": {
+            "type": "string"
+          },
+          "revLabel": {
+            "type": "string"
+          },
+          "purposeCode": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PurposeCode"
+              }
+            ]
+          },
+          "revisionStatus": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RevisionStatus"
+              }
+            ]
+          },
+          "isLatest": {
+            "type": "boolean",
+            "description": "BR-DOC-061: false when a newer approved revision exists"
+          },
+          "copies": {
+            "type": "number"
+          },
+          "format": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TransmittalFormat"
+              }
+            ]
+          },
+          "remark": {
+            "type": "string",
+            "nullable": true
+          },
+          "sizeBytes": {
+            "type": "number",
+            "description": "Bytes of the files that go out for the format"
+          },
+          "clientReturnCode": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ClientReturnCode"
+              }
+            ]
+          },
+          "clientReturnedAt": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "clientResponseNote": {
+            "type": "string",
+            "nullable": true
+          },
+          "clientCommentFileId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "sortOrder": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "revisionId",
+          "documentId",
+          "documentNumber",
+          "documentTitle",
+          "revLabel",
+          "purposeCode",
+          "revisionStatus",
+          "isLatest",
+          "copies",
+          "format",
+          "remark",
+          "sizeBytes",
+          "clientReturnCode",
+          "clientReturnedAt",
+          "clientResponseNote",
+          "clientCommentFileId",
+          "sortOrder"
+        ]
+      },
+      "TransmittalDownloadDto": {
+        "type": "object",
+        "properties": {
+          "downloadedAt": {
+            "type": "string"
+          },
+          "fileName": {
+            "type": "string",
+            "nullable": true
+          },
+          "ip": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "downloadedAt",
+          "fileName",
+          "ip"
+        ]
+      },
+      "TransmittalDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "number": {
+            "type": "string"
+          },
+          "subject": {
+            "type": "string"
+          },
+          "recipientName": {
+            "type": "string"
+          },
+          "purposeCode": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PurposeCode"
+              }
+            ]
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TransmittalStatus"
+              }
+            ]
+          },
+          "deliveryMethod": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DeliveryMethod"
+              }
+            ]
+          },
+          "sentAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "itemCount": {
+            "type": "number"
+          },
+          "respondedCount": {
+            "type": "number",
+            "description": "Items with a client response"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "version": {
+            "type": "number"
+          },
+          "recipientClientId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "recipientEmails": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "ccEmails": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "sentBy": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UserRefDto"
+              }
+            ]
+          },
+          "acknowledgedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "acknowledgedNote": {
+            "type": "string",
+            "nullable": true
+          },
+          "cancelReason": {
+            "type": "string",
+            "nullable": true
+          },
+          "coverSheetFileId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "publicUrl": {
+            "type": "string",
+            "nullable": true,
+            "description": "Public download page (EMAIL_LINK)"
+          },
+          "linkExpiresAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "linkRevokedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalBytes": {
+            "type": "number"
+          },
+          "willSendLink": {
+            "type": "boolean",
+            "description": "BR-DOC-062: attachments would exceed the limit → link"
+          },
+          "maxAttachmentMb": {
+            "type": "number"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TransmittalItemDto"
+            }
+          },
+          "downloads": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TransmittalDownloadDto"
+            }
+          },
+          "allowedActions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "blockedActions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BlockedActionDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "projectId",
+          "number",
+          "subject",
+          "recipientName",
+          "purposeCode",
+          "status",
+          "deliveryMethod",
+          "sentAt",
+          "itemCount",
+          "respondedCount",
+          "createdAt",
+          "version",
+          "recipientClientId",
+          "recipientEmails",
+          "ccEmails",
+          "message",
+          "sentBy",
+          "acknowledgedAt",
+          "acknowledgedNote",
+          "cancelReason",
+          "coverSheetFileId",
+          "publicUrl",
+          "linkExpiresAt",
+          "linkRevokedAt",
+          "totalBytes",
+          "willSendLink",
+          "maxAttachmentMb",
+          "items",
+          "downloads",
+          "allowedActions",
+          "blockedActions"
+        ]
+      },
+      "UpdateTransmittalDto": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "number",
+            "minimum": 1
+          },
+          "subject": {
+            "type": "string"
+          },
+          "purposeCode": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PurposeCode"
+              }
+            ]
+          },
+          "deliveryMethod": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DeliveryMethod"
+              }
+            ]
+          },
+          "recipientClientId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "recipientName": {
+            "type": "string"
+          },
+          "recipientEmails": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "ccEmails": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "version"
+        ]
+      },
+      "UpdateTransmittalItemDto": {
+        "type": "object",
+        "properties": {
+          "copies": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 99
+          },
+          "format": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TransmittalFormat"
+              }
+            ]
+          },
+          "remark": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "TransmittalVersionDto": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "number",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "version"
+        ]
+      },
+      "SendResultDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "number": {
+            "type": "string"
+          },
+          "subject": {
+            "type": "string"
+          },
+          "recipientName": {
+            "type": "string"
+          },
+          "purposeCode": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PurposeCode"
+              }
+            ]
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TransmittalStatus"
+              }
+            ]
+          },
+          "deliveryMethod": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DeliveryMethod"
+              }
+            ]
+          },
+          "sentAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "itemCount": {
+            "type": "number"
+          },
+          "respondedCount": {
+            "type": "number",
+            "description": "Items with a client response"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "version": {
+            "type": "number"
+          },
+          "recipientClientId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "recipientEmails": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "ccEmails": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "sentBy": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UserRefDto"
+              }
+            ]
+          },
+          "acknowledgedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "acknowledgedNote": {
+            "type": "string",
+            "nullable": true
+          },
+          "cancelReason": {
+            "type": "string",
+            "nullable": true
+          },
+          "coverSheetFileId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "publicUrl": {
+            "type": "string",
+            "nullable": true,
+            "description": "Public download page (EMAIL_LINK)"
+          },
+          "linkExpiresAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "linkRevokedAt": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalBytes": {
+            "type": "number"
+          },
+          "willSendLink": {
+            "type": "boolean",
+            "description": "BR-DOC-062: attachments would exceed the limit → link"
+          },
+          "maxAttachmentMb": {
+            "type": "number"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TransmittalItemDto"
+            }
+          },
+          "downloads": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TransmittalDownloadDto"
+            }
+          },
+          "allowedActions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "blockedActions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BlockedActionDto"
+            }
+          },
+          "warnings": {
+            "description": "e.g. SWITCHED_TO_LINK, NOT_LATEST_REVISION",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "projectId",
+          "number",
+          "subject",
+          "recipientName",
+          "purposeCode",
+          "status",
+          "deliveryMethod",
+          "sentAt",
+          "itemCount",
+          "respondedCount",
+          "createdAt",
+          "version",
+          "recipientClientId",
+          "recipientEmails",
+          "ccEmails",
+          "message",
+          "sentBy",
+          "acknowledgedAt",
+          "acknowledgedNote",
+          "cancelReason",
+          "coverSheetFileId",
+          "publicUrl",
+          "linkExpiresAt",
+          "linkRevokedAt",
+          "totalBytes",
+          "willSendLink",
+          "maxAttachmentMb",
+          "items",
+          "downloads",
+          "allowedActions",
+          "blockedActions",
+          "warnings"
+        ]
+      },
+      "CancelTransmittalDto": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "number",
+            "minimum": 1
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 1000
+          }
+        },
+        "required": [
+          "version",
+          "reason"
+        ]
+      },
+      "AcknowledgeDto": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "number",
+            "minimum": 1
+          },
+          "acknowledgedAt": {
+            "type": "string",
+            "format": "date",
+            "description": "Date the client received it (≥ sent date)"
+          },
+          "note": {
+            "type": "string",
+            "maxLength": 1000
+          },
+          "fileId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Signed receipt scan"
+          }
+        },
+        "required": [
+          "version",
+          "acknowledgedAt"
+        ]
+      },
+      "ExtendLinkDto": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "number",
+            "minimum": 1
+          },
+          "days": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 365,
+            "description": "Days from today (default setting)"
+          }
+        },
+        "required": [
+          "version"
+        ]
+      },
+      "ClientResponseDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ClientReturnCode"
+              }
+            ]
+          },
+          "returnedAt": {
+            "type": "string",
+            "format": "date"
+          },
+          "note": {
+            "type": "string",
+            "maxLength": 2000
+          },
+          "fileId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Client comment file (CLIENT_RESPONSE upload)"
+          }
+        },
+        "required": [
+          "code",
+          "returnedAt"
+        ]
+      },
+      "PublicTransmittalItemDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "documentNumber": {
+            "type": "string"
+          },
+          "documentTitle": {
+            "type": "string"
+          },
+          "revLabel": {
+            "type": "string"
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "documentNumber",
+          "documentTitle",
+          "revLabel",
+          "files"
+        ]
+      },
+      "PublicTransmittalDto": {
+        "type": "object",
+        "properties": {
+          "companyName": {
+            "type": "string"
+          },
+          "number": {
+            "type": "string"
+          },
+          "subject": {
+            "type": "string"
+          },
+          "projectName": {
+            "type": "string"
+          },
+          "sentAt": {
+            "type": "string"
+          },
+          "linkExpiresAt": {
+            "type": "string"
+          },
+          "senderName": {
+            "type": "string"
+          },
+          "senderEmail": {
+            "type": "string",
+            "nullable": true
+          },
+          "hasPackage": {
+            "type": "boolean"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PublicTransmittalItemDto"
+            }
+          }
+        },
+        "required": [
+          "companyName",
+          "number",
+          "subject",
+          "projectName",
+          "sentAt",
+          "linkExpiresAt",
+          "senderName",
+          "senderEmail",
+          "hasPackage",
+          "items"
+        ]
+      },
+      "PublicDownloadDto": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "expiresAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "url",
+          "expiresAt"
         ]
       }
     }

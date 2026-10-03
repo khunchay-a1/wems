@@ -17,6 +17,8 @@ import { OutboxRelayService } from './outbox-relay.service';
 import { QueueWorkersService } from './queue-workers.service';
 import { FileProcessingHandler } from './handlers/file-processing.handler';
 import { NotificationHandler } from './handlers/notification.handler';
+import { TransmittalHandler } from './handlers/transmittal.handler';
+import { RevisionStampService } from '../modules/documents/revision-stamp.service';
 import { EmailDigestTask, LicenseExpiryTask } from './tasks/notification.tasks';
 import { CleanupTask } from './tasks/cleanup.task';
 import { ReviewReminderTask } from './tasks/review-reminder.task';
@@ -48,6 +50,8 @@ import { RealtimeEventsHandler } from './handlers/realtime.handler';
     EmailDigestTask,
     LicenseExpiryTask,
     FileProcessingHandler,
+    TransmittalHandler,
+    RevisionStampService,
     ReviewReminderTask,
     RealtimeEventsHandler,
   ],

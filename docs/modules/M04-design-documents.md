@@ -165,6 +165,12 @@ nextRevisionLabel(scheme, existing: { label: string; state: 'ACTIVE' | 'VOID' }[
 
 **อีเมล** (template `templates/mail/transmittal.{th,en}.hbs`): หัวเรื่อง `[<เลขใบนำส่ง>] <subject>`, เนื้อหาสรุปรายการ, แนบใบนำส่ง PDF เสมอ + ไฟล์ (หรือลิงก์), reply-to = อีเมลผู้ส่ง
 
+**เลขใบนำส่ง** ออกตอนสร้าง DRAFT (scheme `TRANSMITTAL` เช่น `TR-P26-001-001`) — ใบที่ยกเลิกแล้วเลขไม่นำกลับมาใช้
+
+**ลิงก์สาธารณะ**: token = HMAC-SHA256 (กุญแจ `APP_ENCRYPTION_KEY`) ของ id ใบนำส่ง + เวลาส่ง; ฐานข้อมูลเก็บเฉพาะ SHA-256 ของ token (`publicTokenHash`) แต่ระบบสร้างลิงก์เดิมให้เจ้าหน้าที่ดู/คัดลอกได้เสมอ; เพิกถอน = ตั้ง `linkRevokedAt`, ขยาย = เลื่อน `linkExpiresAt` และล้างการเพิกถอน; 410 มี `senderEmail` เพื่อให้หน้าเว็บบอกผู้ติดต่อ
+
+**ไฟล์ที่ส่ง**: รูปแบบ `PDF` = PDF rendition ที่ประทับตราตามสถานะ (BR-DOC-070), `NATIVE` = ไฟล์ต้นฉบับ, `PDF_AND_NATIVE` = ทั้งสอง, `HARD_COPY` = ไม่มีไฟล์; ขนาดรวมที่ใช้ตัดสิน BR-DOC-062 คิดจากไฟล์ตามรูปแบบของทุกรายการ
+
 **หน้าดาวน์โหลดสาธารณะ** (`/t/<token>`, Next.js route ไม่ต้องล็อกอิน): ชื่อบริษัท เลขใบนำส่ง วันที่ส่ง วันหมดอายุ ตารางรายการพร้อมปุ่มดาวน์โหลด และปุ่มดาวน์โหลดทั้งหมด (ZIP)
 
 ## 8. นำเข้าทะเบียนจาก Excel
@@ -234,8 +240,9 @@ Template ดาวน์โหลดได้จากหน้าทะเบ�
 | POST | `/comments/{id}/respond` · `/close` · `/reopen` | ดู `05-workflows.md` §3 | respond `{ version, responseNote }` โดยผู้จัดทำ/เจ้าของเอกสาร/`document.edit`; close/reopen `{ version, note? }` โดยผู้เขียนความเห็นหรือ `document.admin` (`note` บันทึกเป็น reply) |
 | GET | `/projects/{projectId}/transmittals` | `document.read` | |
 | POST | `/projects/{projectId}/transmittals` | `transmittal.manage` | สร้าง DRAFT พร้อมรายการ |
+| GET | `/projects/{projectId}/transmittable-revisions?q=` | `document.read` | revision ที่ส่งได้ (BR-DOC-060) + ป้ายไม่ใช่ฉบับล่าสุด (BR-DOC-061) สำหรับตัวเลือกเพิ่มรายการ |
 | GET / PATCH | `/transmittals/{id}` | `document.read` / `transmittal.manage` | |
-| POST / DELETE | `/transmittals/{id}/items[/{itemId}]` | `transmittal.manage` | BR-DOC-060 |
+| POST / PATCH / DELETE | `/transmittals/{id}/items[/{itemId}]` | `transmittal.manage` | BR-DOC-060; PATCH แก้จำนวนชุด/รูปแบบ/หมายเหตุขณะ DRAFT |
 | POST | `/transmittals/{id}/send` · `/cancel` · `/acknowledge` · `/revoke-link` · `/extend-link` · `/resend-email` | `transmittal.manage` | `05-workflows.md` §4 |
 | GET | `/transmittals/{id}/cover-sheet` | `document.read` | `{ url }` |
 | POST | `/transmittal-items/{id}/client-response` | `transmittal.manage` | `{ code, returnedAt, note?, fileId? }` BR-DOC-064 |

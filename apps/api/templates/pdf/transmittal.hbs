@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="{{lang}}">
+<head><meta charset="utf-8"><title>{{number}}</title>{{> styles}}
+<style>
+  .head { display: flex; justify-content: space-between; align-items: flex-start; gap: 6mm; margin-bottom: 5mm; }
+  .head .company .name { font-size: 13pt; font-weight: 700; }
+  .head img.logo { max-height: 16mm; max-width: 40mm; margin-bottom: 2mm; }
+  .doc-title { text-align: right; }
+  .doc-title h1 { margin: 0; }
+  .doc-title .no { font-size: 13pt; font-weight: 700; }
+  .meta { width: 100%; margin-bottom: 4mm; font-size: 10pt; }
+  .meta td { border: none; padding: 0.8mm 2mm 0.8mm 0; }
+  .meta td.k { color: #52606d; width: 32mm; white-space: nowrap; }
+  td.num, td.c { text-align: center; white-space: nowrap; }
+  .msg { white-space: pre-wrap; margin: 4mm 0; }
+  .foot { display: flex; justify-content: space-between; gap: 8mm; margin-top: 10mm; page-break-inside: avoid; }
+  .sign { width: 70mm; text-align: center; }
+  .sign .line { border-bottom: 0.6pt solid #1f2933; height: 14mm; margin-bottom: 1.5mm; }
+  .link { margin-top: 6mm; display: flex; gap: 4mm; align-items: center; font-size: 9.5pt; page-break-inside: avoid; }
+  .link img { width: 26mm; height: 26mm; }
+  .muted { color: #52606d; }
+</style>
+</head>
+<body>
+  <div class="head">
+    <div class="company">
+      {{#if logo}}<img class="logo" src="{{logo}}" alt="">{{/if}}
+      <div class="name">{{company.nameTh}}</div>
+      {{#if company.nameEn}}<div>{{company.nameEn}}</div>{{/if}}
+      {{#if company.addressTh}}<div class="muted">{{company.addressTh}}</div>{{/if}}
+      {{#if company.taxId}}<div class="muted">เลขประจำตัวผู้เสียภาษี / Tax ID {{company.taxId}}</div>{{/if}}
+    </div>
+    <div class="doc-title">
+      <h1>ใบนำส่งเอกสาร</h1>
+      <div class="muted">TRANSMITTAL</div>
+      <div class="no">{{number}}</div>
+    </div>
+  </div>
+  <table class="meta">
+    <tr><td class="k">วันที่ / Date</td><td>{{date}}</td><td class="k">โครงการ / Project</td><td>{{project}}</td></tr>
+    <tr><td class="k">ถึง / To</td><td>{{recipient}}</td><td class="k">อีเมล / Email</td><td>{{emails}}</td></tr>
+    <tr><td class="k">เรื่อง / Subject</td><td>{{subject}}</td><td class="k">วัตถุประสงค์ / Purpose</td><td>{{purpose}}</td></tr>
+  </table>
+  <table>
+    <thead><tr>
+      <th>ลำดับ<br>No.</th><th>เลขเอกสาร<br>Document No.</th><th>ชื่อเอกสาร<br>Title</th><th>Rev.</th>
+      <th>วัตถุประสงค์<br>Purpose</th><th>รูปแบบ<br>Format</th><th>จำนวนชุด<br>Copies</th><th>หมายเหตุ<br>Remark</th>
+    </tr></thead>
+    <tbody>
+      {{#each items}}
+      <tr>
+        <td class="num">{{no}}</td><td>{{number}}</td><td>{{title}}</td><td class="c">{{rev}}</td>
+        <td class="c">{{purpose}}</td><td class="c">{{format}}</td><td class="c">{{copies}}</td><td>{{remark}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+  {{#if message}}<div class="msg">{{message}}</div>{{/if}}
+  {{#if link}}
+  <div class="link">
+    {{#if qr}}<img src="{{qr}}" alt="">{{/if}}
+    <div>
+      <div><strong>ดาวน์โหลดไฟล์ / Download</strong></div>
+      <div>{{link}}</div>
+      <div class="muted">ลิงก์หมดอายุ / Expires {{linkExpires}}</div>
+    </div>
+  </div>
+  {{/if}}
+  <div class="foot">
+    <div class="sign">
+      <div class="line"></div>
+      <div>{{sender.name}}</div>
+      {{#if sender.position}}<div class="muted">{{sender.position}}</div>{{/if}}
+      <div class="muted">ผู้ส่ง / Sent by</div>
+    </div>
+    <div class="sign">
+      <div class="line"></div>
+      <div>(......................................................)</div>
+      <div class="muted">ผู้รับ / Received by &nbsp; วันที่ / Date ......../......../........</div>
+    </div>
+  </div>
+</body>
+</html>

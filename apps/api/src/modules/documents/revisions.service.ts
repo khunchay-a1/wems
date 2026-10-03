@@ -3,14 +3,12 @@ import type { Prisma } from '../../generated/prisma/client';
 import { AuditService } from '../../common/audit/audit.service';
 import { ChangeLogService, Scope } from '../../common/audit/change-log.service';
 import type { AuthUser } from '../../common/auth/auth-user';
-import { sha256Hex } from '../../common/crypto/crypto';
 import { Problem } from '../../common/errors/problem';
 import { FileAccessRegistry } from '../../common/files/file-access.registry';
 import { FilesService, toFileView } from '../../common/files/files.service';
 import { StorageService } from '../../common/files/storage.service';
 import { IdGenerator } from '../../common/ids/id-generator';
 import { OutboxService } from '../../common/outbox/outbox.service';
-import { type StampSpec, StampService } from '../../common/pdf/stamp.service';
 import {
   assertVersionedUpdate,
   bumpVersion,
@@ -20,10 +18,10 @@ import {
   type Tx,
 } from '../../common/prisma/helpers';
 import { PrismaService } from '../../common/prisma/prisma.service';
-import { bangkokDate } from '../../common/time/business-calendar';
 import { ClockService } from '../../common/time/clock';
 import { documentsEditable } from '../projects/domain/project-state-machine';
 import { DocumentAccessService, type RevisionContext } from './document-access.service';
+import { RevisionStampService } from './revision-stamp.service';
 import { isValidLabel, nextRevisionLabel } from './domain/revision-label';
 import {
   assertRevisionTransition,
@@ -91,7 +89,7 @@ export class RevisionsService {
     private readonly docAccess: DocumentAccessService,
     private readonly files: FilesService,
     private readonly storage: StorageService,
-    private readonly stamps: StampService,
+    private readonly revStamps: RevisionStampService,
     registry: FileAccessRegistry,
   ) {
     // Files of a revision are readable by everyone who can read the document
@@ -668,46 +666,6 @@ export class RevisionsService {
     return this.get(user, id);
   }
 
-  /** BR-DOC-070 stamp for a PDF rendition at download time. */
-  stampFor(
-    r: { status: string; purposeCode: string; revLabel: string; approvedAt: Date | null },
-    approverName: string | null,
-    signatureRef: string | null,
-  ): StampSpec | null {
-    switch (r.status) {
-      case 'DRAFT':
-      case 'IN_REVIEW':
-        return { kind: 'watermark', text: 'DRAFT – NOT FOR CONSTRUCTION', color: 'grey' };
-      case 'SUPERSEDED':
-        return { kind: 'watermark', text: 'SUPERSEDED – ฉบับเก่า ห้ามใช้', color: 'red' };
-      case 'VOID':
-        return { kind: 'watermark', text: 'VOID', color: 'grey' };
-      case 'APPROVED':
-      case 'ISSUED': {
-        if (r.purposeCode === 'FC' || r.purposeCode === 'AB') {
-          const head = r.purposeCode === 'AB' ? 'AS-BUILT' : 'APPROVED FOR CONSTRUCTION';
-          const date = r.approvedAt ? bangkokDate(r.approvedAt) : '';
-          return {
-            kind: 'box',
-            color: 'green',
-            lines: [
-              `${head} · Rev.${r.revLabel}`,
-              [date, approverName].filter(Boolean).join(' · '),
-              ...(signatureRef ? [`Ref ${signatureRef}`] : []),
-            ],
-          };
-        }
-        return {
-          kind: 'box',
-          color: 'orange',
-          lines: [`PRELIMINARY – NOT FOR CONSTRUCTION · Rev.${r.revLabel}`],
-        };
-      }
-      default:
-        return null;
-    }
-  }
-
   /** Download URL; PDF renditions are stamped by status (BR-DOC-070/071) and cached by stamp hash. */
   async download(user: AuthUser, id: string, q: DownloadQueryDto): Promise<SignedUrlResultDto> {
     const ctx = await this.docAccess.revision(user, id);
@@ -737,30 +695,8 @@ export class RevisionsService {
       );
     }
     if (df.role !== 'PDF_RENDITION' || !stamp) return this.files.signedDownload(df.file);
-    const approval = ctx.rev.approvedById
-      ? await this.prisma.reviewStep.findFirst({
-          where: {
-            assigneeId: ctx.rev.approvedById,
-            kind: 'APPROVE',
-            signatureEventId: { not: null },
-            cycle: { revisionId: id, status: 'APPROVED' },
-          },
-          include: { assignee: { select: { displayNameEn: true, displayNameTh: true } } },
-        })
-      : null;
-    const spec = this.stampFor(
-      ctx.rev,
-      approval ? (approval.assignee.displayNameEn ?? approval.assignee.displayNameTh) : null,
-      approval?.signatureEventId?.slice(0, 8) ?? null,
-    );
-    if (!spec) return this.files.signedDownload(df.file);
-    const stampHash = sha256Hex(JSON.stringify(spec)).slice(0, 16);
-    const key = `stamps/${df.file.id}/${stampHash}.pdf`;
-    if (!(await this.storage.head(key))) {
-      const original = await this.storage.getBuffer(df.file.storageKey);
-      const stamped = await this.stamps.stamp(original, spec);
-      await this.storage.put(key, stamped, 'application/pdf', stamped.length);
-    }
+    const key = await this.revStamps.stampedKey(ctx.rev, df.file);
+    if (!key) return this.files.signedDownload(df.file);
     return this.files.signedDownload(
       { ...df.file, storageKey: key, mimeType: 'application/pdf' },
       `${baseName}.pdf`,

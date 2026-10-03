@@ -139,3 +139,94 @@ export function makePdf(pages: number, label: string): Buffer {
   out += `trailer\n<< /Size ${objs.length + 1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF\n`;
   return Buffer.from(out, 'latin1');
 }
+
+/** Upload through the presigned flow (BR-PLT-020) and wait for the worker to mark it AVAILABLE. */
+export async function uploadFile(
+  api: Api,
+  request: APIRequestContext,
+  name: string,
+  body: Buffer,
+  purpose = 'DOCUMENT_REVISION',
+): Promise<string> {
+  const u = await api.call<{ fileId: string; uploadUrl: string; headers: Record<string, string> }>(
+    'POST',
+    '/files/upload-url',
+    {
+      originalName: name,
+      mimeType: 'application/pdf',
+      sizeBytes: body.length,
+      purpose,
+    },
+  );
+  const put = await request.fetch(u.uploadUrl, { method: 'PUT', headers: u.headers, data: body });
+  expect(put.ok(), await put.text()).toBe(true);
+  await api.call('POST', `/files/${u.fileId}/complete`);
+  await expect
+    .poll(async () => (await api.call<{ status: string }>('GET', `/files/${u.fileId}`)).status, {
+      timeout: 30_000,
+    })
+    .toBe('AVAILABLE');
+  return u.fileId;
+}
+
+/** A PR drawing with an approved (signed) revision of the given purpose, created through the API. */
+export async function approvedDrawing(
+  request: APIRequestContext,
+  p: Awaited<ReturnType<typeof designProject>>,
+  title: string,
+  purposeCode = 'FC',
+) {
+  const author = await Api.login(request, p.author.email, USER_PASSWORD);
+  const disciplines = await author.call<{ id: string; code: string }[]>('GET', '/disciplines');
+  const types = await author.call<{ id: string; code: string }[]>('GET', '/document-types');
+  const templates = await author.call<{ code: string; steps: { id: string; kind: string }[] }[]>(
+    'GET',
+    '/workflow-templates',
+  );
+  const d = await author.call<{ id: string; number: string; currentRevision: { id: string } }>(
+    'POST',
+    `/projects/${p.projectId}/documents`,
+    {
+      title,
+      disciplineId: disciplines.find((x) => x.code === 'PR')!.id,
+      documentTypeId: types.find((x) => x.code === 'DWG')!.id,
+      firstRevision: { purposeCode },
+    },
+  );
+  const revId = d.currentRevision.id;
+  const fileId = await uploadFile(author, request, `${title}.pdf`, makePdf(2, 'Approved'));
+  const rev = await author.call<{ version: number }>('POST', `/revisions/${revId}/files`, {
+    fileId,
+    role: 'PDF_RENDITION',
+  });
+  const tpl = templates.find((x) => x.code === 'DRAW_CHECK_APPROVE')!;
+  const steps = tpl.steps.flatMap((s) =>
+    s.kind === 'CHECK'
+      ? [{ templateStepId: s.id, assigneeId: p.checker.id }]
+      : s.kind === 'APPROVE'
+        ? [{ templateStepId: s.id, assigneeId: p.approver.id }]
+        : [],
+  );
+  type Rev = {
+    version: number;
+    cycles: { steps: { id: string; kind: string; version: number }[] }[];
+  };
+  let r = await author.call<Rev>('POST', `/revisions/${revId}/submit`, {
+    version: rev.version,
+    steps,
+  });
+  const checker = await Api.login(request, p.checker.email, USER_PASSWORD);
+  const check = r.cycles[0]!.steps.find((s) => s.kind === 'CHECK')!;
+  r = await checker.call<Rev>('POST', `/review-steps/${check.id}/decision`, {
+    version: check.version,
+    decision: 'APPROVED',
+  });
+  const approver = await Api.login(request, p.approver.email, USER_PASSWORD);
+  const approve = r.cycles[0]!.steps.find((s) => s.kind === 'APPROVE')!;
+  await approver.call('POST', `/review-steps/${approve.id}/decision`, {
+    version: approve.version,
+    decision: 'APPROVED',
+    signature: { method: 'SIGNING_PIN', secret: '246810' },
+  });
+  return { documentId: d.id, number: d.number, revisionId: revId };
+}

@@ -254,4 +254,32 @@ export function registerDocumentNotifications(): void {
       };
     },
   });
+
+  // BR-DOC-064: CODE_3/CODE_4 → document owner and PM; the register shows "new revision needed"
+  defineNotification('transmittal.client_response_recorded', {
+    channels: ['IN_APP', 'EMAIL', 'PUSH'],
+    recipients: async (p, { prisma }) => {
+      const doc = await prisma.document.findUnique({
+        where: { id: s(p.documentId) },
+        select: { ownerId: true, project: { select: { projectManagerId: true } } },
+      });
+      return [doc?.ownerId, doc?.project.projectManagerId].filter((x): x is string => !!x);
+    },
+    render: async (p, l, { prisma }) => {
+      const r = await revisionInfo(prisma, s(p.revisionId));
+      const label = r ? `${r.document.number} Rev.${r.revLabel}` : '';
+      return {
+        title: t(
+          l,
+          `ลูกค้าตอบกลับ ${enumLabel('ClientReturnCode', s(p.code), l)}: ${label}`,
+          `Client returned ${enumLabel('ClientReturnCode', s(p.code), l)}: ${label}`,
+        ),
+        body: t(l, 'ต้องออก revision ใหม่', 'A new revision is needed'),
+        entityType: 'DocumentRevision',
+        entityId: s(p.revisionId),
+        projectId: s(p.projectId),
+        link: r ? docLink(r.document.projectId, r.document.id, r.id) : undefined,
+      };
+    },
+  });
 }

@@ -10,8 +10,12 @@ import { DocumentsExcelService } from './documents-excel.service';
 import { DocumentsService } from './documents.service';
 import { MasterDataController } from './master-data.controller';
 import { MasterDataService } from './master-data.service';
+import { PublicTransmittalsService } from './public-transmittals.service';
 import { ReviewService } from './review.service';
+import { RevisionStampService } from './revision-stamp.service';
 import { RevisionsService } from './revisions.service';
+import { PublicTransmittalsController, TransmittalsController } from './transmittals.controller';
+import { TransmittalsService } from './transmittals.service';
 
 /** M04 design documents (docs/modules/M04-design-documents.md). */
 @Module({
@@ -21,6 +25,8 @@ import { RevisionsService } from './revisions.service';
     DocumentsExcelController,
     DocumentsController,
     CommentsController,
+    TransmittalsController,
+    PublicTransmittalsController,
   ],
   providers: [
     MasterDataService,
@@ -30,6 +36,9 @@ import { RevisionsService } from './revisions.service';
     ReviewService,
     DocumentsExcelService,
     CommentsService,
+    RevisionStampService,
+    TransmittalsService,
+    PublicTransmittalsService,
   ],
   exports: [MasterDataService, DocumentAccessService, DocumentsService, RevisionsService],
 })

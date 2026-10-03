@@ -82,6 +82,7 @@ export function unwrap<T>(result: { data?: T; error?: unknown; response: Respons
     const p = (result.error ?? {}) as Partial<Problem>;
     throw new ApiError(
       {
+        ...p, // extension members (e.g. senderEmail on TRN_LINK_EXPIRED)
         type: p.type ?? '',
         title: p.title ?? result.response.statusText,
         status: result.response.status,
