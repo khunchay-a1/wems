@@ -47,10 +47,13 @@ export async function startSmtpSink(): Promise<{
   return { port, mails, close: () => new Promise((r) => server.close(() => r())) };
 }
 
-export async function waitFor<T>(fn: () => T | undefined | false, timeoutMs = 8000): Promise<T> {
+export async function waitFor<T>(
+  fn: () => T | undefined | false | Promise<T | undefined | false>,
+  timeoutMs = 8000,
+): Promise<T> {
   const start = Date.now();
   for (;;) {
-    const v = fn();
+    const v = await fn();
     if (v) return v;
     if (Date.now() - start > timeoutMs) throw new Error('waitFor timed out');
     await new Promise((r) => setTimeout(r, 50));

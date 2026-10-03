@@ -19,6 +19,8 @@ import { FileProcessingHandler } from './handlers/file-processing.handler';
 import { NotificationHandler } from './handlers/notification.handler';
 import { EmailDigestTask, LicenseExpiryTask } from './tasks/notification.tasks';
 import { CleanupTask } from './tasks/cleanup.task';
+import { ReviewReminderTask } from './tasks/review-reminder.task';
+import { RealtimeEventsHandler } from './handlers/realtime.handler';
 
 /** Background process: outbox relay, BullMQ consumers and scheduled jobs (docs/02-architecture.md §6). */
 @Module({
@@ -46,6 +48,8 @@ import { CleanupTask } from './tasks/cleanup.task';
     EmailDigestTask,
     LicenseExpiryTask,
     FileProcessingHandler,
+    ReviewReminderTask,
+    RealtimeEventsHandler,
   ],
   exports: [EventDispatcher, OutboxRelayService, NotificationHandler],
 })

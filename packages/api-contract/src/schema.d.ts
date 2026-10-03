@@ -1390,6 +1390,419 @@ export interface paths {
         patch: operations["MasterData_updateWorkflowTemplate"];
         trace?: never;
     };
+    "/api/v1/projects/{projectId}/documents/export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Register as .xlsx with the list filters (report.export) */
+        get: operations["Documents_exportDocuments"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/projects/{projectId}/documents/import-template": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Excel template for importing the register (M04 §8) */
+        get: operations["Documents_getImportTemplate"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/projects/{projectId}/documents/import": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Dry-run or commit an Excel import (BR-DOC-015/016) */
+        post: operations["Documents_importDocuments"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/projects/{projectId}/documents": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Document register of a project (M04 §10 filters) */
+        get: operations["Documents_listDocuments"];
+        put?: never;
+        /** Register a document (BR-DOC-010/013/014) */
+        post: operations["Documents_createDocument"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/projects/{projectId}/documents/number-preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Number the next document of this discipline/type would get */
+        get: operations["Documents_previewDocumentNumber"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/documents/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Document with revisions, plans and allowed actions */
+        get: operations["Documents_getDocument"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Edit a document (BR-DOC-011) */
+        patch: operations["Documents_updateDocument"];
+        trace?: never;
+    };
+    "/api/v1/documents/{id}/plans": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Replace the delivery plan of a document */
+        put: operations["Documents_putDocumentPlans"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/documents/{id}/hold": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** ACTIVE → ON_HOLD */
+        post: operations["Documents_holdDocument"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/documents/{id}/resume": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** ON_HOLD → ACTIVE */
+        post: operations["Documents_resumeDocument"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/documents/{id}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Cancel a deliverable (reason required) */
+        post: operations["Documents_cancelDocument"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/documents/{id}/supersede": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Superseded by another document of the project */
+        post: operations["Documents_supersedeDocument"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/documents/{id}/revisions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Revisions of a document (newest first) */
+        get: operations["Documents_listRevisions"];
+        put?: never;
+        /** New DRAFT revision (BR-DOC-020..024, 034) */
+        post: operations["Documents_createRevision"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/revisions/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Revision with files, review cycles and allowed actions */
+        get: operations["Documents_getRevision"];
+        put?: never;
+        post?: never;
+        /** Discard a never-submitted draft (BR-DOC-025) */
+        delete: operations["Documents_discardRevision"];
+        options?: never;
+        head?: never;
+        /** Edit a DRAFT revision (purpose before the first submit, description) */
+        patch: operations["Documents_updateRevision"];
+        trace?: never;
+    };
+    "/api/v1/revisions/{id}/files": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Attach an uploaded file to a DRAFT revision (BR-DOC-026) */
+        post: operations["Documents_addRevisionFile"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/revisions/{id}/void": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Void a revision (reason required) */
+        post: operations["Documents_voidRevision"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/revisions/{id}/download": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Signed URL; PDF renditions are stamped (BR-DOC-070/071) */
+        get: operations["Documents_downloadRevisionFile"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/revisions/{id}/eligible-reviewers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Assignee candidates per template step with licence status */
+        get: operations["Reviews_listEligibleReviewers"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/revisions/{id}/submit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Submit for review (BR-DOC-030, 040–042) */
+        post: operations["Reviews_submitRevision"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/revisions/{id}/cancel-review": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Cancel the running review cycle (reason required) */
+        post: operations["Reviews_cancelReview"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/review-steps": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** My review inbox across projects, by due date */
+        get: operations["Reviews_listReviewSteps"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/review-cycles/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Review cycle with steps */
+        get: operations["Reviews_getReviewCycle"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/review-steps/{id}/decision": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Decide a review step (BR-DOC-033, 039–043) */
+        post: operations["Reviews_decideStep"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/review-steps/{id}/reassign": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Hand over / reassign a review step (BR-DOC-037) */
+        post: operations["Reviews_reassignStep"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/review-steps/{id}/skip": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Skip an optional step (PM / document.admin) */
+        post: operations["Reviews_skipStep"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -2566,6 +2979,563 @@ export interface components {
             isActive?: boolean;
             steps?: components["schemas"]["WorkflowStepInputDto"][];
         };
+        ImportRequestDto: {
+            /**
+             * Format: uuid
+             * @description Uploaded .xlsx (purpose IMPORT)
+             */
+            fileId: string;
+            /** @description true = validate only (BR-DOC-015) */
+            dryRun: boolean;
+        };
+        ImportRowDto: {
+            row: number;
+            number: string | null;
+            title: string;
+        };
+        ImportResultDto: {
+            dryRun: boolean;
+            count: number;
+            rows: components["schemas"]["ImportRowDto"][];
+        };
+        CodeRefDto: {
+            /** Format: uuid */
+            id: string;
+            code: string;
+            nameTh: string;
+            nameEn: string;
+        };
+        /** @enum {string} */
+        DocumentStatus: "ACTIVE" | "ON_HOLD" | "CANCELLED" | "SUPERSEDED";
+        /** @enum {string} */
+        Confidentiality: "INTERNAL" | "CLIENT_SHAREABLE" | "CONFIDENTIAL";
+        /** @enum {string} */
+        PurposeCode: "FI" | "FR" | "FA" | "FT" | "FC" | "AB";
+        /** @enum {string} */
+        RevisionStatus: "DRAFT" | "IN_REVIEW" | "APPROVED" | "ISSUED" | "SUPERSEDED" | "VOID";
+        /** @enum {string} */
+        ClientReturnCode: "CODE_1" | "CODE_2" | "CODE_3" | "CODE_4" | "INFO";
+        RevisionSummaryDto: {
+            /** Format: uuid */
+            id: string;
+            revLabel: string;
+            revIndex: number;
+            purposeCode: components["schemas"]["PurposeCode"];
+            status: components["schemas"]["RevisionStatus"];
+            clientReturnCode: components["schemas"]["ClientReturnCode"] | null;
+            approvedAt: string | null;
+            issuedAt: string | null;
+        };
+        PlanDto: {
+            purposeCode: components["schemas"]["PurposeCode"];
+            /** Format: date */
+            plannedDate: string | null;
+            /** Format: date */
+            forecastDate: string | null;
+            /** Format: date */
+            actualDate: string | null;
+        };
+        DocumentListItemDto: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            projectId: string;
+            number: string;
+            title: string;
+            titleEn: string | null;
+            discipline: components["schemas"]["CodeRefDto"];
+            documentType: components["schemas"]["CodeRefDto"];
+            status: components["schemas"]["DocumentStatus"];
+            confidentiality: components["schemas"]["Confidentiality"];
+            owner: components["schemas"]["UserRefDto"] | null;
+            currentRevision: components["schemas"]["RevisionSummaryDto"] | null;
+            /** @description ฉบับใช้งาน */
+            latestApprovedRevision: components["schemas"]["RevisionSummaryDto"] | null;
+            /** @description BR-DOC-064: client returned CODE_3/4 and no newer revision yet */
+            needsNewRevision: boolean;
+            openCommentCount: number;
+            plans: components["schemas"]["PlanDto"][];
+            tags: string[];
+            updatedAt: string;
+            version: number;
+        };
+        NumberPreviewDto: {
+            /** @example P26-001-PR-DWG-003 */
+            number: string;
+        };
+        /** @enum {string} */
+        DocumentSource: "INTERNAL" | "EXTERNAL";
+        PlanInputDto: {
+            purposeCode: components["schemas"]["PurposeCode"];
+            /** Format: date */
+            plannedDate?: string | null;
+            /** Format: date */
+            forecastDate?: string | null;
+            /**
+             * Format: date
+             * @description Normally set by transmittals (BR-DOC-063)
+             */
+            actualDate?: string | null;
+        };
+        FirstRevisionDto: {
+            purposeCode: components["schemas"]["PurposeCode"];
+            description?: string;
+        };
+        CreateDocumentDto: {
+            title: string;
+            titleEn?: string | null;
+            /** Format: uuid */
+            disciplineId: string;
+            /** Format: uuid */
+            documentTypeId: string;
+            source?: components["schemas"]["DocumentSource"];
+            originator?: string | null;
+            /** @description BR-DOC-012 */
+            externalNumber?: string | null;
+            confidentiality?: components["schemas"]["Confidentiality"];
+            sheetSize?: string | null;
+            scale?: string | null;
+            /** Format: uuid */
+            ownerId?: string | null;
+            /**
+             * Format: uuid
+             * @description Overrides the workflow of the document type
+             */
+            workflowTemplateId?: string | null;
+            tags?: string[];
+            remarks?: string | null;
+            plans?: components["schemas"]["PlanInputDto"][];
+            /** @description Create the first revision right away */
+            firstRevision?: components["schemas"]["FirstRevisionDto"];
+        };
+        DocumentWarningDto: {
+            /** @example DOC_TITLE_EXISTS */
+            code: string;
+            documents: string[];
+        };
+        SaveDocumentResultDto: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            projectId: string;
+            number: string;
+            title: string;
+            titleEn: string | null;
+            discipline: components["schemas"]["CodeRefDto"];
+            documentType: components["schemas"]["CodeRefDto"];
+            status: components["schemas"]["DocumentStatus"];
+            confidentiality: components["schemas"]["Confidentiality"];
+            owner: components["schemas"]["UserRefDto"] | null;
+            currentRevision: components["schemas"]["RevisionSummaryDto"] | null;
+            /** @description ฉบับใช้งาน */
+            latestApprovedRevision: components["schemas"]["RevisionSummaryDto"] | null;
+            /** @description BR-DOC-064: client returned CODE_3/4 and no newer revision yet */
+            needsNewRevision: boolean;
+            openCommentCount: number;
+            plans: components["schemas"]["PlanDto"][];
+            tags: string[];
+            updatedAt: string;
+            version: number;
+            source: components["schemas"]["DocumentSource"];
+            originator: string | null;
+            externalNumber: string | null;
+            sheetSize: string | null;
+            scale: string | null;
+            remarks: string | null;
+            /** Format: uuid */
+            workflowTemplateId: string | null;
+            /** Format: uuid */
+            supersededByDocumentId: string | null;
+            revisions: components["schemas"]["RevisionSummaryDto"][];
+            createdAt: string;
+            /**
+             * @example [
+             *       "edit",
+             *       "newRevision",
+             *       "hold"
+             *     ]
+             */
+            allowedActions: string[];
+            blockedActions: components["schemas"]["BlockedActionDto"][];
+            warnings: components["schemas"]["DocumentWarningDto"][];
+        };
+        DocumentDto: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            projectId: string;
+            number: string;
+            title: string;
+            titleEn: string | null;
+            discipline: components["schemas"]["CodeRefDto"];
+            documentType: components["schemas"]["CodeRefDto"];
+            status: components["schemas"]["DocumentStatus"];
+            confidentiality: components["schemas"]["Confidentiality"];
+            owner: components["schemas"]["UserRefDto"] | null;
+            currentRevision: components["schemas"]["RevisionSummaryDto"] | null;
+            /** @description ฉบับใช้งาน */
+            latestApprovedRevision: components["schemas"]["RevisionSummaryDto"] | null;
+            /** @description BR-DOC-064: client returned CODE_3/4 and no newer revision yet */
+            needsNewRevision: boolean;
+            openCommentCount: number;
+            plans: components["schemas"]["PlanDto"][];
+            tags: string[];
+            updatedAt: string;
+            version: number;
+            source: components["schemas"]["DocumentSource"];
+            originator: string | null;
+            externalNumber: string | null;
+            sheetSize: string | null;
+            scale: string | null;
+            remarks: string | null;
+            /** Format: uuid */
+            workflowTemplateId: string | null;
+            /** Format: uuid */
+            supersededByDocumentId: string | null;
+            revisions: components["schemas"]["RevisionSummaryDto"][];
+            createdAt: string;
+            /**
+             * @example [
+             *       "edit",
+             *       "newRevision",
+             *       "hold"
+             *     ]
+             */
+            allowedActions: string[];
+            blockedActions: components["schemas"]["BlockedActionDto"][];
+        };
+        UpdateDocumentDto: {
+            title?: string;
+            titleEn?: string | null;
+            /** Format: uuid */
+            disciplineId?: string;
+            /** Format: uuid */
+            documentTypeId?: string;
+            source?: components["schemas"]["DocumentSource"];
+            originator?: string | null;
+            /** @description BR-DOC-012 */
+            externalNumber?: string | null;
+            confidentiality?: components["schemas"]["Confidentiality"];
+            sheetSize?: string | null;
+            scale?: string | null;
+            /** Format: uuid */
+            ownerId?: string | null;
+            /**
+             * Format: uuid
+             * @description Overrides the workflow of the document type
+             */
+            workflowTemplateId?: string | null;
+            tags?: string[];
+            remarks?: string | null;
+            version: number;
+            /** @description document.admin only, after an approved revision (BR-DOC-011) */
+            number?: string;
+            /** @description Required for locked number/discipline/type changes (BR-DOC-011) */
+            reason?: string;
+        };
+        PutPlansDto: {
+            plans: components["schemas"]["PlanInputDto"][];
+        };
+        DocumentActionDto: {
+            version: number;
+            reason?: string;
+        };
+        SupersedeDocumentDto: {
+            version: number;
+            reason?: string;
+            /** Format: uuid */
+            byDocumentId: string;
+        };
+        /** @enum {string} */
+        ReviewCycleStatus: "IN_PROGRESS" | "APPROVED" | "REJECTED" | "CANCELLED";
+        /** @enum {string} */
+        DocumentFileRole: "PDF_RENDITION" | "NATIVE" | "SUPPORTING";
+        DocumentFileDto: {
+            /** Format: uuid */
+            id: string;
+            role: components["schemas"]["DocumentFileRole"];
+            uploadVersion: number;
+            isCurrent: boolean;
+            note: string | null;
+            uploadedBy: components["schemas"]["UserRefDto"];
+            uploadedAt: string;
+            file: components["schemas"]["FileDto"];
+        };
+        /** @enum {string} */
+        ReviewStepStatus: "PENDING" | "ACTIVE" | "APPROVED" | "APPROVED_WITH_COMMENTS" | "REJECTED" | "SKIPPED" | "CANCELLED";
+        ReviewStepDto: {
+            /** Format: uuid */
+            id: string;
+            stepOrder: number;
+            kind: components["schemas"]["ReviewStepKind"];
+            name: string;
+            assignee: components["schemas"]["UserRefDto"];
+            status: components["schemas"]["ReviewStepStatus"];
+            requiresSignature: boolean;
+            requiresLicense: boolean;
+            isOptional: boolean;
+            activatedAt: string | null;
+            dueAt: string | null;
+            isOverdue: boolean;
+            decidedAt: string | null;
+            decisionNote: string | null;
+            delegatedFrom: components["schemas"]["UserRefDto"] | null;
+            /** Format: uuid */
+            signatureEventId: string | null;
+            version: number;
+            /**
+             * @example [
+             *       "decide",
+             *       "reassign"
+             *     ]
+             */
+            allowedActions: string[];
+        };
+        ReviewCycleDto: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            revisionId: string;
+            cycleNo: number;
+            status: components["schemas"]["ReviewCycleStatus"];
+            /** Format: uuid */
+            templateId: string | null;
+            /** Format: uuid */
+            reviewedFileId: string | null;
+            reviewedFileSha256: string | null;
+            submittedBy: components["schemas"]["UserRefDto"];
+            submittedAt: string;
+            submitNote: string | null;
+            completedAt: string | null;
+            cancelledReason: string | null;
+            steps: components["schemas"]["ReviewStepDto"][];
+        };
+        RevisionDto: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            documentId: string;
+            /** Format: uuid */
+            projectId: string;
+            documentNumber: string;
+            documentTitle: string;
+            revLabel: string;
+            revIndex: number;
+            purposeCode: components["schemas"]["PurposeCode"];
+            status: components["schemas"]["RevisionStatus"];
+            description: string | null;
+            preparedBy: components["schemas"]["UserRefDto"];
+            checkedBy: components["schemas"]["UserRefDto"] | null;
+            approvedBy: components["schemas"]["UserRefDto"] | null;
+            approvedAt: string | null;
+            issuedAt: string | null;
+            lockedAt: string | null;
+            lastCycleOutcome: components["schemas"]["ReviewCycleStatus"] | null;
+            clientReturnCode: components["schemas"]["ClientReturnCode"] | null;
+            /** Format: date */
+            clientReturnedAt: string | null;
+            voidedAt: string | null;
+            voidReason: string | null;
+            isLatestApproved: boolean;
+            /** @description All uploads, newest first */
+            files: components["schemas"]["DocumentFileDto"][];
+            /** @description Newest first */
+            cycles: components["schemas"]["ReviewCycleDto"][];
+            commentCount: number;
+            openCommentCount: number;
+            version: number;
+            /**
+             * @example [
+             *       "upload",
+             *       "submit",
+             *       "discard"
+             *     ]
+             */
+            allowedActions: string[];
+            blockedActions: components["schemas"]["BlockedActionDto"][];
+        };
+        CreateRevisionDto: {
+            purposeCode: components["schemas"]["PurposeCode"];
+            /** @description What changed (required from the 2nd revision before submit — BR-DOC-027) */
+            description?: string;
+            /**
+             * @description document.admin only (BR-DOC-024)
+             * @example C
+             */
+            revLabelOverride?: string;
+        };
+        UpdateRevisionDto: {
+            version: number;
+            /** @description Before the first submit only; recomputes the label */
+            purposeCode?: components["schemas"]["PurposeCode"];
+            description?: string;
+        };
+        AddRevisionFileDto: {
+            /** Format: uuid */
+            fileId: string;
+            role: components["schemas"]["DocumentFileRole"];
+            note?: string;
+        };
+        VersionReasonBodyDto: {
+            version: number;
+            reason: string;
+        };
+        SignedUrlResultDto: {
+            url: string;
+            expiresAt: string;
+        };
+        LicenseBadgeDto: {
+            /** Format: uuid */
+            id: string;
+            licenseNo: string;
+            branch: components["schemas"]["LicenseBranch"];
+            level: components["schemas"]["LicenseLevel"];
+            /** Format: date */
+            expiresAt: string;
+        };
+        EligibleReviewerDto: {
+            /** Format: uuid */
+            userId: string;
+            displayName: string;
+            position: string | null;
+            projectRole: components["schemas"]["ProjectRole"] | null;
+            eligible: boolean;
+            /** @example DOC_SEPARATION_OF_DUTIES */
+            reason: string | null;
+            license: components["schemas"]["LicenseBadgeDto"] | null;
+            /** @description The licence expires before the estimated due date (warning only) */
+            licenseExpiresBeforeDue: boolean;
+            /** @description Used for this step on the same document type in this project before */
+            suggested: boolean;
+        };
+        EligibleStepDto: {
+            /** Format: uuid */
+            templateStepId: string;
+            stepOrder: number;
+            kind: components["schemas"]["ReviewStepKind"];
+            name: string;
+            isOptional: boolean;
+            requiresSignature: boolean;
+            needsLicense: boolean;
+            dueDays: number;
+            /** @description Estimated due date if the step started now */
+            estimatedDueAt: string;
+            candidates: components["schemas"]["EligibleReviewerDto"][];
+        };
+        EligibleReviewersDto: {
+            /** Format: uuid */
+            templateId: string | null;
+            steps: components["schemas"]["EligibleStepDto"][];
+        };
+        SubmitStepDto: {
+            /** Format: uuid */
+            templateStepId: string;
+            /** Format: uuid */
+            assigneeId: string;
+        };
+        SubmitRevisionDto: {
+            version: number;
+            /**
+             * Format: uuid
+             * @description Default: document override, else the document type default
+             */
+            templateId?: string;
+            /** @description Several entries per template step = parallel assignees */
+            steps: components["schemas"]["SubmitStepDto"][];
+            note?: string;
+        };
+        SubmitResultDto: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            documentId: string;
+            /** Format: uuid */
+            projectId: string;
+            documentNumber: string;
+            documentTitle: string;
+            revLabel: string;
+            revIndex: number;
+            purposeCode: components["schemas"]["PurposeCode"];
+            status: components["schemas"]["RevisionStatus"];
+            description: string | null;
+            preparedBy: components["schemas"]["UserRefDto"];
+            checkedBy: components["schemas"]["UserRefDto"] | null;
+            approvedBy: components["schemas"]["UserRefDto"] | null;
+            approvedAt: string | null;
+            issuedAt: string | null;
+            lockedAt: string | null;
+            lastCycleOutcome: components["schemas"]["ReviewCycleStatus"] | null;
+            clientReturnCode: components["schemas"]["ClientReturnCode"] | null;
+            /** Format: date */
+            clientReturnedAt: string | null;
+            voidedAt: string | null;
+            voidReason: string | null;
+            isLatestApproved: boolean;
+            /** @description All uploads, newest first */
+            files: components["schemas"]["DocumentFileDto"][];
+            /** @description Newest first */
+            cycles: components["schemas"]["ReviewCycleDto"][];
+            commentCount: number;
+            openCommentCount: number;
+            version: number;
+            /**
+             * @example [
+             *       "upload",
+             *       "submit",
+             *       "discard"
+             *     ]
+             */
+            allowedActions: string[];
+            blockedActions: components["schemas"]["BlockedActionDto"][];
+            /** @description e.g. LICENSE_EXPIRES_BEFORE_DUE */
+            warnings: string[];
+        };
+        MyReviewStepDto: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            cycleId: string;
+            kind: components["schemas"]["ReviewStepKind"];
+            name: string;
+            status: components["schemas"]["ReviewStepStatus"];
+            activatedAt: string | null;
+            dueAt: string | null;
+            isOverdue: boolean;
+            requiresSignature: boolean;
+            /** Format: uuid */
+            revisionId: string;
+            revLabel: string;
+            purposeCode: components["schemas"]["PurposeCode"];
+            /** Format: uuid */
+            documentId: string;
+            documentNumber: string;
+            documentTitle: string;
+            /** Format: uuid */
+            projectId: string;
+            projectCode: string;
+            projectName: string;
+            submittedBy: components["schemas"]["UserRefDto"];
+            version: number;
+        };
+        SignatureInputDto: {
+            /** @enum {string} */
+            method: "PASSWORD" | "SIGNING_PIN";
+            secret: string;
+        };
+        DecisionDto: {
+            version: number;
+            /** @enum {string} */
+            decision: "APPROVED" | "APPROVED_WITH_COMMENTS" | "REJECTED";
+            note?: string;
+            /** @description Required when the step requires a signature (BR-DOC-043) */
+            signature?: components["schemas"]["SignatureInputDto"];
+        };
+        ReassignDto: {
+            version: number;
+            /** Format: uuid */
+            assigneeId: string;
+            reason: string;
+        };
     };
     responses: never;
     parameters: never;
@@ -2691,6 +3661,53 @@ export type SchemaWorkflowTemplateDto = components['schemas']['WorkflowTemplateD
 export type SchemaWorkflowStepInputDto = components['schemas']['WorkflowStepInputDto'];
 export type SchemaCreateWorkflowTemplateDto = components['schemas']['CreateWorkflowTemplateDto'];
 export type SchemaUpdateWorkflowTemplateDto = components['schemas']['UpdateWorkflowTemplateDto'];
+export type SchemaImportRequestDto = components['schemas']['ImportRequestDto'];
+export type SchemaImportRowDto = components['schemas']['ImportRowDto'];
+export type SchemaImportResultDto = components['schemas']['ImportResultDto'];
+export type SchemaCodeRefDto = components['schemas']['CodeRefDto'];
+export type SchemaDocumentStatus = components['schemas']['DocumentStatus'];
+export type SchemaConfidentiality = components['schemas']['Confidentiality'];
+export type SchemaPurposeCode = components['schemas']['PurposeCode'];
+export type SchemaRevisionStatus = components['schemas']['RevisionStatus'];
+export type SchemaClientReturnCode = components['schemas']['ClientReturnCode'];
+export type SchemaRevisionSummaryDto = components['schemas']['RevisionSummaryDto'];
+export type SchemaPlanDto = components['schemas']['PlanDto'];
+export type SchemaDocumentListItemDto = components['schemas']['DocumentListItemDto'];
+export type SchemaNumberPreviewDto = components['schemas']['NumberPreviewDto'];
+export type SchemaDocumentSource = components['schemas']['DocumentSource'];
+export type SchemaPlanInputDto = components['schemas']['PlanInputDto'];
+export type SchemaFirstRevisionDto = components['schemas']['FirstRevisionDto'];
+export type SchemaCreateDocumentDto = components['schemas']['CreateDocumentDto'];
+export type SchemaDocumentWarningDto = components['schemas']['DocumentWarningDto'];
+export type SchemaSaveDocumentResultDto = components['schemas']['SaveDocumentResultDto'];
+export type SchemaDocumentDto = components['schemas']['DocumentDto'];
+export type SchemaUpdateDocumentDto = components['schemas']['UpdateDocumentDto'];
+export type SchemaPutPlansDto = components['schemas']['PutPlansDto'];
+export type SchemaDocumentActionDto = components['schemas']['DocumentActionDto'];
+export type SchemaSupersedeDocumentDto = components['schemas']['SupersedeDocumentDto'];
+export type SchemaReviewCycleStatus = components['schemas']['ReviewCycleStatus'];
+export type SchemaDocumentFileRole = components['schemas']['DocumentFileRole'];
+export type SchemaDocumentFileDto = components['schemas']['DocumentFileDto'];
+export type SchemaReviewStepStatus = components['schemas']['ReviewStepStatus'];
+export type SchemaReviewStepDto = components['schemas']['ReviewStepDto'];
+export type SchemaReviewCycleDto = components['schemas']['ReviewCycleDto'];
+export type SchemaRevisionDto = components['schemas']['RevisionDto'];
+export type SchemaCreateRevisionDto = components['schemas']['CreateRevisionDto'];
+export type SchemaUpdateRevisionDto = components['schemas']['UpdateRevisionDto'];
+export type SchemaAddRevisionFileDto = components['schemas']['AddRevisionFileDto'];
+export type SchemaVersionReasonBodyDto = components['schemas']['VersionReasonBodyDto'];
+export type SchemaSignedUrlResultDto = components['schemas']['SignedUrlResultDto'];
+export type SchemaLicenseBadgeDto = components['schemas']['LicenseBadgeDto'];
+export type SchemaEligibleReviewerDto = components['schemas']['EligibleReviewerDto'];
+export type SchemaEligibleStepDto = components['schemas']['EligibleStepDto'];
+export type SchemaEligibleReviewersDto = components['schemas']['EligibleReviewersDto'];
+export type SchemaSubmitStepDto = components['schemas']['SubmitStepDto'];
+export type SchemaSubmitRevisionDto = components['schemas']['SubmitRevisionDto'];
+export type SchemaSubmitResultDto = components['schemas']['SubmitResultDto'];
+export type SchemaMyReviewStepDto = components['schemas']['MyReviewStepDto'];
+export type SchemaSignatureInputDto = components['schemas']['SignatureInputDto'];
+export type SchemaDecisionDto = components['schemas']['DecisionDto'];
+export type SchemaReassignDto = components['schemas']['ReassignDto'];
 export type $defs = Record<string, never>;
 export interface operations {
     Health_getLive: {
@@ -5099,6 +6116,740 @@ export interface operations {
             };
         };
     };
+    Documents_exportDocuments: {
+        parameters: {
+            query?: {
+                page?: number;
+                pageSize?: number;
+                /** @description Comma separated, "-" prefix = descending, e.g. "-updatedAt,number" */
+                sort?: string;
+                /** @description Search text */
+                q?: string;
+                disciplineId?: string;
+                documentTypeId?: string;
+                /** @description Comma separated DocumentStatus (default ACTIVE,ON_HOLD) */
+                status?: string;
+                /** @description Comma separated status of the current revision; NONE = no revision */
+                revisionStatus?: string;
+                /** @description Comma separated purpose of the current revision */
+                purposeCode?: string;
+                ownerId?: string;
+                /** @description Comma separated client return code of the latest issued revision */
+                clientReturnCode?: string;
+                hasOpenComments?: boolean;
+                tag?: string;
+            };
+            header?: never;
+            path: {
+                projectId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": string;
+                };
+            };
+        };
+    };
+    Documents_getImportTemplate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                projectId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": string;
+                };
+            };
+        };
+    };
+    Documents_importDocuments: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                projectId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ImportRequestDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ImportResultDto"];
+                };
+            };
+        };
+    };
+    Documents_listDocuments: {
+        parameters: {
+            query?: {
+                page?: number;
+                pageSize?: number;
+                /** @description Comma separated, "-" prefix = descending, e.g. "-updatedAt,number" */
+                sort?: string;
+                /** @description Search text */
+                q?: string;
+                disciplineId?: string;
+                documentTypeId?: string;
+                /** @description Comma separated DocumentStatus (default ACTIVE,ON_HOLD) */
+                status?: string;
+                /** @description Comma separated status of the current revision; NONE = no revision */
+                revisionStatus?: string;
+                /** @description Comma separated purpose of the current revision */
+                purposeCode?: string;
+                ownerId?: string;
+                /** @description Comma separated client return code of the latest issued revision */
+                clientReturnCode?: string;
+                hasOpenComments?: boolean;
+                tag?: string;
+            };
+            header?: never;
+            path: {
+                projectId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["DocumentListItemDto"][];
+                        meta: components["schemas"]["PageMetaDto"];
+                    };
+                };
+            };
+        };
+    };
+    Documents_createDocument: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                projectId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateDocumentDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SaveDocumentResultDto"];
+                };
+            };
+        };
+    };
+    Documents_previewDocumentNumber: {
+        parameters: {
+            query: {
+                disciplineId: string;
+                documentTypeId: string;
+            };
+            header?: never;
+            path: {
+                projectId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NumberPreviewDto"];
+                };
+            };
+        };
+    };
+    Documents_getDocument: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DocumentDto"];
+                };
+            };
+        };
+    };
+    Documents_updateDocument: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateDocumentDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SaveDocumentResultDto"];
+                };
+            };
+        };
+    };
+    Documents_putDocumentPlans: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PutPlansDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DocumentDto"];
+                };
+            };
+        };
+    };
+    Documents_holdDocument: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DocumentActionDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DocumentDto"];
+                };
+            };
+        };
+    };
+    Documents_resumeDocument: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DocumentActionDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DocumentDto"];
+                };
+            };
+        };
+    };
+    Documents_cancelDocument: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DocumentActionDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DocumentDto"];
+                };
+            };
+        };
+    };
+    Documents_supersedeDocument: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SupersedeDocumentDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DocumentDto"];
+                };
+            };
+        };
+    };
+    Documents_listRevisions: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RevisionDto"][];
+                };
+            };
+        };
+    };
+    Documents_createRevision: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateRevisionDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RevisionDto"];
+                };
+            };
+        };
+    };
+    Documents_getRevision: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RevisionDto"];
+                };
+            };
+        };
+    };
+    Documents_discardRevision: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    Documents_updateRevision: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateRevisionDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RevisionDto"];
+                };
+            };
+        };
+    };
+    Documents_addRevisionFile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AddRevisionFileDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RevisionDto"];
+                };
+            };
+        };
+    };
+    Documents_voidRevision: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VersionReasonBodyDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RevisionDto"];
+                };
+            };
+        };
+    };
+    Documents_downloadRevisionFile: {
+        parameters: {
+            query?: {
+                fileRole?: components["schemas"]["DocumentFileRole"];
+                /** @description A specific DocumentFile (default: current file of the role) */
+                documentFileId?: string;
+                /** @description false needs document.edit (BR-DOC-071) */
+                stamp?: boolean;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SignedUrlResultDto"];
+                };
+            };
+        };
+    };
+    Reviews_listEligibleReviewers: {
+        parameters: {
+            query?: {
+                templateId?: string;
+                templateStepId?: string;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EligibleReviewersDto"];
+                };
+            };
+        };
+    };
+    Reviews_submitRevision: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SubmitRevisionDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SubmitResultDto"];
+                };
+            };
+        };
+    };
+    Reviews_cancelReview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VersionReasonBodyDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RevisionDto"];
+                };
+            };
+        };
+    };
+    Reviews_listReviewSteps: {
+        parameters: {
+            query?: {
+                /** @description "me" (default) or a user id (PM/document.admin) */
+                assigneeId?: string;
+                /** @description Comma separated ReviewStepStatus (default ACTIVE) */
+                status?: string;
+                projectId?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MyReviewStepDto"][];
+                };
+            };
+        };
+    };
+    Reviews_getReviewCycle: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReviewCycleDto"];
+                };
+            };
+        };
+    };
+    Reviews_decideStep: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DecisionDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RevisionDto"];
+                };
+            };
+        };
+    };
+    Reviews_reassignStep: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReassignDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RevisionDto"];
+                };
+            };
+        };
+    };
+    Reviews_skipStep: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VersionReasonBodyDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RevisionDto"];
+                };
+            };
+        };
+    };
 }
 type FlattenedDeepRequired<T> = {
     [K in keyof T]-?: FlattenedDeepRequired<T[K] extends unknown[] | undefined | null ? Extract<T[K], unknown[]>[number] : T[K]>;
@@ -5134,3 +6885,14 @@ export const projectStatusValues: ReadonlyArray<FlattenedDeepRequired<components
 export const revisionSchemeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["RevisionScheme"]> = ["ALPHA_NUMERIC", "ISO19650"];
 export const projectRoleValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["ProjectRole"]> = ["PROJECT_MANAGER", "DESIGN_MANAGER", "ENGINEER", "DRAFTER", "DOCUMENT_CONTROLLER", "SITE_ENGINEER", "FOREMAN", "VIEWER"];
 export const reviewStepKindValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["ReviewStepKind"]> = ["CHECK", "REVIEW", "APPROVE"];
+export const documentStatusValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["DocumentStatus"]> = ["ACTIVE", "ON_HOLD", "CANCELLED", "SUPERSEDED"];
+export const confidentialityValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["Confidentiality"]> = ["INTERNAL", "CLIENT_SHAREABLE", "CONFIDENTIAL"];
+export const purposeCodeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["PurposeCode"]> = ["FI", "FR", "FA", "FT", "FC", "AB"];
+export const revisionStatusValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["RevisionStatus"]> = ["DRAFT", "IN_REVIEW", "APPROVED", "ISSUED", "SUPERSEDED", "VOID"];
+export const clientReturnCodeValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["ClientReturnCode"]> = ["CODE_1", "CODE_2", "CODE_3", "CODE_4", "INFO"];
+export const documentSourceValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["DocumentSource"]> = ["INTERNAL", "EXTERNAL"];
+export const reviewCycleStatusValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["ReviewCycleStatus"]> = ["IN_PROGRESS", "APPROVED", "REJECTED", "CANCELLED"];
+export const documentFileRoleValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["DocumentFileRole"]> = ["PDF_RENDITION", "NATIVE", "SUPPORTING"];
+export const reviewStepStatusValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["ReviewStepStatus"]> = ["PENDING", "ACTIVE", "APPROVED", "APPROVED_WITH_COMMENTS", "REJECTED", "SKIPPED", "CANCELLED"];
+export const signatureInputDtoMethodValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["SignatureInputDto"]["method"]> = ["PASSWORD", "SIGNING_PIN"];
+export const decisionDtoDecisionValues: ReadonlyArray<FlattenedDeepRequired<components>["schemas"]["DecisionDto"]["decision"]> = ["APPROVED", "APPROVED_WITH_COMMENTS", "REJECTED"];
