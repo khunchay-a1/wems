@@ -14,7 +14,7 @@ import 'settings.dart';
 Future<({Directory dir, AppSettings settings})> _load(AppDatabase db) async =>
     (dir: await getApplicationSupportDirectory(), settings: await AppSettings.load(db));
 
-/// Shared entry for every flavor (lib/main_<flavor>.dart → env/<flavor>.json).
+/// Shared entry for every flavor (`lib/main_<flavor>.dart` → `env/<flavor>.json`).
 Future<void> bootstrap() async {
   WidgetsFlutterBinding.ensureInitialized();
   final db = AppDatabase.open();

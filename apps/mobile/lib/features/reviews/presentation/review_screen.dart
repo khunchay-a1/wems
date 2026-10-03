@@ -251,7 +251,7 @@ class _CommentList extends StatelessWidget {
                     dense: true,
                     leading: CircleAvatar(radius: 14, child: Text('${c['seq'] ?? ''}')),
                     title: Text((c['body'] as String?) ?? ''),
-                    subtitle: Text([
+                    subtitle: Text(<String>[
                       ((c['author'] as Map?)?['displayName'] as String?) ?? '',
                       if (c['anchor'] is Map) l.reviewCommentOnPage(((c['anchor'] as Map)['page'] as num).toInt()),
                       enumLabel(l, 'CommentStatus', c['status'] as String?),

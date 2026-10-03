@@ -46,7 +46,7 @@ class _WemsAppState extends ConsumerState<WemsApp> with WidgetsBindingObserver {
     _subs.add(push.foreground.listen((m) {
       // the messenger lives below MaterialApp's Localizations; this State's context does not
       final mctx = _messenger.currentContext;
-      if (mctx == null) return;
+      if (mctx == null || !mctx.mounted) return;
       _messenger.currentState?.showSnackBar(SnackBar(
         content: Text(m.title.isEmpty ? m.body : m.title),
         action: SnackBarAction(

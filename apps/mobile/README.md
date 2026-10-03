@@ -15,8 +15,9 @@ Phase 1 app for site and design staff — `docs/08-mobile.md`.
 
 ```bash
 cd apps/mobile
-flutter pub get                                    # also runs gen-l10n (lib/l10n/gen)
-dart run build_runner build --delete-conflicting-outputs   # drift tables (*.g.dart)
+flutter pub get
+flutter gen-l10n                                   # lib/l10n/gen (not run by pub get any more)
+dart run build_runner build                        # drift tables (*.g.dart)
 flutter analyze && flutter test
 cp env/dev.example.json env/dev.json             # per-developer copy (git-ignored)
 flutter run --flavor dev -t lib/main_dev.dart --dart-define-from-file=env/dev.json
@@ -30,6 +31,10 @@ flutter run --flavor dev -t lib/main_dev.dart --dart-define-from-file=env/dev.js
 - iOS: the `ios/` folder is not committed yet — create it once with
   `flutter create --platforms=ios --org th.co.wems --project-name wems_mobile .`, then add the
   schemes `dev`/`staging`/`prod` in Xcode (docs/08-mobile.md §10).
+
+On Windows `tool\check.bat` runs the same steps as CI and writes `build\check.log`
+(`tool\check.bat apk` also builds the debug APK). Verified 2026-10-04 with Flutter 3.47.6 /
+Dart 3.13.5: analyze clean, 31 tests pass.
 
 ## Push notifications
 

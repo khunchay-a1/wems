@@ -58,7 +58,7 @@ pnpm --filter api cli create-admin --email <e> --name <n>   # ผู้ดูแ
 pnpm --filter api dev                                # API ที่ http://localhost:4000/api/v1 (Swagger: /api/docs)
 pnpm --filter api test                               # unit (src/**/*.spec.ts) + e2e (test/**/*.e2e-spec.ts, ใช้ DB wems_test)
 pnpm api:contract                                    # build api → packages/api-contract/openapi.json + TS types (api:contract:check ใน CI)
-cd apps/mobile && dart run swagger_parser && dart run build_runner build --delete-conflicting-outputs
+cd apps/mobile && flutter pub get && flutter gen-l10n && dart run build_runner build
 cd apps/mobile && flutter analyze && flutter test
 node tools/check-enum-labels.mjs && node tools/check-spec-refs.mjs
 ```

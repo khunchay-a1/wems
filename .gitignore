@@ -42,3 +42,6 @@ playwright-report/
 test-results/
 # local redis dump
 dump.rdb
+run-mobile-check.bat
+run-flutter-upgrade.bat
+run-mobile-apk.bat
