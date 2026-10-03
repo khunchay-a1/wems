@@ -50,7 +50,7 @@
 | `UserPicker` | เลือกคน | จาก `/users/directory` + กรองตามสิทธิ์/บทบาทที่ server ส่ง (เช่น eligible reviewers) |
 | `DateField` | เลือกวันที่ | แสดง พ.ศ./ค.ศ. ตามค่าผู้ใช้ ส่งค่า `YYYY-MM-DD` |
 | `FileUploader` | อัปโหลด | presigned PUT, progress, ยกเลิก/ลองใหม่, แสดง PROCESSING → AVAILABLE/REJECTED (ผ่าน SSE `file.processed`) |
-| `PdfViewer` | ดู PDF | pdfjs-dist, thumbnail หน้า, zoom/fit, layer หมุด/กรอบความเห็น (พิกัด normalize), โหมด "เพิ่มความเห็น" |
+| `PdfViewer` | ดู PDF | pdfjs-dist (build `legacy` เพื่อรองรับเบราว์เซอร์ที่ยังไม่มี JS API ใหม่; worker/ฟอนต์มาตรฐาน/CMaps เสิร์ฟจาก `/pdfjs` ของเว็บเอง — `scripts/copy-pdf-worker.mjs`), thumbnail หน้า, zoom/fit, layer หมุด/กรอบความเห็น (พิกัด normalize), โหมด "เพิ่มความเห็น" (คลิก = หมุด, ลาก = กรอบ) |
 | `SignatureDialog` | ลงนาม | เลือก รหัสผ่าน/PIN, แสดงสิ่งที่กำลังลงนาม (เอกสาร Rev. การตัดสิน) และเลขใบอนุญาตที่ใช้ |
 | `ReasonDialog` | ยืนยันพร้อมเหตุผล | ใช้กับ void/cancel/reject/reassign |
 | `ProblemAlert` | แสดง error | แสดง `detail` จาก problem+json + `requestId` (คัดลอกได้) |

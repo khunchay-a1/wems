@@ -62,5 +62,7 @@ done
 
 touch /tmp/ready
 echo "storage ready"
-# Stay alive so the healthcheck reports healthy (lets `docker compose up --wait` succeed)
+# Stay alive so the healthcheck reports healthy (lets `docker compose up --wait` succeed);
+# INIT_ONCE=1 (CI) exits instead
+[ "${INIT_ONCE:-}" = "1" ] && exit 0
 exec sleep infinity

@@ -134,6 +134,10 @@ jobs:
           RUSTFS_ADDRESS: 0.0.0.0:9000
           RUSTFS_VOLUMES: /data
         ports: ['9000:9000']
+      # stamped PDF downloads and CRS render through Gotenberg (docs/02-architecture.md §8)
+      gotenberg:
+        image: gotenberg/gotenberg:8.37.0-chromium
+        ports: ['3001:3000']
     env:
       S3_BUCKET: wems-dev
       JWT_ACCESS_SECRET: ci-only-secret-ci-only-secret-ci-only-secret
@@ -160,8 +164,10 @@ jobs:
       - name: Bucket
         run: |
           for i in $(seq 1 30); do curl -fsS http://127.0.0.1:9000/health && break; sleep 2; done
-          aws --endpoint-url "$S3_ENDPOINT" s3 mb s3://wems-dev || true
+          INIT_ONCE=1 bash infra/storage/init-bucket.sh
         env:
+          S3_BUCKETS: wems-dev
+          CORS_ORIGINS: http://localhost:3000
           AWS_ACCESS_KEY_ID: wemsdev
           AWS_SECRET_ACCESS_KEY: wemsdev-secret-change-me
           AWS_DEFAULT_REGION: ap-southeast-1

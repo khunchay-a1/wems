@@ -13,3 +13,5 @@ apps/mobile/
 *.hbs
 apps/web/src/data/*.json
 apps/api/src/common/i18n/enum-labels.json
+apps/web/public/pdfjs/
+apps/web/next-env.d.ts

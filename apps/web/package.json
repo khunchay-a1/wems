@@ -4,8 +4,8 @@
   "private": true,
   "description": "WEMS web app (Next.js App Router)",
   "scripts": {
-    "dev": "next dev --port 3000",
-    "build": "next build",
+    "dev": "node scripts/copy-pdf-worker.mjs && next dev --port 3000",
+    "build": "node scripts/copy-pdf-worker.mjs && next build",
     "start": "next start --port 3000",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
@@ -23,6 +23,7 @@
     "next": "16.3.8",
     "next-intl": "4.14.9",
     "openapi-fetch": "0.17.0",
+    "pdfjs-dist": "6.3.289",
     "qrcode": "^1.5.4",
     "radix-ui": "1.6.7",
     "react": "19.3.0",
